@@ -1,12 +1,13 @@
 "use strict";
 /* global gadgets: true */
+/*global _:false */
 
 angular.module("medialibrary")
 .controller("FileListCtrl",
-["$scope", "$stateParams", "$modal", "$log", "$location", "FileListService",
+["$scope", "$stateParams", "$modal", "$log", "$location", "FileListService","shareFolderListService",
 "OAuthAuthorizationService", "GAPIRequestService", "OAuthStatusService",
 "$window","STORAGE_API_URL", "$state", "$translate",
-function ($scope, $stateParams, $modal, $log, $location, listSvc,
+function ($scope, $stateParams, $modal, $log, $location, listSvc, shareFolderListSvc,
 OAuthAuthorizationService, requestSvc, OAuthStatusService,
 $window, STORAGE_API_URL, $state, $translate) {
   var bucketName = "risemedialibrary-" + $stateParams.companyId;
@@ -18,8 +19,9 @@ $window, STORAGE_API_URL, $state, $translate) {
   $scope.filesDetails = listSvc.filesDetails;
   $scope.statusDetails = listSvc.statusDetails;
   $scope.bucketCreationStatus = {code: 202};
-  $scope.currentDecodedFolder = $stateParams.folderPath ? 
+  $scope.currentDecodedFolder = $stateParams.folderPath ?
                                 decodeURIComponent($stateParams.folderPath) : undefined;
+  $scope.shareFolderSvc = shareFolderListSvc;
 
   $translate("storage-client.trash").then(function(value) {
     trashLabel = value;
@@ -36,7 +38,19 @@ $window, STORAGE_API_URL, $state, $translate) {
   $scope.login = function() {
     OAuthAuthorizationService.authorize().then(function() {
       $scope.isAuthed = true;
-      listSvc.refreshFilesList();
+	    shareFolderListSvc.resetLoading();
+	    afterRefresh().then(function() {
+		    if(shareFolderListSvc.state.sharedFolderViewOnly !== "") {
+			    shareFolderListSvc.state.sharedFolderViewOnly = (shareFolderListSvc.state.originCompanyId !== $stateParams.companyId);
+		    }
+		    if(shareFolderListSvc.state.sharedFolderViewOnly) {
+			    // if in share root delete the previous folder object
+			    if(shareFolderListSvc.state.sharedRootFolder === $scope.currentDecodedFolder){
+				    listSvc.filesDetails.files = _.without(listSvc.filesDetails.files, _.findWhere(listSvc.filesDetails.files, {name: $scope.currentDecodedFolder}));
+			    }
+		    }
+		    shareFolderListSvc.CheckAccess();
+	    });
     })
     .then(null, function(errResult) {
       console.log(errResult);
@@ -61,7 +75,29 @@ $window, STORAGE_API_URL, $state, $translate) {
 
   OAuthStatusService.getAuthStatus().then(function() {
     $scope.isAuthed = true;
-    listSvc.refreshFilesList();
+    if(shareFolderListSvc.state.originCompanyId === ""){
+      afterRefresh().then(function(){
+        shareFolderListSvc.CheckAccess().then(function () {
+          shareFolderListSvc.resetLoading();
+          if (shareFolderListSvc.state.sharedFolderViewOnly === true) {
+            // if in share root delete the previous folder object
+            if (shareFolderListSvc.state.sharedRootFolder === $scope.currentDecodedFolder) {
+              listSvc.filesDetails.files = _.without(listSvc.filesDetails.files, _.findWhere(listSvc.filesDetails.files, {name: $scope.currentDecodedFolder}));
+            }
+          }
+        });
+      });
+    } else{
+      afterRefresh().then(function(){
+        if (!shareFolderListSvc.access) {
+          // if in share root delete the previous folder object
+          if (shareFolderListSvc.state.sharedRootFolder === $scope.currentDecodedFolder) {
+            listSvc.filesDetails.files = _.without(listSvc.filesDetails.files, _.findWhere(listSvc.filesDetails.files, {name: $scope.currentDecodedFolder}));
+          }
+        }
+      });
+
+    }
   }, function() { $scope.isAuthed = false; });
 
   $scope.createBucket = function() {
@@ -117,6 +153,36 @@ $window, STORAGE_API_URL, $state, $translate) {
   $scope.fileIsTrash = function(file) {
     return file.name === "--TRASH--/";
   };
+
+  $scope.fileIsImage = function(file) {
+      var ext = file.name.substr(-4).toLowerCase();
+      if(ext === ".png" || ext === ".gif" || ext === ".tif" || ext === ".psd"){
+          return true;
+      }
+      ext = file.name.substr(-5).toLowerCase();
+      if(ext === ".jpeg" || ext === ".tiff" || ext === ".tif"){
+          return true;
+      }
+      return false;
+  };
+
+  $scope.$on("$stateChangeStart", function(e, toState, toParams){
+    if(shareFolderListSvc.sharedWithFolders.items){
+      var foundCompany = shareFolderListSvc.sharedWithFolders.items.filter(function(e){
+        return e.originCompanyId === toParams.companyId;
+      });
+      if(foundCompany.length > 0){
+        if(!foundCompany.edit){
+          shareFolderListSvc.access = false;
+        }
+        shareFolderListSvc.state.sharedRootFolder = foundCompany[0].folderName;
+      }
+    }
+
+    if(toParams.companyId === shareFolderListSvc.state.originCompanyId || shareFolderListSvc.state.originCompanyId === "" ){
+      shareFolderListSvc.access = true;
+    }
+  });
 
   $scope.$on("FileSelectAction", function(event, file) {
     var fileUrl = encodeURI((file.kind === "folder") ? file.selfLink : bucketUrl + "o/" + file.name + "?&alt=media");

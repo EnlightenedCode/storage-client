@@ -97,11 +97,11 @@ var env = process.env.NODE_ENV || "dev",
     ],
 
     viewFiles = [
-      "web/partials/**/*",
+      "web/partials/**/*"
     ],
 
     languageFiles = [
-      "web/locales/**",
+      "web/locales/**"
     ],
 
     fileFiles = [

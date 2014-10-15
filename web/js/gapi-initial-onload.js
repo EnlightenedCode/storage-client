@@ -6,8 +6,8 @@ function handleClientJSLoad() {
   angular.element(document).ready(function() {
     angular.element(document).injector()
     .invoke(["gapiClientService", "$window", "STORAGE_URL", "$q", "$log",
-             "cookieTester",
-    function(gapiClient, $window, STORAGE_URL, $q, $log, cookieTester) {
+             "cookieTester", "CORE_URL","shareFolderListService", "$rootScope",
+    function(gapiClient, $window, STORAGE_URL, $q, $log, cookieTester, CORE_URL, shareFolderListSvc, $rootScope) {
       return cookieTester.checkCookies()
              .then(function() {
                return loadStorageClient();
@@ -18,18 +18,35 @@ function handleClientJSLoad() {
              .then(null, function() {console.log("Cookie check error");});
 
       function loadStorageClient() {
-        var defer = $q.defer();
+        var storageDefer = $q.defer();
+        var coreDefer = $q.defer();
+        var promises = [];
+
+        promises.push(storageDefer.promise);
+        promises.push(coreDefer.promise);
         $window.gapi.client.load("storage", "v0.01", function () {
           if ($window.gapi.client.storage) {
             $log.info("Storage API is loaded");
-            defer.resolve();
+            storageDefer.resolve();
           } else {
             $log.error("Storage API is NOT loaded");
-            defer.reject();
+            storageDefer.reject();
           }
         }, STORAGE_URL);
 
-        return defer.promise;
+        $window.gapi.client.load("core", "v0", function () {
+          if ($window.gapi.client.core) {
+            $log.info("Core API is loaded");
+            coreDefer.resolve();
+          } else {
+            $log.error("Core API is NOT loaded");
+            coreDefer.reject();
+          }
+        }, CORE_URL);
+
+
+
+        return $q.all(promises).then(function(){ shareFolderListSvc.state.fullyLoaded = true;});
       }
     }]);
   });

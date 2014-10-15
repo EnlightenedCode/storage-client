@@ -106,6 +106,14 @@ angular.module("medialibraryFilters", ["risevision.common.i18n"])
 	};
 }])
 
+.filter("cleanFolderName",function(){
+		return function(path){
+			var pathWithoutLastSlash = (path) ? path.substr(0, path.length -1) : path;
+			var cleanFolderName = (path) ? path.substr(pathWithoutLastSlash.lastIndexOf("/") + 1).replace("/", "") : "";
+			return cleanFolderName;
+		};
+})
+
 .filter("fileSizeFilter", function() {
 	return function(size) {
 		var sizeString = "";

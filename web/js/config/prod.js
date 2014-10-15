@@ -24,5 +24,5 @@ angular.module("risevision.common.config")
     //.value("IN_RVA_PATH", "?up_id=iframeId&parent=parentUrl#/product/productId/?inRVA&cid=companyId")
     //.value("PATH_URL", "v1/company/companyId/product/status?pc=")
     //.value("STORE_URL", "https://store.risevision.com") // Also used by common-header
-    //.value("CORE_URL", "https://rvaserver2.appspot.com/_ah/api")
+    .value("CORE_URL", "https://rvaserver2.appspot.com/_ah/api")
     ;
