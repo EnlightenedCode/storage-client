@@ -16,7 +16,7 @@ angular.module("risevision.common.config")
     //.value("CORE_URL", "https://store-dot-rvacore-test.appspot.com/_ah/api")
     .value("COOKIE_CHECK_URL", "http://cookie-dot-storage-dot-rvacore-test.appspot.com")
     .value("STORAGE_URL", "http://localhost:8888/_ah/api")
-    .value("MEDIA_LIBRARY_URL", "http://commondatastorage.googleapis.com/")
+    .value("STORAGE_API_URL", "https://www.googleapis.com/download/storage/v1/b/")
     .value("STORE_PRODUCT_CODE", "b0cba08a4baa0c62b8cdc621b6f6a124f89a03db")
     .value("STORE_PRODUCT_ID", "24")
     // Subscription status

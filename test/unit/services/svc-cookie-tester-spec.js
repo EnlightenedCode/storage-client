@@ -1,5 +1,4 @@
 "use strict";
-var httpRequestHandler, $httpBackend;
 
 function getService(serviceName) {
   var injectedService;
@@ -31,7 +30,7 @@ function mockHttp(resp) {
       if (resp === "failed") {
         return {get: function() {return Q.reject();}};
       }
-      return {get: function() {return Q.when({data: {check: resp}})}};
+      return {get: function() {return Q.when({data: {check: resp}});}};
     });
   };
 }

@@ -9,12 +9,17 @@
 
 var port = require("system").env.E2E_PORT || 8000;
 var url = "http://localhost:" + port + "/storage-full.html";
+var popupClosed = false;
 var imgdir = "test/e2e/storage-full/";
 var customHeaders = {
     "Accept-Language": "en-US,en;q=0.8"
   };
 
 casper.options.waitTimeout = 50000;
+
+casper.on("popup.closed", function() {
+	popupClosed = true;
+});
 
 casper.on("remote.message", function(msg) {
   casper.echo("DOM console: " + msg);

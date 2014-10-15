@@ -54,7 +54,7 @@ function setupMocks(servicesPassFail) {
         };
 
         fun.preferredLanguage = function() {
-        	return "en"
+        	return "en";
         };
 
         fun.use = function() {

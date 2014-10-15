@@ -1,15 +1,16 @@
 "use strict";
 /* global gadgets: true */
 
-angular.module("medialibrary").controller("FileListCtrl",
-["$scope", "$stateParams", "$location", "FileListService",
+angular.module("medialibrary")
+.controller("FileListCtrl",
+["$scope", "$stateParams", "$modal", "$log", "$location", "FileListService",
 "OAuthAuthorizationService", "GAPIRequestService", "OAuthStatusService",
-"$window","MEDIA_LIBRARY_URL", "$state", "$translate",
-function ($scope, $stateParams, $location, listSvc,
+"$window","STORAGE_API_URL", "$state",
+function ($scope, $stateParams, $modal, $log, $location, listSvc,
 OAuthAuthorizationService, requestSvc, OAuthStatusService,
-$window, MEDIA_LIBRARY_URL, $state, $translate) {
+$window, STORAGE_API_URL, $state) {
   var bucketName = "risemedialibrary-" + $stateParams.companyId;
-  var bucketUrl = MEDIA_LIBRARY_URL + bucketName + "/";
+  var bucketUrl = STORAGE_API_URL + bucketName + "/";
   var trashLabel;
 
   $scope.$location = $location;
@@ -27,6 +28,10 @@ $window, MEDIA_LIBRARY_URL, $state, $translate) {
   $scope.dateModifiedOrderFunction = function(file) {
     return file.updated ? file.updated.value : "";
   };
+
+	$scope.isTrashFolder = function(){
+		return $stateParams.folderPath === "--TRASH--/";
+	};
 
   $scope.login = function() {
     OAuthAuthorizationService.authorize().then(function() {
@@ -114,7 +119,7 @@ $window, MEDIA_LIBRARY_URL, $state, $translate) {
   };
 
   $scope.$on("FileSelectAction", function(event, file) {
-    var fileUrl = bucketUrl + file.name;
+    var fileUrl = encodeURI((file.kind === "folder") ? file.selfLink : bucketUrl + "o/" + file.name + "?&alt=media");
     var data = { params: fileUrl };
 
     if ($scope.fileIsFolder(file)) {
@@ -135,4 +140,5 @@ $window, MEDIA_LIBRARY_URL, $state, $translate) {
       gadgets.rpc.call("", "rscmd_saveSettings", null, data);
     }
   });
+
 }]);

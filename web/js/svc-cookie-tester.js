@@ -1,6 +1,7 @@
+"use strict";
 angular.module("cookieTester", [])
 .service("cookieTester", ["$q", "$document", "$http", "COOKIE_CHECK_URL", function($q, $document, $http, COOKIE_CHECK_URL) {
-  var svc = {}
+  var svc = {};
 
   svc.status = {message: "Checking local and third party cookies",
                 passed: undefined};
