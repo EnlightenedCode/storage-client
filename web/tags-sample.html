@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="medialibrary">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title translate="storage-client.title"></title>
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css">
+          <!-- build:css css/all.min.css -->
+	<link href="components/rv-common-style/dist/css/rise.min.css" rel="stylesheet" type="text/css">
+	<link href="components/rv-subscription-status/dist/css/subscription-status.css" rel="stylesheet" type="text/css">
+          <!-- endbuild -->
+	<!-- build:js script/main.min.js -->
+	<!-- Copied form Store project (needed for the Header) -->
+  <script type="text/javascript" src="components/jQuery/dist/jquery.js"></script>
+
+  <script type="text/javascript" src="components/angular/angular.js"></script>
+  <script type="text/javascript" src="components/angular-resource/angular-resource.js"></script>
+  <script type="text/javascript" src="components/angular-ui-router/release/angular-ui-router.js"></script>
+
+  <script src="components/angular-file-upload/angular-file-upload.js"></script>
+  <script src="components/angular-translate/angular-translate.js"></script>
+  <script src="components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+
+  <script type="text/javascript" src="js/config/locales_config.js"></script>
+  <script src="components/rv-common-i18n/dist/i18n.js"></script>
+
+  <script src="components/rv-widget-settings-ui-core/dist/widget-settings-ui-core.js"></script>
+  <script src="components/rv-subscription-status/dist/js/subscription-status.js"></script>
+
+  <script type="text/javascript" src="js/config/config.js"></script>
+
+  <script type="text/javascript" src="js/gapi-initial-onload.js"></script>
+  <script type="text/javascript" src="js/svc-cookie-tester.js"></script>
+  <script type="text/javascript" src="js/ctr-cookie-tester.js"></script>
+  <script type="text/javascript" src="js/svc-gapi-auth.js"></script>
+  <script type="text/javascript" src="js/services.js"></script>
+
+  <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" src="js/svc-download.js"></script>
+  <script type="text/javascript" src="js/ctr-buttons.js"></script>
+  <script type="text/javascript" src="js/svc-oauth-status.js"></script>
+  <script type="text/javascript" src="js/svc-upload-request.js"></script>
+  <script type="text/javascript" src="js/ctr-files.js"></script>
+  <script type="text/javascript" src="js/svc-bandwidth.js"></script>
+  <script type="text/javascript" src="js/ctr-bandwidth.js"></script>
+  <script type="text/javascript" src="js/ctr-upload.js"></script>
+  <script type="text/javascript" src="js/ctr-gapi-client.js"></script>
+  <script type="text/javascript" src="js/ctr-subscription.js"></script>
+  <script type="text/javascript" src="js/filters.js"></script>
+  <script type="text/javascript" src="js/files/svc-file-list.js"></script>
+  <script type="text/javascript" src="js/svc-gapi-requestor.js"></script>
+		<!-- endbuild -->
+  <script type="text/javascript" src="//s3.amazonaws.com/rise-common-test/scripts/bootstrap/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//apis.google.com/js/client.js?onload=handleClientJSLoad"></script>
+</head>
+<body>
+  <div style="padding:40px">
+            <div class="app-header">
+                <div class="title-block">
+                    <h1>Storage</h1>
+                </div>
+                <div class="global-actions">
+                    <button class="btn btn-default btn-lg"><i class="fa fa-plus"></i> New Folder</button>
+                    <button class="btn btn-primary btn-lg" disabled="disabled"><i class="fa fa-cloud-upload"></i> Upload a File</button>
+                </div>
+            </div>
+            <div class="bar">
+                <div class="col-sm-6">
+                    <button class="btn btn-default btn-lg"><i class="fa fa-folder"></i> <strong>Folders</strong></button>
+                    <button class="btn btn-default btn-lg"><i class="fa fa-trash-o"></i> Trash</button>
+                </div>
+                <div class="col-sm-6 text-right hidden-xs">
+                    <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">
+                        <i class="fa fa-cog"></i>
+                    </button>
+                    <button class="btn btn-default btn-lg">
+                        <i class="fa fa-cloud-download"></i>
+                    </button>
+                    <button class="btn btn-default btn-lg">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <form class="form-group form-group-lg">
+                    <input type="text" class="form-control" placeholder="Search files or folders">
+                </form>
+            </div>
+            <div class="table-responsive">
+            <table class="table table-hover filetable">
+                <thead>
+                    <tr>
+                        <th class="check-col"><input type="checkbox"></th>
+                        <th class="copy-url"></th>
+                        <th>Name</th>
+                        <th class="text-right">File Type</th>
+                        <th class="text-right">Size</th>
+                        <th class="text-right">Modified</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="check-col"><input type="checkbox"></td>
+                        <td class="copy-url"><button class="btn btn-link"><i class="fa fa-link"></i></button></td>
+                        <td class="file-name folder-type">
+                            <a href="#"><i class="fa fa-folder"></i> Backgrounds</a>
+                        </td>
+                        <td class="type-col text-right">Folder</td>
+                        <td class="filesize-col text-right">100 MB</td>
+                        <td class="datemod-col text-right">31/10/14 6:20 PM</td>
+                    </tr>
+                    <tr>
+                        <td class="check-col"><input type="checkbox"></td>
+                        <td class="copy-url"><button class="btn btn-link"><i class="fa fa-link"></i></button></td>
+                        <td class="file-name">
+                            <a href="#"><i class="fa fa-file"></i> document.doc</a>
+                        </td>
+                        <td class="type-col text-right">Document</td>
+                        <td class="filesize-col text-right">100 MB</td>
+                        <td class="datemod-col text-right">31/10/14 6:20 PM</td>
+                    </tr>
+                     <tr>
+                        <td class="check-col"><input type="checkbox"></td>
+                        <td class="copy-url"><button class="btn btn-link"><i class="fa fa-link"></i></button></td>
+                        <td class="file-name">
+                            <a href="#"><i class="fa fa-file"></i> document.doc</a>
+                            <i class="fa fa-tag"></i>
+
+                        </td>
+                        <td class="type-col text-right">Document</td>
+                        <td class="filesize-col text-right">100 MB</td>
+                        <td class="datemod-col text-right">31/10/14 6:20 PM</td>
+                    </tr>
+                     <tr>
+                        <td class="check-col"><input type="checkbox"></td>
+                        <td class="copy-url"><button class="btn btn-link"><i class="fa fa-link"></i></button></td>
+                        <td class="file-name">
+                            <a href="#"><i class="fa fa-file"></i> document.doc</a>
+                        </td>
+                        <td class="type-col text-right">Document</td>
+                        <td class="filesize-col text-right">100 MB</td>
+                        <td class="datemod-col text-right">31/10/14 6:20 PM</td>
+                    </tr>
+                     <tr>
+                        <td class="check-col"><input type="checkbox"></td>
+                        <td class="copy-url"><button class="btn btn-link"><i class="fa fa-link"></i></button></td>
+                        <td class="file-name">
+                            <a href="#"><i class="fa fa-file"></i> document.doc</a>
+                        </td>
+                        <td class="type-col text-right">Document</td>
+                        <td class="filesize-col text-right">100 MB</td>
+                        <td class="datemod-col text-right">31/10/14 6:20 PM</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="myModalLabel">File Settings</h2>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            
+    <div class="file-settings">
+        <section>
+            <h3>Tags</h3>
+           
+
+            <span class="label label-success">brand: levi's <i class="fa fa-times"></i></span>
+            <span class="label label-success">brand: gap <i class="fa fa-times"></i></span>
+            <button class="btn btn-link" id="add-tags">
+                <i class="fa fa-plus"></i> Add tags
+            </button>
+            <div class="content-box" id="tags-list">
+                <ul class="nav simple-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">All</a></li>
+                    <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">Brands</a></li>
+                    <li role="presentation"><a href="#messages" role="tab" data-toggle="tab">Regions</a></li>
+                </ul>
+                
+                <div class="tags-wrapper">
+                    <div class="tag-group">
+                        <span class="label label-success">brand: levi's</span>
+                        <span class="label label-success">brand: Gap</span>
+                        <span class="label label-default">brand: Express</span>
+                        <span class="label label-default">brand: Nike</span>
+                    </div>
+                    <div class="tag-group">
+                        <span class="label label-default">region: lorem</span>
+                        <span class="label label-default">region: ipsum</span>
+                        <span class="label label-default">region: dolor</span>
+                        <span class="label label-default">region: amet</span>
+                    </div>
+                </div>
+                <button class="btn btn-default btn-xs" id="done-tags">Done</button>
+            </div>
+        </section>
+
+       
+
+        <section>
+            <h3>Custom Fields</h3>
+
+            <button class="btn btn-link" id="add-caption">
+                <i class="fa fa-plus"></i> Add Caption
+            </button>
+            
+            <button class="btn btn-link">
+                <i class="fa fa-plus"></i> Add Property Code
+            </button>
+
+
+            <div class="custom-field-wrapper">
+                <div class="input-group">
+                    <span class="input-group-addon">Caption</span>
+                    <input type="text" class="form-control" placeholder="Enter your text...">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="done-caption">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+         <section>
+            <h3>Timeline</h3>
+            <button class="btn btn-link">
+                <i class="fa fa-plus"></i> Add Timeline
+            </button>
+        </section>        
+    </div>
+
+
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default">Cancel</button>
+        <button class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+            <!-- Modal -->
+
+<script type="text/javascript">
+    $("#add-tags").click(function () {
+    $("#tags-list").toggle();
+    $(this).addClass('hidden');
+    });
+
+    $("#add-caption").click(function () {
+    $(".custom-field-wrapper").toggle();
+    $(this).addClass('hidden');
+    });
+
+    $("#done-caption").click(function () {
+    $(".custom-field-wrapper").toggle();
+    $("#add-caption").removeClass('hidden');
+    });
+
+    $("#done-tags").click(function () {
+    $("#tags-list").toggle();
+    $("#add-tags").removeClass('hidden');
+    });
+         
+</script>
+
+
+            
+        </div>
+</body>
+</html>
