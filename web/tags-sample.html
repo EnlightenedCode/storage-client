@@ -57,8 +57,8 @@
   <script type="text/javascript" src="//s3.amazonaws.com/rise-common-test/scripts/bootstrap/bootstrap.min.js"></script>
   <script type="text/javascript" src="//apis.google.com/js/client.js?onload=handleClientJSLoad"></script>
 </head>
-<body>
-  <div style="padding:40px">
+    <body>
+                <div class="storage-modal" style="padding:40px">
             <div class="app-header">
                 <div class="title-block">
                     <h1>Storage</h1>
@@ -75,7 +75,7 @@
                 </div>
                 <div class="col-sm-6 text-right hidden-xs">
                     <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">
-                        <i class="fa fa-cog"></i>
+                        <i class="fa fa-tag"></i>
                     </button>
                     <button class="btn btn-default btn-lg">
                         <i class="fa fa-cloud-download"></i>
@@ -163,14 +163,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h2 class="modal-title" id="myModalLabel">File Settings</h2>
+        <h2 class="modal-title" id="myModalLabel">Tags</h2>
       </div>
       <div class="modal-body">
         <div class="form-group">
             
     <div class="file-settings">
         <section>
-            <h3>Tags</h3>
+            <h3>Lookup</h3>
            
 
             <span class="label label-success">brand: levi's <i class="fa fa-times"></i></span>
@@ -206,7 +206,7 @@
        
 
         <section>
-            <h3>Custom Fields</h3>
+            <h3>Freeform</h3>
 
             <button class="btn btn-link" id="add-caption">
                 <i class="fa fa-plus"></i> Add Caption
@@ -233,9 +233,60 @@
 
          <section>
             <h3>Timeline</h3>
-            <button class="btn btn-link">
+            <button class="btn btn-link" id="add-timeline">
                 <i class="fa fa-plus"></i> Add Timeline
             </button>
+
+            <form class="content-box" id="timeline-form" role="form">
+                <div class="form-inline">
+                    
+
+                    <div class="form-group" id="timeline-date">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Start Date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div><!-- /input-group -->
+
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <input type="checkbox">
+                            </span>
+                            <input type="text" class="form-control" disabled="disabled" placeholder="End Date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div><!-- /input-group -->
+                    </div>
+
+                    <div class="form-group">
+                        <label><input type="checkbox" checked="checked"> All Day</label>
+                    </div>
+                    
+                    
+                    <h4>Recurrence</h4>
+                    <div id="timeline-recurrence">
+
+                    <div class="form-group" id="recurrence-controls">
+                        <label><input type="radio" checked> Daily</label>
+                        <label><input type="radio"> Weekly</label>
+                        <label><input type="radio"> Monthly</label>
+                        <label><input type="radio"> Yearly</label>
+                    </div>
+
+                    <div class="form-group" id="recurrence-form">
+                        <label class="control-label">Every</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="1">
+                            <span class="input-group-addon">day(s)</span>
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+                <button class="btn btn-xs" id="done-timeline">Add</button>
+            </form>
         </section>        
     </div>
 
@@ -264,6 +315,16 @@
     $(this).addClass('hidden');
     });
 
+    $("#add-timeline").click(function () {
+    $("#timeline-form").toggle();
+    $(this).addClass('hidden');
+    });
+
+    $("#done-timeline").click(function () {
+    $("#timeline-form").toggle();
+    $("#add-timeline").removeClass('hidden');
+    });
+
     $("#done-caption").click(function () {
     $(".custom-field-wrapper").toggle();
     $("#add-caption").removeClass('hidden');
@@ -279,5 +340,5 @@
 
             
         </div>
-</body>
+    </body>
 </html>
