@@ -58,7 +58,7 @@
   <script type="text/javascript" src="//apis.google.com/js/client.js?onload=handleClientJSLoad"></script>
 </head>
     <body>
-                <div class="storage-modal" style="padding:40px">
+                       <div class="storage-modal" style="padding:40px">
             <div class="app-header">
                 <div class="title-block">
                     <h1>Storage</h1>
@@ -238,53 +238,80 @@
             </button>
 
             <form class="content-box" id="timeline-form" role="form">
-                <div class="form-inline">
-                    
-
                     <div class="form-group" id="timeline-date">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Start Date">
-                            <span class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                        </div><!-- /input-group -->
-
+                        <div class="timeline-start">
+                            <label class="control-label">Start Date</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Nov 17, 2014">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div><!-- /timeline-start -->
+                        <div class="timeline-end">
+                        <label class="control-label">End Date</label>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <input type="checkbox">
                             </span>
-                            <input type="text" class="form-control" disabled="disabled" placeholder="End Date">
+                            <input type="text" class="form-control" disabled="disabled" >
                             <span class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div><!-- /input-group -->
+                        </div><!-- /timeline-end -->
                     </div>
 
-                    <div class="form-group">
-                        <label><input type="checkbox" checked="checked"> All Day</label>
-                    </div>
-                    
-                    
-                    <h4>Recurrence</h4>
-                    <div id="timeline-recurrence">
+                    <div class="form-group"><label><input type="checkbox" checked="checked" id="all-day"> All Day</label></div>
 
-                    <div class="form-group" id="recurrence-controls">
-                        <label><input type="radio" checked> Daily</label>
-                        <label><input type="radio"> Weekly</label>
-                        <label><input type="radio"> Monthly</label>
-                        <label><input type="radio"> Yearly</label>
-                    </div>
-
-                    <div class="form-group" id="recurrence-form">
-                        <label class="control-label">Every</label>
+                    <div class="form-group" id="timeline-time">
+                        <div class="timeline-start">
+                            <label class="control-label">Start Time</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled="disabled" placeholder="00:00">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-sort"></i>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div><!-- /timeline-start -->
+                        <div class="timeline-end">
+                        <label class="control-label">End Time</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="1">
-                            <span class="input-group-addon">day(s)</span>
-                        </div>
+                            <input type="text" class="form-control" disabled="disabled" placeholder="00:00" >
+                            <span class="input-group-addon">
+                                <i class="fa fa-sort"></i>
+                            </span>
+                        </div><!-- /input-group -->
+                        </div><!-- /timeline-end -->
                     </div>
 
+<h4>Recurrence</h4>
+ <div class="btn-group btn-group-justified" data-toggle="buttons">
+  <label class="btn btn-default active">
+    <input type="radio" name="options" id="option1"> Daily
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option2"> Weekly
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option3"> Monthly
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option3"> Yearly
+  </label>
+</div>
+ 
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                            <label class="control-label text-right col-sm-3">Every</label>
+                            <div class="input-group col-sm-7 col-sm-offset-2">
+                                <input type="text" class="form-control" placeholder="1">
+                                <span class="input-group-addon">day(s)</span>
+                            </div>
                     </div>
                 </div>
+
                 <button class="btn btn-xs" id="done-timeline">Add</button>
             </form>
         </section>        
@@ -334,6 +361,10 @@
     $("#tags-list").toggle();
     $("#add-tags").removeClass('hidden');
     });
+
+    $('#all-day').change(function () {                
+    $('#timeline-time').toggle(!this.checked);
+}).change();
          
 </script>
 
