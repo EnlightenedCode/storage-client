@@ -58,7 +58,7 @@
   <script type="text/javascript" src="//apis.google.com/js/client.js?onload=handleClientJSLoad"></script>
 </head>
     <body>
-                       <div class="storage-modal" style="padding:40px">
+        <div class="storage-modal" style="padding:40px">
             <div class="app-header">
                 <div class="title-block">
                     <h1>Storage</h1>
@@ -179,11 +179,25 @@
                 <i class="fa fa-plus"></i> Add tags
             </button>
             <div class="content-box" id="tags-list">
-                <ul class="nav simple-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">All</a></li>
-                    <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">Brands</a></li>
-                    <li role="presentation"><a href="#messages" role="tab" data-toggle="tab">Regions</a></li>
-                </ul>
+
+                 <div class="btn-group btn-group-justified" data-toggle="buttons">
+  <label class="btn btn-default active">
+    <input type="radio" name="options" id="option1"> All
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option2"> Brand
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option3"> Region
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option3"> Video
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option4"> Image
+  </label>
+</div>
+
                 
                 <div class="tags-wrapper">
                     <div class="tag-group">
@@ -286,7 +300,9 @@
                     </div>
 
 <h4>Recurrence</h4>
- <div class="btn-group btn-group-justified" data-toggle="buttons">
+
+
+<div id="test" class="btn-group btn-group-justified" data-toggle="buttons">
   <label class="btn btn-default active">
     <input type="radio" name="options" id="option1"> Daily
   </label>
@@ -297,20 +313,72 @@
     <input type="radio" name="options" id="option3"> Monthly
   </label>
   <label class="btn btn-default">
-    <input type="radio" name="options" id="option3"> Yearly
+    <input type="radio" name="options" id="option4"> Yearly
   </label>
-</div>
+</div><!-- /btn-group -->
  
 
-                <div class="form-horizontal">
-                    <div class="form-group">
-                            <label class="control-label text-right col-sm-3">Every</label>
-                            <div class="input-group col-sm-7 col-sm-offset-2">
-                                <input type="text" class="form-control" placeholder="1">
-                                <span class="input-group-addon">day(s)</span>
-                            </div>
-                    </div>
-                </div>
+<div id="form-option1" class="recurrence">
+
+<div class="col-sm-6">
+    <label>Every</label>
+    <div class="form-group">
+        <div class="input-group">
+            <input class="form-control" type="text" value="1"/>
+            <span class="input-group-addon">Day(s)</span>
+        </div>
+    </div>
+</div>
+<div class="col-sm-6"></div>
+   
+</div><!-- /recurrence -->
+
+<div id="form-option2" class="recurrence">
+    <div class="col-sm-6">
+        <label>Every</label>
+        <div class="form-group">
+            <div class="input-group">
+                <input class="form-control" type="text" value="1"/>
+                <span class="input-group-addon">Week(s)</span>
+            </div>
+        </div>   
+    </div>
+    <div class="col-sm-6">
+        <div id="week-days">
+            <div class="checkbox"><label><input type="checkbox">Monday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Tuesday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Wednesday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Thursday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Friday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Saturday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Sunday</label></div>
+        </div>
+    </div>    
+</div><!-- /recurrence -->
+
+<div id="form-option3" class="recurrence form-inline">
+    <div class="col-sm-12">        
+        <div class="form-group">
+            <label><input type="radio"> Day</label>
+            <input style="width:80px;" class="form-control" type="text" value="1"/>
+            <label>of every</label>
+            <div class="input-group">
+                <input style="width:80px;" class="form-control" type="text" value="1"/>
+                <span class="input-group-addon">Month(s)</span>
+            </div>
+        </div> 
+    </div>
+
+
+
+</div><!-- /recurrence -->
+
+<div id="form-option4" class="recurrence">
+
+</div><!-- /recurrence -->
+
+
+ 
 
                 <button class="btn btn-xs" id="done-timeline">Add</button>
             </form>
@@ -364,7 +432,17 @@
 
     $('#all-day').change(function () {                
     $('#timeline-time').toggle(!this.checked);
-}).change();
+    }).change();
+
+    $('#test input[type="radio"]').on('change', function(e)
+    {
+    $('.recurrence').hide();
+    $('#form-' + $(this).attr('id')).toggle();
+    });
+
+    // Initial state
+    $('input[type="radio"]:first').prop('checked', true);
+    $('#form-' + $('input[type="radio"]:checked').attr('id')).toggle();
          
 </script>
 
