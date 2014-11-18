@@ -1949,7 +1949,7 @@ td.visible-print,th.visible-print{display:table-cell!important}}
 .alert-link:active,.alert-link:hover{color:#333}
 .btn,.sign-in,.top-auth-button{outline:0;border-radius:2px}
 .btn .badge,.btn .sign-in,.btn .top-auth-button{background:#f4f4f4;color:#444}
-.btn-default,.btn-github,.btn-rv-help{color:#444;border-color:#d4d4d4}
+.btn-default,.btn-github,.btn-rv-help{color:#444}
 .active.btn-github,.active.btn-rv-help,.btn-default.active,.btn-default:active,.btn-default:focus,.btn-default:hover,.btn-github:active,.btn-github:focus,.btn-github:hover,.btn-rv-help:active,.btn-rv-help:focus,.btn-rv-help:hover,.open>.btn-default.dropdown-toggle,.open>.dropdown-toggle.btn-github,.open>.dropdown-toggle.btn-rv-help{color:#444;background-color:#fff;border-color:#f4f4f4}
 .active.btn-github,.active.btn-rv-help,.btn-default.active,.btn-default:active,.btn-github:active,.btn-rv-help:active,.open>.btn-default.dropdown-toggle,.open>.dropdown-toggle.btn-github,.open>.dropdown-toggle.btn-rv-help{background-image:none}
 .btn-default.disabled,.btn-default.disabled.active,.btn-default.disabled:active,.btn-default.disabled:focus,.btn-default.disabled:hover,.btn-default[disabled],.btn-default[disabled].active,.btn-default[disabled]:active,.btn-default[disabled]:focus,.btn-default[disabled]:hover,.disabled.active.btn-github,.disabled.active.btn-rv-help,.disabled.btn-github,.disabled.btn-github:active,.disabled.btn-github:focus,.disabled.btn-github:hover,.disabled.btn-rv-help,.disabled.btn-rv-help:active,.disabled.btn-rv-help:focus,.disabled.btn-rv-help:hover,[disabled].active.btn-github,[disabled].active.btn-rv-help,[disabled].btn-github,[disabled].btn-github:active,[disabled].btn-github:focus,[disabled].btn-github:hover,[disabled].btn-rv-help,[disabled].btn-rv-help:active,[disabled].btn-rv-help:focus,[disabled].btn-rv-help:hover,fieldset[disabled] .active.btn-github,fieldset[disabled] .active.btn-rv-help,fieldset[disabled] .btn-default,fieldset[disabled] .btn-default.active,fieldset[disabled] .btn-default:active,fieldset[disabled] .btn-default:focus,fieldset[disabled] .btn-default:hover,fieldset[disabled] .btn-github,fieldset[disabled] .btn-github:active,fieldset[disabled] .btn-github:focus,fieldset[disabled] .btn-github:hover,fieldset[disabled] .btn-rv-help,fieldset[disabled] .btn-rv-help:active,fieldset[disabled] .btn-rv-help:focus,fieldset[disabled] .btn-rv-help:hover{background-color:#f4f4f4;border-color:#d5d5d5}
@@ -2096,7 +2096,8 @@ ul.social li.in a{background-position:-48px 0}
 ul.social li.gplus a{background-position:-72px 0}
 ul.social li.email a{background-position:-96px 0}
 @media (min-width:768px){.copyright{text-align:right}}
-.btn-default,.btn-github,.btn-rv-help{background:#d4d4d4}
+.btn-default,.btn-github,.btn-rv-help{background:#d4d4d4;border-color:#d0d0d0}
+.active.btn-github,.active.btn-rv-help,.btn-default.active{border-color:#d4d4d4}
 .btn-default .btn-github,.btn-default .btn-rv-help,.btn-default .fa::before,.btn-default .glyphicons::before,.btn-default:hover,.btn-default:hover .btn-github:hover,.btn-default:hover .btn-rv-help:hover,.btn-default:hover .fa::before,.btn-default:hover .glyphicons::before,.btn-github:hover,.btn-rv-help:hover{color:#444}
 .btn-primary{background:#4AB767;border-color:#4AB767}
 .btn-primary .fa::before,.btn-primary .glyphicons::before{color:#fff}
@@ -2396,21 +2397,36 @@ ul.tree ul li:last-child:before{background:#fff;height:auto;top:15px;bottom:0}
 .storage-modal .thumbnail:nth-child(6n+1){clear:left;padding-left:0}}
 #shareModal input{margin-top:10px}
 #foldersModal .content-box{padding:15px 0}
-.file-settings a{color:#4AB767}
-.file-settings h2{margin-bottom:20px;font-weight:400}
+.file-settings .btn-group{margin-bottom:10px}
 .file-settings .btn-link,.file-settings .sign-in,.file-settings .top-auth-button{color:#666;padding:0;margin-right:10px}
-.file-settings section{margin-bottom:15px;padding:0 0 20px;border-bottom:1px solid #e6e6e6}
+.file-settings .btn-link .fa:before,.file-settings .btn-link .sign-in,.file-settings .btn-link .top-auth-button{color:#4AB767}
+.file-settings section{padding:0 0 20px;border-bottom:1px solid #e6e6e6}
 .file-settings section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .file-settings .content-box{padding:10px;margin-top:10px;display:none}
-.file-settings h3{color:#555;font-size:16px;font-weight:800;margin-bottom:10px}
-.file-settings .btn-link .fa:before,.file-settings .btn-link .sign-in,.file-settings .btn-link .top-auth-button{color:#4AB767}
-.file-settings .label{font-size:13px;display:inline-block}
+.file-settings h3{color:#666;font-size:16px;font-weight:800;margin-bottom:10px}
+.file-settings .label{font-size:14px;font-weight:400;margin-bottom:5px;display:inline-block}
 .file-settings .label .fa:before{color:#FFF}
-.file-settings .tag-group{margin-bottom:5px}
-.file-settings .tag-group:last-child{margin-bottom:15px}
-.file-settings .input-group{margin-top:10px}
-.file-settings .custom-field-wrapper{display:none}
+.file-settings .tag-group:last-child{margin-bottom:10px}
+.file-settings .custom-field-wrapper{display:none;margin-top:10px}
+.file-settings .custom-field-wrapper .input-group{margin-bottom:5px}
+.file-settings .custom-field-wrapper .input-group:last-child{margin-bottom:0}
+.file-settings .custom-field-wrapper .btn,.file-settings .custom-field-wrapper .sign-in,.file-settings .custom-field-wrapper .top-auth-button{height:34px}
 .file-settings .custom-field-wrapper .btn .fa:before,.file-settings .custom-field-wrapper .btn .sign-in,.file-settings .custom-field-wrapper .btn .top-auth-button{color:#666}
+#timeline-date,#timeline-time{margin-left:-15px;margin-right:-15px}
+#timeline-date:after,#timeline-date:before,#timeline-time:after,#timeline-time:before{content:" ";display:table}
+#timeline-date:after,#timeline-time:after{clear:both}
+#timeline-date .timeline-end,#timeline-date .timeline-start,#timeline-time .timeline-end,#timeline-time .timeline-start{position:relative;min-height:1px;padding-left:15px;padding-right:15px}
+@media (min-width:768px){#timeline-date .timeline-end,#timeline-date .timeline-start,#timeline-time .timeline-end,#timeline-time .timeline-start{float:left;width:50%}}
+#timeline-time{display:none}
+#timeline-form .btn-group-xs>.btn,#timeline-form .btn-xs,#timeline-form .sign-in,#timeline-form .top-auth-button,.btn-group-xs>#timeline-form .btn{margin-top:20px}
+#timeline-form h4{font-size:14px;margin-top:20px;padding-bottom:5px;color:#888}
+#timeline-form #timeline-date{margin-bottom:5px}
+#timeline-form .recurrence{margin-left:-15px;margin-right:-15px;display:none}
+#timeline-form .recurrence:after,#timeline-form .recurrence:before{content:" ";display:table}
+#timeline-form .recurrence:after{clear:both}
+#timeline-form #week-days{margin-top:20px}
+#timeline-form #week-days .checkbox{display:block}
+#timeline-form #week-days .checkbox input{margin-right:5px}
 .storage-selector-backdrop{position:absolute;top:0;left:0;width:100%;height:100%;background-color:#e7e7e7;opacity:.9}
 .storage-selector-iframe{width:90%;height:500px;position:absolute;top:20%;left:5%;box-shadow:0 5px 15px rgba(0,0,0,.5);border-radius:6px;border:1px solid rgba(0,0,0,.2);padding:5px;background-color:#f4f4f4}
 .storage-selector-iframe-full{width:100%;height:100%;position:absolute;border:0;padding:0;background-color:#f4f4f4}

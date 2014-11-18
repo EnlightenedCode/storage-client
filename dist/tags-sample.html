@@ -14,8 +14,8 @@
   <script type="text/javascript" src="//s3.amazonaws.com/rise-common-test/scripts/bootstrap/bootstrap.min.js"></script>
   <script type="text/javascript" src="//apis.google.com/js/client.js?onload=handleClientJSLoad"></script>
 </head>
-<body>
-  <div style="padding:40px">
+    <body>
+        <div class="storage-modal" style="padding:40px">
             <div class="app-header">
                 <div class="title-block">
                     <h1>Storage</h1>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-sm-6 text-right hidden-xs">
                     <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">
-                        <i class="fa fa-cog"></i>
+                        <i class="fa fa-tag"></i>
                     </button>
                     <button class="btn btn-default btn-lg">
                         <i class="fa fa-cloud-download"></i>
@@ -120,14 +120,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h2 class="modal-title" id="myModalLabel">File Settings</h2>
+        <h2 class="modal-title" id="myModalLabel">Tags</h2>
       </div>
       <div class="modal-body">
         <div class="form-group">
             
     <div class="file-settings">
         <section>
-            <h3>Tags</h3>
+            <h3>Lookup</h3>
            
 
             <span class="label label-success">brand: levi's <i class="fa fa-times"></i></span>
@@ -136,11 +136,25 @@
                 <i class="fa fa-plus"></i> Add tags
             </button>
             <div class="content-box" id="tags-list">
-                <ul class="nav simple-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">All</a></li>
-                    <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">Brands</a></li>
-                    <li role="presentation"><a href="#messages" role="tab" data-toggle="tab">Regions</a></li>
-                </ul>
+
+                 <div class="btn-group btn-group-justified" data-toggle="buttons">
+  <label class="btn btn-default active">
+    <input type="radio" name="options" id="option1"> All
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option2"> Brand
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option3"> Region
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option3"> Video
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option4"> Image
+  </label>
+</div>
+
                 
                 <div class="tags-wrapper">
                     <div class="tag-group">
@@ -163,7 +177,7 @@
        
 
         <section>
-            <h3>Custom Fields</h3>
+            <h3>Freeform</h3>
 
             <button class="btn btn-link" id="add-caption">
                 <i class="fa fa-plus"></i> Add Caption
@@ -190,9 +204,141 @@
 
          <section>
             <h3>Timeline</h3>
-            <button class="btn btn-link">
+            <button class="btn btn-link" id="add-timeline">
                 <i class="fa fa-plus"></i> Add Timeline
             </button>
+
+            <form class="content-box" id="timeline-form" role="form">
+                    <div class="form-group" id="timeline-date">
+                        <div class="timeline-start">
+                            <label class="control-label">Start Date</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Nov 17, 2014">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div><!-- /timeline-start -->
+                        <div class="timeline-end">
+                        <label class="control-label">End Date</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <input type="checkbox">
+                            </span>
+                            <input type="text" class="form-control" disabled="disabled" >
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div><!-- /input-group -->
+                        </div><!-- /timeline-end -->
+                    </div>
+
+                    <div class="form-group"><label><input type="checkbox" checked="checked" id="all-day"> All Day</label></div>
+
+                    <div class="form-group" id="timeline-time">
+                        <div class="timeline-start">
+                            <label class="control-label">Start Time</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled="disabled" placeholder="00:00">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-sort"></i>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div><!-- /timeline-start -->
+                        <div class="timeline-end">
+                        <label class="control-label">End Time</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" disabled="disabled" placeholder="00:00" >
+                            <span class="input-group-addon">
+                                <i class="fa fa-sort"></i>
+                            </span>
+                        </div><!-- /input-group -->
+                        </div><!-- /timeline-end -->
+                    </div>
+
+<h4>Recurrence</h4>
+
+
+<div id="test" class="btn-group btn-group-justified" data-toggle="buttons">
+  <label class="btn btn-default active">
+    <input type="radio" name="options" id="option1"> Daily
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option2"> Weekly
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option3"> Monthly
+  </label>
+  <label class="btn btn-default">
+    <input type="radio" name="options" id="option4"> Yearly
+  </label>
+</div><!-- /btn-group -->
+ 
+
+<div id="form-option1" class="recurrence">
+
+<div class="col-sm-6">
+    <label>Every</label>
+    <div class="form-group">
+        <div class="input-group">
+            <input class="form-control" type="text" value="1"/>
+            <span class="input-group-addon">Day(s)</span>
+        </div>
+    </div>
+</div>
+<div class="col-sm-6"></div>
+   
+</div><!-- /recurrence -->
+
+<div id="form-option2" class="recurrence">
+    <div class="col-sm-6">
+        <label>Every</label>
+        <div class="form-group">
+            <div class="input-group">
+                <input class="form-control" type="text" value="1"/>
+                <span class="input-group-addon">Week(s)</span>
+            </div>
+        </div>   
+    </div>
+    <div class="col-sm-6">
+        <div id="week-days">
+            <div class="checkbox"><label><input type="checkbox">Monday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Tuesday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Wednesday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Thursday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Friday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Saturday</label></div>
+            <div class="checkbox"><label><input type="checkbox">Sunday</label></div>
+        </div>
+    </div>    
+</div><!-- /recurrence -->
+
+<div id="form-option3" class="recurrence form-inline">
+    <div class="col-sm-12">        
+        <div class="form-group">
+            <label><input type="radio"> Day</label>
+            <input style="width:80px;" class="form-control" type="text" value="1"/>
+            <label>of every</label>
+            <div class="input-group">
+                <input style="width:80px;" class="form-control" type="text" value="1"/>
+                <span class="input-group-addon">Month(s)</span>
+            </div>
+        </div> 
+    </div>
+
+
+
+</div><!-- /recurrence -->
+
+<div id="form-option4" class="recurrence">
+
+</div><!-- /recurrence -->
+
+
+ 
+
+                <button class="btn btn-xs" id="done-timeline">Add</button>
+            </form>
         </section>        
     </div>
 
@@ -221,6 +367,16 @@
     $(this).addClass('hidden');
     });
 
+    $("#add-timeline").click(function () {
+    $("#timeline-form").toggle();
+    $(this).addClass('hidden');
+    });
+
+    $("#done-timeline").click(function () {
+    $("#timeline-form").toggle();
+    $("#add-timeline").removeClass('hidden');
+    });
+
     $("#done-caption").click(function () {
     $(".custom-field-wrapper").toggle();
     $("#add-caption").removeClass('hidden');
@@ -230,11 +386,25 @@
     $("#tags-list").toggle();
     $("#add-tags").removeClass('hidden');
     });
+
+    $('#all-day').change(function () {                
+    $('#timeline-time').toggle(!this.checked);
+    }).change();
+
+    $('#test input[type="radio"]').on('change', function(e)
+    {
+    $('.recurrence').hide();
+    $('#form-' + $(this).attr('id')).toggle();
+    });
+
+    // Initial state
+    $('input[type="radio"]:first').prop('checked', true);
+    $('#form-' + $('input[type="radio"]:checked').attr('id')).toggle();
          
 </script>
 
 
             
         </div>
-</body>
+    </body>
 </html>
