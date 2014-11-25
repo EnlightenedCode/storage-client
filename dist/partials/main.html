@@ -11,10 +11,10 @@
       </div>  
       <div class="global-actions">
         
-        <button class="btn btn-lg btn-primary" type="button" title="{{'storage-client.upload-file' | translate}}" ng-hide="statusDetails.code!==200 || fileListStatus.code===404" ng-click="uploadButtonClick()" ng-disabled="!(filesDetails.localFiles === false && !isTrashFolder())">
+        <button class="btn btn-lg btn-primary" type="button" title="{{'storage-client.upload-file' | translate}}" ng-hide="statusDetails.code!==200 || fileListStatus.code===404" ng-click="uploadButtonClick()" ng-disabled="!shareFolderSvc.access || !(filesDetails.localFiles === false && !isTrashFolder())">
           <i class="fa fa-cloud-upload fa-lg"></i> <span translate="storage-client.upload-file"></span>
         </button>
-        <button class="btn btn-lg btn-default" type="button" title="{{'storage-client.new-folder' | translate}}" ng-hide="statusDetails.code!==200 || fileListStatus.code===404" ng-click="newFolderButtonClick('md')" ng-disabled="isTrashFolder()">
+        <button class="btn btn-lg btn-default" type="button" title="{{'storage-client.new-folder' | translate}}" ng-hide="statusDetails.code!==200 || fileListStatus.code===404" ng-click="newFolderButtonClick('md')" ng-disabled="!shareFolderSvc.access || isTrashFolder()">
           <i class="fa fa-plus fa-lg"></i> <span translate="storage-client.new-folder"></span>
         </button>
       </div>
@@ -37,10 +37,8 @@
 	<div class="bar-wrapper" id="files-toolbar" ng-controller="ButtonsController" ng-hide="fileListStatus.code === 404">
 		<div class="bar">
 			<div class="col-sm-6">
-        <span ng-class="filesDetails.checkedItemsCount > 0 ? 'hidden-xs' : ''">
-    			<span class="ellipsed current-folder current-folder-icon" ng-show="!isTrashFolder()"><i class="fa fa-folder fa-lg"></i> {{fileListStatus.folder}}</span>
-    			<span class="ellipsed current-folder current-folder-icon" ng-show="isTrashFolder()"><i class="fa fa-folder fa-lg"></i> Trash/{{fileListStatus.folder | trashItemFilter}}</span>
-        </span>
+                <button id="currentFolder" class="btn btn-default btn-lg" ng-click="foldersClick('md')" ng-disabled="!shareFolderSvc.access"><i class="fa fa-folder"></i> {{ currentFolder }}</button>
+                <button id="shareFolder" class="btn btn-default btn-lg" ng-click="shareFolderClick('md')" ng-hide="currentFolder === 'Folders' || isTrashFolder()" ng-disabled="!shareFolderSvc.access">Share Folder</button>
 			</div>
 
 			<div class="col-sm-6 text-right">
@@ -52,9 +50,9 @@
         </button>
 				<button type="button" class="btn btn-lg" ng-click="downloadButtonClick()" ng-hide="isTrashFolder() || !(filesDetails.checkedCount > 0 && filesDetails.folderCheckedCount === 0 && filesDetails.localFiles === false)"><i class="fa fa-cloud-download fa-lg"></i></button>
                 <button type="button" class="btn btn-lg" ng-hide="isTrashFolder() || (filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.checkedCount + filesDetails.folderCheckedCount > 1 && filesDetails.localFiles === false)" ng-click="copyUrlButtonClick('lg')"><i class="fa fa-link fa-lg"></i></button>
-				<button type="button" class="btn btn-lg" ng-click="trashButtonClick()" ng-hide="isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i></button>
-        <button type="button" class="btn btn-lg" ng-click="restoreButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i><i class="fa fa-share"></i></button>
-				<button type="button" class="btn btn-lg" ng-click="deleteButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i></button>
+				<button type="button" class="btn btn-lg" ng-click="trashButtonClick()" ng-hide="!shareFolderSvc.access || isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i></button>
+        <button type="button" class="btn btn-lg" ng-click="restoreButtonClick()" ng-hide="!shareFolderSvc.access || !isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i><i class="fa fa-share"></i></button>
+				<button type="button" class="btn btn-lg" ng-click="deleteButtonClick()" ng-hide="!shareFolderSvc.access || !isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i></button>
 			</div>
 		</div>
 	</div>
@@ -141,18 +139,175 @@
             </button>
         </div>
     </form>
-</script>
 <script type="text/ng-template" id="copyUrl.html">
     <form>
         <div class="modal-header">
             <input id="okCopyButton" type="submit" value="x" class="close" ng-click="ok()" ng-hide="true"/>
-            <button type="button" class="close" ng-click="cancel()" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <button type="button" class="close" ng-click="cancel()" aria-hidden="true">×</button>
+            <h5 class="textEllipsis span12 text-center">Link to "{{copyFileName}}"</h5>
+
         </div>
         <div class="modal-body">
-            <h5 class="ellipsed span12 text-left">Link To "{{copyFile.name}}"</h5>
-            <input type="text" class="ellipsed form-control" id="copyUrlInput" autofocus="autofocus">
+            <input type="text" class="form-control textEllipsis" id="copyUrlInput" autofocus="autofocus">
         </div>
         <div class="modal-footer">
         </div>
     </form>
+</script>
+<script type="text/ng-template" id="shareModal.html">
+    <form>
+        <div ng-show="showShareView">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h2 class="modal-title">Share Folder</h2>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger" ng-hide="!loading.forbidden && loading.completed"> {{loading.status }}</div>
+                <div ng-show="!loading.forbidden && loading.completed">
+                    <div class="form-group">
+                        <button class="btn btn-block" ng-class="{'btn-primary': allSelected, 'btn-default': !allSelected}" ng-click="setAllSelected()">Share with all Sub-Companies</button>
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Search Sub-Companies" ng-model="subCompanyQuery">
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item"  ng-class="{active: isSelected(subCompany)}" ng-click="setSelected(subCompany)" ng-repeat="subCompany in subCompanies.items | filter:subCompanyQuery">{{ subCompany.name }}</li>
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"  ng-click="cancel()"> Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="showShareView = false; showEditView = true;" ng-disabled="!allSelected && selectedSubCompanies.length < 1"><i class="fa fa-check"></i> Share</button>
+            </div>
+        </div>
+        <div ng-show="showEditView">
+            <div class="modal-header">
+                <button type="button" class="close"  ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h2 class="modal-title">Sharing Options</h2>
+            </div>
+
+            <div class="modal-body">
+
+                <div style="margin-bottom: 10px" class="bar">
+                    <div class="col-sm-8"><h3>Sharing folder and subfolders with:</h3></div>
+                    <div class="col-sm-2 text-right"><button class="btn btn-primary" ng-click="unlinkSelectedFolders()">Unlink</button></div>
+                    <div class="col-sm-2 text-right"><button class="btn btn-primary" ng-click="showShareView = true; showEditView = false;">Edit</button></div>
+
+                </div>
+
+                <div class="alert alert-success" ng-show="state.deleteStatus"> Removing Shared Folder Links Successful!</div>
+                <ul class="list-group" ng-hide="state.deleteStatus">
+                    <li class="list-group-item" ng-show="allSelected">
+                        <a href="" ng-click="setAllEdit = false" ng-show="setAllEdit" class="pull-right">can edit</a>
+                        <a href="" ng-click="setAllEdit = true" ng-hide="setAllEdit" class="pull-right">view only</a>
+                        All Sub-Companies
+                    </li>
+                </ul>
+                <ul class="list-group" ng-hide="allSelected || state.deleteStatus">
+                    <li class="list-group-item" ng-repeat="subCompany in selectedSubCompanies">
+                        <a href="" ng-show="subCompany.edit" ng-click="subCompany.edit = false;" class="pull-right">can edit</a>
+                        <a href="" ng-hide="subCompany.edit" ng-click="subCompany.edit = true;" class="pull-right">view only</a>
+                        {{ subCompany.name }}
+                    </li>
+                </ul>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="updateShareFolders()">Done</button>
+            </div>
+
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="foldersModal.html">
+    <form>
+        <div>
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h2 class="modal-title">Folders</h2>
+                <div class="modal-body">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav folder-tabs" role="tablist">
+                        <li role="presentation" ng-class="{active: tabIsActive('all')}" ng-click="setActiveTab('all')"><a href="">All</a></li>
+                        <li role="presentation" ng-class="{active: tabIsActive('shared')}" ng-click="setActiveTab('shared')"><a href="">Shared</a></li>
+                        <li role="presentation" ng-class="{active: tabIsActive('sharedWithMe')}" ng-click="setActiveTab('sharedWithMe')"><a href="">Shared with me</a></li>
+                    </ul>
+                    <div class="form-group" ng-show="selectedFolder.sharedFolderReset === ''">
+                        <input class="form-control" placeholder="Search Folders" ng-model="folderQuery">
+                    </div>
+                    <div ng-hide="selectedFolder.sharedFolderReset === ''">
+                        <div><h3>Sharing Folder: {{ selectedFolder.folderName | cleanFolderName }}</h3></div>
+                    </div>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane" ng-class="{active: tabIsActive('all')}" id="home">
+                            <div class="content-box">
+                                <ul class="tree">
+                                    <li><a href="" ng-click="$emit('FolderSelectAction', '')"><i class="fa fa-folder"></i>/</a>
+                                        <div ng-include="'node.html'" ng-init="node=folders">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" ng-class="{active: tabIsActive('shared')}">
+                            <div class="alert alert-danger" ng-show="sharedFolders.code !== 200 || loading.forbidden"> {{loading.status }}</div>
+                            <div class="row"><div class="col-sm-12 text-center"><h4 ng-show="is.noSharedFolders && sharedFolders.code === 200 && !loading.forbidden">There are no shared folders</h4></div></div>
+                            <div ng-show="!loading.forbidden">
+                                <div ng-show="selectedFolder.sharedFolderReset === ''">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="folder in sharedFolders.items | filter:folderQuery">
+                                        <a href="" class="pull-right" ng-click="changeSelectFolder(folder)">Sharing</a>
+                                        {{ folder.folderName | cleanFolderName }}
+                                    </li>
+                                </ul>
+                                </div>
+                                <div ng-hide="selectedFolder.sharedFolderReset === ''">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="shareCompany in selectedFolder.sharedCompanies">
+                                        <a href="" class="pull-right">{{ shareCompany.edit }}</a>
+                                        {{ shareCompany }}
+                                    </li>
+                                </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" ng-class="{active: tabIsActive('sharedWithMe')}">
+                            <div class="alert alert-danger" ng-show=" sharedWithFolders.code !== 200 || loading.forbidden"> {{loading.status }}</div>
+                            <div class="col-sm-12 text-center"><h4 ng-show="is.noSharedWithFolders && sharedWithFolders.code === 200 && !loading.forbidden">There are no folders shared with you</h4></div>
+                            <table id="filesTable" ng-show="!is.noSharedWithFolders && loading.completed && !loading.forbidden" class="table filetable table-hover table-striped" ng-show="statusDetails.code!==202">
+                                <tbody>
+                                <tr ng-repeat="folder in sharedWithFolders.items | filter:folderQuery">
+                                    <td class="col-sm-6 file-name"> <a href="" ng-click="goToFolder(folder)">{{ folder.folderName | cleanFolderName}}</a></td>
+                                    <td class="col-sm-4 text-right"><a href="" popover-trigger="mouseenter" popover="{{ folder.originCompanyName }}">Shared From...</a></td>
+                                    <td class="col-sm-2 text-right"><a href="" ng-click="unlinkFolder(folder, $Index)">Unlink</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-hide="selectedFolder.sharedFolderReset === ''" class="btn btn-default" ng-click="reset()">Back</button>
+                    <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+                </div>
+            </div>
+        </div>
+        <div>
+
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="node.html">
+    <a href="" ng-click="$emit('FolderSelectAction', node)" ng-show="node.name"><i class="fa fa-folder"></i>{{node.name}}</a>
+    <ul>
+        <li ng-repeat="node in node.children | filter:folderQuery"  ng-include="'node.html'"></li>
+    </ul>
 </script>

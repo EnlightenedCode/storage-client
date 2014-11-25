@@ -7,7 +7,7 @@
   </div>
 </div>
 <div ng-controller="FileListCtrl" id="list">
-<div class="alert alert-info alert-dismissable" ng-show="statusDetails.code===202">
+<div class="alert alert-info alert-dismissable" ng-show="sharedFolderSvc.access === 'undefined' || statusDetails.code===202">
   <span translate="storage-client.requesting-file-list"></span>
 </div>
 <div ng-class="{alert:true, 'alert-info':(bucketCreationStatus.code < 300), 'alert-danger':(bucketCreationStatus.code > 299), 'alert-dismissable':true}" ng-show="statusDetails.code===404">
