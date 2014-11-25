@@ -38,9 +38,9 @@ angular.module("medialibrary")
         $modalInstance.dismiss("cancel");
     };
 }])
-.controller("FoldersCtrl", ["$scope","$modalInstance", "folders", "MEDIA_LIBRARY_URL", "$stateParams", "$state", "shareFolderListService"
+.controller("FoldersCtrl", ["$scope","$modalInstance", "folders", "STORAGE_API_URL", "$stateParams", "$state", "shareFolderListService"
 		, function($scope, $modalInstance, folders,
-    MEDIA_LIBRARY_URL, $stateParams, $state, shareFolderListSvc){
+               STORAGE_API_URL, $stateParams, $state, shareFolderListSvc){
 
 		$scope.loading = shareFolderListSvc.loading;
 		$scope.selectedFolder = shareFolderListSvc.state;
