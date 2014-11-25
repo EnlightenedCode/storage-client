@@ -11,10 +11,10 @@
       </div>  
       <div class="global-actions">
         
-        <button class="btn btn-lg btn-primary" type="button" title="{{'storage-client.upload-file' | translate}}" ng-click="uploadButtonClick()" ng-disabled="!(filesDetails.localFiles === false && !isTrashFolder())">
+        <button class="btn btn-lg btn-primary" type="button" title="{{'storage-client.upload-file' | translate}}" ng-hide="statusDetails.code!==200 || fileListStatus.code===404" ng-click="uploadButtonClick()" ng-disabled="!(filesDetails.localFiles === false && !isTrashFolder())">
           <i class="fa fa-cloud-upload fa-lg"></i> <span translate="storage-client.upload-file"></span>
         </button>
-        <button class="btn btn-lg btn-default" type="button" title="{{'storage-client.new-folder' | translate}}" ng-click="newFolderButtonClick('md')" ng-disabled="isTrashFolder()">
+        <button class="btn btn-lg btn-default" type="button" title="{{'storage-client.new-folder' | translate}}" ng-hide="statusDetails.code!==200 || fileListStatus.code===404" ng-click="newFolderButtonClick('md')" ng-disabled="isTrashFolder()">
           <i class="fa fa-plus fa-lg"></i> <span translate="storage-client.new-folder"></span>
         </button>
       </div>
