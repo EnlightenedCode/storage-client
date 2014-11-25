@@ -6,10 +6,10 @@ angular.module("medialibrary")
 .controller("FileListCtrl",
 ["$scope", "$stateParams", "$modal", "$log", "$location", "FileListService","shareFolderListService",
 "OAuthAuthorizationService", "GAPIRequestService", "OAuthStatusService",
-"$window","STORAGE_API_URL", "$state", "$translate",
+"$window","STORAGE_API_URL", "$state", "$translate", "$q",
 function ($scope, $stateParams, $modal, $log, $location, listSvc, shareFolderListSvc,
 OAuthAuthorizationService, requestSvc, OAuthStatusService,
-$window, STORAGE_API_URL, $state, $translate) {
+$window, STORAGE_API_URL, $state, $translate, $q) {
   var bucketName = "risemedialibrary-" + $stateParams.companyId;
   var bucketUrl = STORAGE_API_URL + bucketName + "/";
   var trashLabel;

@@ -227,7 +227,7 @@ angular.module("medialibrary")
 }])
 .controller("ButtonsController",
 ["$scope", "$stateParams", "$window","$modal", "$log", "$timeout", "$filter", "FileListService", "shareFolderListService",
-"GAPIRequestService", "MEDIA_LIBRARY_URL", "DownloadService", "$q", "$translate", "$state",
+"GAPIRequestService", "STORAGE_API_URL", "DownloadService", "$q", "$translate", "$state",
 function ($scope, $stateParams, $window, $modal, $log, $timeout, $filter, listSvc, shareFolderListSvc, requestSvc,
           STORAGE_API_URL, downloadSvc, $q, $translate, $state) {
   $scope.currentDecodedFolder = $stateParams.folderPath ?
