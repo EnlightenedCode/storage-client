@@ -178,7 +178,7 @@ function ($scope, $stateParams, $window, $modal, $log, $timeout, $filter, listSv
       });
   };
 
-  $scope.confirmDeleteFilesAction = function(size) {
+  $scope.confirmDeleteFilesAction = function() {
       $scope.shouldBeOpen = true;
       var selectedFileNames = getSelectedFiles().map(function(file) {
           return file.name;

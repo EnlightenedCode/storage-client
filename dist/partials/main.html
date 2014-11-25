@@ -11,16 +11,16 @@
       </div>  
       <div class="global-actions">
         
-        <button class="btn btn-lg btn-primary" type="button" title="{{'storage-client.upload-file' | translate}}" ng-click="uploadButtonClick()" ng-disabled="!(filesDetails.localFiles === false && !isTrashFolder())">
+        <button class="btn btn-lg btn-primary" type="button" title="{{'storage-client.upload-file' | translate}}" ng-hide="statusDetails.code!==200 || fileListStatus.code===404" ng-click="uploadButtonClick()" ng-disabled="!(filesDetails.localFiles === false && !isTrashFolder())">
           <i class="fa fa-cloud-upload fa-lg"></i> <span translate="storage-client.upload-file"></span>
         </button>
-        <button class="btn btn-lg btn-default" type="button" title="{{'storage-client.new-folder' | translate}}" ng-click="newFolderButtonClick('md')" ng-disabled="isTrashFolder()">
+        <button class="btn btn-lg btn-default" type="button" title="{{'storage-client.new-folder' | translate}}" ng-hide="statusDetails.code!==200 || fileListStatus.code===404" ng-click="newFolderButtonClick('md')" ng-disabled="isTrashFolder()">
           <i class="fa fa-plus fa-lg"></i> <span translate="storage-client.new-folder"></span>
         </button>
       </div>
     </div>
   </div>
-  
+
   <div>
     <div class="row row-no-padding">
       <div class="col-lg-12">
@@ -33,7 +33,7 @@
       </div>
     </div>
   </div>
-	
+
 	<div class="bar-wrapper" id="files-toolbar" ng-controller="ButtonsController" ng-hide="fileListStatus.code === 404">
 		<div class="bar">
 			<div class="col-sm-6">
@@ -51,6 +51,7 @@
           <span translate="common.select"></span> <i class="fa fa-check fa-white icon-right"></i>
         </button>
 				<button type="button" class="btn btn-lg" ng-click="downloadButtonClick()" ng-hide="isTrashFolder() || !(filesDetails.checkedCount > 0 && filesDetails.folderCheckedCount === 0 && filesDetails.localFiles === false)"><i class="fa fa-cloud-download fa-lg"></i></button>
+                <button type="button" class="btn btn-lg" ng-hide="isTrashFolder() || (filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.checkedCount + filesDetails.folderCheckedCount > 1 && filesDetails.localFiles === false)" ng-click="copyUrlButtonClick('lg')"><i class="fa fa-link fa-lg"></i></button>
 				<button type="button" class="btn btn-lg" ng-click="trashButtonClick()" ng-hide="isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i></button>
         <button type="button" class="btn btn-lg" ng-click="restoreButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i><i class="fa fa-share"></i></button>
 				<button type="button" class="btn btn-lg" ng-click="deleteButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i></button>
@@ -97,7 +98,6 @@
     </form>
   </div>
 </div>
-
 <div ui-view></div>
 <script type="text/ng-template" id="deleteModal.html">
     <form id="deleteForm">
@@ -139,6 +139,20 @@
             <button class="btn btn-default btn-fixed-width" ng-click="cancel()">
               <span translate="common.cancel"></span> <i class="fa fa-white fa-times icon-right"></i>
             </button>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="copyUrl.html">
+    <form>
+        <div class="modal-header">
+            <input id="okCopyButton" type="submit" value="x" class="close" ng-click="ok()" ng-hide="true"/>
+            <button type="button" class="close" ng-click="cancel()" aria-hidden="true"><i class="fa fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <h5 class="ellipsed span12 text-left">Link To "{{copyFile.name}}"</h5>
+            <input type="text" class="ellipsed form-control" id="copyUrlInput" autofocus="autofocus">
+        </div>
+        <div class="modal-footer">
         </div>
     </form>
 </script>

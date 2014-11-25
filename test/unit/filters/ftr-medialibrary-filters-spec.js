@@ -166,12 +166,12 @@ describe("Filters: lastModifiedFilter", function() {
     expect(filter(date1)).to.equal(date1obj.toLocaleDateString());
 
     // Not run if month changes, because filter uses new Date() internally
-    if(new Date().getMonth() == date2obj.getMonth()) {
+    if(new Date().getMonth() === date2obj.getMonth()) {
       expect(filter(date2)).to.equal(monthNames[date2obj.getMonth()] + " " + date2obj.getDate());
     }
 
     // Not run if day changes, because filter uses new Date() internally
-    if(new Date().getDate() == date3obj.getDate()) {
+    if(new Date().getDate() === date3obj.getDate()) {
       expect(filter(date3).indexOf(":")).to.be.above(-1);
     }
   }));
