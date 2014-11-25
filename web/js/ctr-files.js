@@ -206,5 +206,13 @@ $window, STORAGE_API_URL, $state, $translate) {
       gadgets.rpc.call("", "rscmd_saveSettings", null, data);
     }
   });
+  function afterRefresh(){
+    var promises = [];
+
+    promises.push(listSvc.refreshFilesList());
+    promises.push(shareFolderListSvc.refreshFoldersList());
+
+    return $q.all(promises);
+  }
 
 }]);
