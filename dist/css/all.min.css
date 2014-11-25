@@ -2138,6 +2138,7 @@ ul.social li.email a{background-position:-96px 0}
 .btn-primary{background:#4AB767;border-color:#4AB767}
 .btn-primary .fa::before,.btn-primary .glyphicons::before{color:#fff}
 .btn-primary:active,.btn-primary:hover,.btn-primary[disabled]{background:#3b9351;border-color:#3b9351}
+.btn-success .btn-sign-in,.btn-success .fa:before,.btn-success .modal-dialog .sign-in,.btn-success .modal-dialog .sign-in:hover,.modal-dialog .btn-success .sign-in,.modal-dialog .btn-success .sign-in:hover{color:#fff}
 .btn-sign-in:hover,.btn-success:hover,.modal-dialog .sign-in:hover{background:#45b864;border-color:#45b864}
 .btn-github,.btn-rv-help{font-weight:700;background-color:#f4f4f4}
 .btn-github:active,.btn-github:hover,.btn-rv-help:active,.btn-rv-help:hover{border-color:#d4d4d4;background-color:#f4f4f4;color:#444;-webkit-box-shadow:none;box-shadow:none}
@@ -2440,22 +2441,22 @@ ul.tree ul li:last-child:before{background:#fff;height:auto;top:15px;bottom:0}
 .label-tag a:hover{color:#fff}
 .label-tag span{font-weight:400;margin-right:5px}
 .tag-settings{background:#FFF}
-.tag-settings h3{font-size:16px}
 .tag-settings .active-tags{margin:15px 0 10px}
-.tag-settings .active-tags .label-tag{background:#5cbe75}
+.tag-settings .active-tags .label-tag{background:#4AB767}
 .tag-settings .label-tag{margin:0 0 5px}
+.tag-settings .bg-warning{padding:5px;margin-top:5px;display:block;border-radius:3px}
 .tag-settings .btn-add{color:#666;padding:0}
 .tag-settings .btn-add .fa:before{color:#4AB767}
 .tag-settings .button-wrapper{margin-top:5px}
 .tag-settings .hidden-form{margin-top:10px}
 .tag-settings .content-box{overflow:hidden;margin-bottom:5px}
 .tag-settings .content-box .scrollable-content{margin-top:5px;padding:0 5px}
-.tag-settings .content-box .search-bar input{border:none;border-bottom:1px solid #e6e6e6;border-radius:0;margin-bottom:5px;background:#f2f2f2}
+.tag-settings .content-box .search-bar input{border:none;border-bottom:1px solid #d4d4d4;border-radius:0;margin-bottom:5px}
 .tag-settings .content-box section{padding:10px;border-bottom:1px solid #e6e6e6}
 .tag-settings .content-box section:last-child{border-bottom:none}
-.btn-group-xs>.tag-settings .content-box .btn,.tag-settings .content-box .btn-group-xs>.btn,.tag-settings .content-box .btn-xs,.tag-settings .content-box .sign-in,.tag-settings .content-box .top-auth-button{margin-left:5px}
-.tag-settings .input-short{max-width:42px}
-@media (max-width:768px){.tag-settings .form-inline .input-group .input-short,.tag-settings .form-inline .input-group .navbar-form{max-width:none}}
+.tag-settings .content-box .tags-filter{display:block;margin-left:5px;font-weight:700;color:#444}
+.tag-settings .input-short{max-width:40px}
+@media (max-width:768px){.tag-settings .form-inline>*{display:inline-block}}
 .tag-settings .hidden-option{display:none}
 .tag-settings .hidden-form label{font-weight:400}
 .tag-settings .weekdays-group label{display:block}
