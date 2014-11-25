@@ -179,7 +179,21 @@
             <i class="fa fa-search"></i>
             <input type="text" placeholder="Search Tags" class="form-control">
         </div><!-- left-inner-addon -->
-        <a class="tags-filter" href="#">Show All <i class="fa fa-caret-down"></i></a>
+
+        <!-- Extra small button group -->
+<div class="btn-group">
+  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+    Show All Tags <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li class="active"><a href="#">All</a></li>
+    <li><a href="#">Brands</a></li>
+    <li><a href="#">Regions</a></li>
+    <li><a href="#">Video</a></li>
+    <li><a href="#">Image</a></li>
+  </ul>
+</div>
+
         <div class="scrollable-content">
             <div class="label label-tag">
                 <span>brand:</span>levis <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
@@ -190,7 +204,7 @@
         </div>        
     </div><!-- content-box -->
     <div class="button-wrapper text-right">
-            <button class="btn btn-sm btn-success">Save <i class="fa fa-check"></i></button>
+            <button class="btn btn-sm btn-primary">Save <i class="fa fa-check"></i></button>
             <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
         </div>
     </div><!-- hidden-div -->
@@ -207,7 +221,7 @@
     <div class="hidden-div">
         <input type="text" class="form-control" placeholder="Enter Property Code">
         <div class="button-wrapper text-right">
-            <button class="btn btn-sm btn-success">Save <i class="fa fa-check"></i></button>
+            <button class="btn btn-sm btn-primary">Save <i class="fa fa-check"></i></button>
             <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
         </div>
     </div>
@@ -245,7 +259,7 @@
                         </div> 
                     </div>
                     <div class="col-sm-12">
-                    <label class="control-label bg-warning"><input type="checkbox"> Move file to Trash after end date</label>
+                    <label class="control-label bg-warning"><input type="checkbox"> Move file to Trash after End Date</label>
                     </div>
                 </div><!-- row -->
             </section>
@@ -254,16 +268,18 @@
                 <div class="row row-no-padding hidden-form">
                     <div class="col-sm-6">
                         <label class="control-label">Start Time</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="HH:MM">
-                            <span class="input-group-addon"><i class="fa fa-sort"></i></span>
-                        </div>    
+                        <div class="time-form">
+                            <button class="btn btn-default">12 <i class="fa fa-sort"></i></button><span> :</span>
+                            <button class="btn btn-default">00 <i class="fa fa-sort"></i></button>
+                            <button class="btn btn-default">AM <i class="fa fa-sort"></i></button>
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <label class="control-label">End Time</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="HH:MM">
-                            <span class="input-group-addon"><i class="fa fa-sort"></i></span>
+                        <div class="time-form">
+                            <button class="btn btn-default">12 <i class="fa fa-sort"></i></button><span> :</span>
+                            <button class="btn btn-default">00 <i class="fa fa-sort"></i></button>
+                            <button class="btn btn-default">PM <i class="fa fa-sort"></i></button>
                         </div> 
                     </div>
                 </div><!-- row -->
@@ -331,13 +347,13 @@
 </div>
 <div id="form-option3" class="hidden-option">
     <div class="form-group form-inline">
-        <label class="control-label"><input type="radio" checked> Day</label>
+        <label class="control-label"><input type="radio"> Day</label>
         <input type="text" class="form-control input-short input-sm" value="1">
         <label class="control-label">of Every</label>
         <input type="text" class="form-control input-short input-sm" value="1">
         <label class="control-label">Month(s)</label>
     </div>
-    <div class="form-group form-inline" style="opacity:0.7">
+    <div class="form-group form-inline">
         <label class="control-label"><input type="radio"> The</label>
         <button class="btn btn-default btn-sm">First <i class="fa fa-sort"></i></button>
         <button class="btn btn-default btn-sm">Sunday <i class="fa fa-sort"></i></button>
@@ -348,11 +364,11 @@
 </div>
 <div id="form-option4" class="hidden-option">
     <div class="form-group form-inline">
-        <label class="control-label"><input type="radio" checked> Every</label>
+        <label class="control-label"><input type="radio"> Every</label>
         <button class="btn btn-default btn-sm">January <i class="fa fa-sort"></i></button>
         <input type="text" class="form-control input-sm input-short" value="1">
     </div>
-    <div class="form-group form-inline" style="opacity:0.7">
+    <div class="form-group form-inline">
         <label class="control-label"><input type="radio"> The</label>
         <button class="btn btn-default btn-sm">First <i class="fa fa-sort"></i></button>
         <button class="btn btn-default btn-sm">Sunday <i class="fa fa-sort"></i></button>
@@ -368,7 +384,7 @@
         </div>
 
         <div class="button-wrapper text-right">
-            <button class="btn btn-sm btn-success">Save <i class="fa fa-check"></i></button>
+            <button class="btn btn-sm btn-primary">Save <i class="fa fa-check"></i></button>
             <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
         </div>
         
@@ -388,7 +404,7 @@ $('.hidden-form').hide();
 
 $(".btn-add").click(function () {
     $(this).addClass('hidden');
-    $(this).next('div').show();
+    $(this).next('div').fadeIn("fast");;
 });
 
 $('.toggle-div').change(function(){
@@ -401,7 +417,6 @@ $('.toggle-div').change(function(){
 });
 
 
-
 $('#recurrence-options input[type="radio"]').on('change', function(e)
                                   {
                                       $('.hidden-option').hide();
@@ -411,7 +426,6 @@ $('#recurrence-options input[type="radio"]').on('change', function(e)
 // Initial state
 $('input[type="radio"]:first').prop('checked', true);
 $('#form-' + $('input[type="radio"]:checked').attr('id')).toggle();
-
 
 </script>
 
