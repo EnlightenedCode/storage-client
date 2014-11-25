@@ -2132,8 +2132,10 @@ ul.social li.in a{background-position:-48px 0}
 ul.social li.gplus a{background-position:-72px 0}
 ul.social li.email a{background-position:-96px 0}
 @media (min-width:768px){.copyright{text-align:right}}
-.btn-default,.btn-github,.btn-rv-help{background:#d4d4d4}
-.btn-primary .fa:before,.btn-success .btn-primary,.btn-success .btn-sign-in,.btn-success .fa:before,.btn-success .modal-dialog .sign-in,.btn-success .modal-dialog .sign-in:hover,.modal-dialog .btn-success .sign-in,.modal-dialog .btn-success .sign-in:hover{color:#fff}
+.btn-default,.btn-github,.btn-rv-help{background:#e6e6e6}
+.btn-primary .fa:before{color:#fff}
+.btn-primary:hover{background:#5cbe75!important}
+.btn-success .btn-primary,.btn-success .btn-sign-in,.btn-success .fa:before,.btn-success .modal-dialog .sign-in,.btn-success .modal-dialog .sign-in:hover,.modal-dialog .btn-success .sign-in,.modal-dialog .btn-success .sign-in:hover{color:#fff}
 .btn-primary:hover,.btn-sign-in:hover,.btn-success:hover,.modal-dialog .sign-in:hover{background:#45b864;border-color:#45b864}
 .btn-github,.btn-rv-help{font-weight:700;background-color:#f4f4f4}
 .btn-github:active,.btn-github:hover,.btn-rv-help:active,.btn-rv-help:hover{border-color:#d4d4d4;background-color:#f4f4f4;color:#444;-webkit-box-shadow:none;box-shadow:none}

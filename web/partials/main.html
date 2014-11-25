@@ -52,7 +52,7 @@
         </button>
 				<button type="button" class="btn btn-lg" ng-click="downloadButtonClick()" ng-hide="isTrashFolder() || !(filesDetails.checkedCount > 0 && filesDetails.folderCheckedCount === 0 && filesDetails.localFiles === false)"><i class="fa fa-cloud-download fa-lg"></i></button>
 
-        <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#tagModal"><i class="fa fa-tag fa-lg"></i></button>
+        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#tagModal"><i class="fa fa-tag fa-lg"></i></button>
 
 				<button type="button" class="btn btn-lg" ng-click="trashButtonClick()" ng-hide="isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i></button>
         <button type="button" class="btn btn-lg" ng-click="restoreButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-lg"></i><i class="fa fa-share"></i></button>
@@ -287,17 +287,19 @@
             <section>
                 <label class="control-label"><input type="checkbox" class="toggle-div"> Duration</label>
                 <div class="hidden-form">
-                    <div class="form-group">
-                    <label class="control-label"><input type="radio"> Play Until Done</label>
-                    </div>
+                    
 
                     <div class="form-group form-inline">
                     <label class="control-label"><input type="radio"> Seconds</label>
                     
                     
-                        <input type="text" class="form-control input-sm input-short" placeholder="00" disabled>
+                        <input type="text" class="form-control input-sm" style="width:60px" placeholder="00" value="60">
                    
                     <label class="control-label"><input type="checkbox"> Carry On</label>
+                    </div>
+
+                    <div class="form-group">
+                    <label class="control-label"><input type="radio"> Play Until Done</label>
                     </div>
 
                 </div>
