@@ -13,19 +13,397 @@
     <script src="script/main.min.js"></script>
   <script type="text/javascript" src="//s3.amazonaws.com/rise-common-test/scripts/bootstrap/bootstrap.min.js"></script>
   <script type="text/javascript" src="//apis.google.com/js/client.js?onload=handleClientJSLoad"></script>
+
+    <script type="text/javascript" src="/components/roughdraft.js/jquery.roughdraft.js"></script>
+  
 </head>
 <body class="storage-modal">
+
+<script>
+      $(function(){
+        $(window).roughDraft();
+      });
+    </script>
+
   <div class="container">
     
   <div class="app-header">
     <div class="title-block">
       <h1>Storage</h1>
+      <div class="store-status"><h3><i class="fa fa-info-circle"></i> Store Status |</h3></div>
     </div>
     <div class="global-actions">
       <button class="btn btn-primary btn-lg"><i class="fa fa-cloud-upload"></i> Upload File</button>
-      <button class="btn btn-default btn-lg"><i class="fa fa-cloud-upload"></i> New Folder</button>
+      <button class="btn btn-default btn-lg"><i class="fa fa-plus"></i> New Folder</button>
     </div>
   </div><!-- app-header -->
+
+    <div class="row row-no-padding">
+      <div class="col-lg-12">
+        <div class="form-group search-bar left-inner-addon">
+          <i class="fa fa-search"></i>
+          <input type="text" class="form-control" placeholder="Search for a File or Folder">
+          <span class="input-group-btn">
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bar-wrapper ng-scope" id="files-toolbar" ng-controller="ButtonsController" ng-hide="fileListStatus.code === 404">
+    <div class="bar">
+      <div class="col-sm-6">
+        <span ng-class="filesDetails.checkedItemsCount > 0 ? 'hidden-xs' : ''">
+          <span class="ellipsed current-folder current-folder-icon ng-binding" ng-show="!isTrashFolder()"><i class="fa fa-folder fa-lg"></i> /</span>
+          <span class="ellipsed current-folder current-folder-icon ng-binding ng-hide" ng-show="isTrashFolder()"><i class="fa fa-folder fa-lg"></i> Trash//</span>
+        </span>
+      </div>
+
+      <div class="col-sm-6 text-right">
+        <span>
+          <span style="margin-right:10px">1 Selected</span>
+        </span>
+
+
+        <div class="btn-group">
+  <button class="btn btn-link" type="button" title="Download" disabled>
+    <i class="fa fa-cloud-download fa-2x"></i>
+  </button>
+  <button class="btn btn-link" type="button" title="New Folder" data-toggle="modal" data-target="#tagModal">
+    <i class="fa fa-tag fa-2x"></i>
+  </button>
+  <button class="btn btn-link" type="button" title="Delete" disabled>
+    <i class="fa fa-trash-o fa-2x"></i>
+  </button>
+</div>
+        
+
+
+      </div>
+    </div>
+  </div>
+
+
+<div class="table-responsive">
+ <table class="table table-hover filetable">
+   <thead>
+     <tr>
+      <th class="check-col"><a href="#"><input type="checkbox"></a></th>
+      <th><a href="#">Name</a></th>
+      <th class="type-col text-right hidden-xs"><a href="#">Type</a></th>
+      <th class="filesize-col text-right hidden-xs"><a href="#">Size</a></th>
+      <th class="datemod-col text-right hidden-xs"><a href="#">Modified</a></th>
+     </tr>
+   </thead>
+   <tbody>
+     <tr data-draft-repeat="10">
+       <td class="check-col"><input type="checkbox"></td>
+       <td class="file-name">
+        <a href="#"><i class="fa fa-file"></i> File Name</a>
+       </td>
+       <td class="type-col text-right hidden-xs">
+         Document
+       </td>
+       <td class="filesize-col text-right hidden-xs">
+        <span data-draft-number="3"></span> KB  
+       </td>
+       <td class="datemod-col text-right hidden-xs" data-draft-date="D/M/Y"></td>
+     </tr>
+   </tbody>
+ </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="myModalLabel">Tags</h2>
+      </div>
+      <div class="modal-body" style="padding: 0 15px">
+
+
+<div class="tag-settings">
+
+    <h3>Lookup Tags</h3>
+    <div class="active-tags">
+        <div class="label label-tag" data-draft-repeat="10" style="margin: 0 2px 5px">
+            <span>brand:</span><span style="font-weight:bold; text-transform:lowercase" data-draft-text="1/w"></span> <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+        </div>
+    </div><!-- active-tags -->
+    
+    <button class="btn btn-link btn-add">
+        <i class="fa fa-plus"></i> Add Tags
+    </button>
+
+    <div class="hidden-div">
+    <div class="content-box">
+        <div class="search-bar left-inner-addon">
+            <i class="fa fa-search"></i>
+            <input type="text" placeholder="Search Tags" class="form-control">
+        </div><!-- left-inner-addon -->
+
+        <!-- Extra small button group -->
+<div class="btn-group">
+  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+    Show All Tags <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li class="active"><a href="#">All</a></li>
+    <li><a href="#">Brands</a></li>
+    <li><a href="#">Regions</a></li>
+    <li><a href="#">Video</a></li>
+    <li><a href="#">Image</a></li>
+  </ul>
+</div>
+
+        <div class="scrollable-content">
+            <div class="label label-tag">
+                <span>brand:</span>levis <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div class="label label-tag">
+                <span>brand:</span>levis <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>     
+        </div>        
+    </div><!-- content-box -->
+    <div class="button-wrapper text-right">
+            <button class="btn btn-sm btn-primary">Save <i class="fa fa-check"></i></button>
+            <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
+        </div>
+    </div><!-- hidden-div -->
+
+    <h3>Freeform Tags</h3>
+    <div class="active-tags">
+        <div class="label label-tag">
+            <span>caption:</span>lorem ipsum dolor sit <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+        </div>
+    </div><!-- active-tags -->
+    <button class="btn btn-link btn-add">
+        <i class="fa fa-plus"></i> Add Property Code
+    </button>
+    <div class="hidden-div">
+        <input type="text" class="form-control" placeholder="Enter Property Code">
+        <div class="button-wrapper text-right">
+            <button class="btn btn-sm btn-primary">Save <i class="fa fa-check"></i></button>
+            <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
+        </div>
+    </div>
+
+    <h3>Timeline Tags</h3>
+    
+
+    <button class="btn btn-link btn-add">
+        <i class="fa fa-plus"></i> Add Timeline
+    </button>
+    <div class="hidden-div">
+
+        <div class="active-tags">
+        <div class="label label-tag">
+            (Daily (Every 1 day(s))) <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+        </div>
+    </div><!-- active-tags -->
+
+        <div class="content-box">
+            <section>
+                <label class="control-label"><input class="toggle-div" type="checkbox" checked> Every Day</label>
+                <div class="row row-no-padding hidden-form">
+                    <div class="col-sm-6">
+                        <label class="control-label">Start Date</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="DD-MMM-YYYY">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>    
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="control-label">End Date</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="DD-MMM-YYYY">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div> 
+                    </div>
+                    <div class="col-sm-12">
+                    <label class="control-label bg-warning"><input type="checkbox"> Move file to Trash after End Date</label>
+                    </div>
+                </div><!-- row -->
+            </section>
+            <section>
+                <label class="control-label"><input type="checkbox" class="toggle-div" checked> All Day</label>
+                <div class="row row-no-padding hidden-form">
+                    <div class="col-sm-6">
+                        <label class="control-label">Start Time</label>
+                        <div class="time-form">
+                            <button class="btn btn-default">12 <i class="fa fa-sort"></i></button><span> :</span>
+                            <button class="btn btn-default">00 <i class="fa fa-sort"></i></button>
+                            <button class="btn btn-default">AM <i class="fa fa-sort"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="control-label">End Time</label>
+                        <div class="time-form">
+                            <button class="btn btn-default">12 <i class="fa fa-sort"></i></button><span> :</span>
+                            <button class="btn btn-default">00 <i class="fa fa-sort"></i></button>
+                            <button class="btn btn-default">PM <i class="fa fa-sort"></i></button>
+                        </div> 
+                    </div>
+                </div><!-- row -->
+            </section>
+            <section>
+                <label class="control-label">Duration</label>
+                <div>
+                    
+
+                    <div class="form-group form-inline">
+                    <label class="control-label"><input type="radio"> Seconds</label>
+                    
+                    
+                        <input type="text" class="form-control input-sm" style="width:60px" placeholder="00" value="00">
+                   
+                    <label class="control-label"><input type="checkbox"> Carry On</label>
+                    </div>
+
+                    <div class="form-group">
+                    <label class="control-label"><input type="radio"> Play Until Done</label>
+                    </div>
+
+                </div>
+            </section>
+            <section>
+                <label class="control-label"><input type="checkbox" class="toggle-div"> Recurrence</label>
+                <div class="hidden-form">
+
+<div class="form-group" id="recurrence-options">
+  <label>
+    <input type="radio" name="options" id="option1" checked="checked"> Daily
+  </label>
+  <label>
+    <input type="radio" name="options" id="option2"> Weekly
+  </label>
+  <label>
+    <input type="radio" name="options" id="option3"> Monthly
+  </label>
+  <label>
+    <input type="radio" name="options" id="option4"> Yearly
+  </label>
+</div>
+ 
+
+<div id="form-option1" class="hidden-option">
+    <div class="form-group form-inline">
+        <label class="control-label">Every</label>
+        <input type="text" class="form-control input-short input-sm" value="1">
+        <label class="control-label">Day(s)</label>
+    </div>    
+</div>
+<div id="form-option2" class="hidden-option">
+    <div class="form-group form-inline">
+        <label class="control-label">Every</label>
+        <input type="text" class="form-control input-short input-sm" value="1">
+        <label class="control-label">Week(s)</label>
+    </div>
+    <div class="form-group weekdays-group">
+        <label class="control-label"><input type="checkbox"> Monday</label>
+        <label class="control-label"><input type="checkbox"> Tuesday</label>
+        <label class="control-label"><input type="checkbox"> Wednesday</label>
+        <label class="control-label"><input type="checkbox"> Thursday</label>
+        <label class="control-label"><input type="checkbox"> Friday</label>
+        <label class="control-label"><input type="checkbox"> Saturday</label>
+        <label class="control-label"><input type="checkbox"> Sunday</label>
+    </div>   
+</div>
+<div id="form-option3" class="hidden-option">
+    <div class="form-group form-inline">
+        <label class="control-label"><input type="radio"> Day</label>
+        <input type="text" class="form-control input-short input-sm" value="1">
+        <label class="control-label">of Every</label>
+        <input type="text" class="form-control input-short input-sm" value="1">
+        <label class="control-label">Month(s)</label>
+    </div>
+    <div class="form-group form-inline">
+        <label class="control-label"><input type="radio"> The</label>
+        <button class="btn btn-default btn-sm">First <i class="fa fa-sort"></i></button>
+        <button class="btn btn-default btn-sm">Sunday <i class="fa fa-sort"></i></button>
+        <label class="control-label">of Every</label>
+        <input type="text" class="form-control input-short input-sm" value="1">
+        <label class="control-label">Month(s)</label>
+    </div>   
+</div>
+<div id="form-option4" class="hidden-option">
+    <div class="form-group form-inline">
+        <label class="control-label"><input type="radio"> Every</label>
+        <button class="btn btn-default btn-sm">January <i class="fa fa-sort"></i></button>
+        <input type="text" class="form-control input-sm input-short" value="1">
+    </div>
+    <div class="form-group form-inline">
+        <label class="control-label"><input type="radio"> The</label>
+        <button class="btn btn-default btn-sm">First <i class="fa fa-sort"></i></button>
+        <button class="btn btn-default btn-sm">Sunday <i class="fa fa-sort"></i></button>
+        <label class="control-label">of</label>
+        <button class="btn btn-default btn-sm">January <i class="fa fa-sort"></i></button>
+    </div>    
+</div>
+
+
+                    
+                </div>
+            </section>
+        </div>
+
+        <div class="button-wrapper text-right">
+            <button class="btn btn-sm btn-primary">Save <i class="fa fa-check"></i></button>
+            <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
+        </div>
+        
+    </div>
+
+    
+</div><!-- Content Inventory -->
+
+<script type="text/javascript">
+
+$(".remove-tag").click(function () {
+    $(this).parent('div').fadeOut("fast");
+});
+
+$('.hidden-div').hide();
+$('.hidden-form').hide();
+
+$(".btn-add").click(function () {
+    $(this).addClass('hidden');
+    $(this).next('div').fadeIn("fast");;
+});
+
+$('.toggle-div').change(function(){
+  var div = $(this).parent().next();
+    if(div.is(":visible")) {
+        div.hide();
+    } else {
+        div.fadeIn(450);
+    };                   
+});
+
+
+$('#recurrence-options input[type="radio"]').on('change', function(e)
+                                  {
+                                      $('.hidden-option').hide();
+                                      $('#form-' + $(this).attr('id')).toggle();
+                                  });
+
+// Initial state
+$('input[type="radio"]:first').prop('checked', true);
+$('#form-' + $('input[type="radio"]:checked').attr('id')).toggle();
+
+</script>
+
+
+      </div>
+      <div class="modal-footer">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
   </div>
 </body>

@@ -2433,13 +2433,11 @@ ul.tree ul li:last-child:before{background:#fff;height:auto;top:15px;bottom:0}
 .storage-modal .thumbnail:nth-child(6n+1){clear:left;padding-left:0}}
 .storage-modal .current-folder{line-height:43px}
 .storage-modal .form-group{margin-bottom:10px}
-.label-tag{background:#8c8c8c;font-size:14px;display:inline-block}
-.label-tag a .fa:before{margin-left:5px;color:#fff}
-.label-tag a:hover{color:#fff}
-.label-tag span{font-weight:400;margin-right:5px}
+.label-tag{background:#f2f2f2;font-size:14px;display:inline-block;color:#555;border:1px solid #d4d4d4}
+.label-tag a .fa:before{margin-left:5px}
+.label-tag span{margin-right:5px;color:#555;font-weight:400}
 .tag-settings{background:#FFF}
 .tag-settings .active-tags{margin:15px 0 10px}
-.tag-settings .active-tags .label-tag{background:#4AB767}
 .tag-settings .label-tag{margin:0 0 5px}
 .tag-settings .bg-warning{padding:5px;margin-top:5px;display:block;border-radius:3px}
 .tag-settings .btn-add{color:#666;padding:0}

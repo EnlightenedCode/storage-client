@@ -19,5 +19,8 @@
     "angular": ">=1",
     "jquery": "~1.11.1",
     "angular-mocks": "~1.2.24"
+  },
+  "devDependencies": {
+    "roughdraft.js": "~0.1.5"
   }
 }
