@@ -2433,23 +2433,21 @@ ul.tree ul li:last-child:before{background:#fff;height:auto;top:15px;bottom:0}
 .storage-modal .thumbnail:nth-child(6n+1){clear:left;padding-left:0}}
 .storage-modal .current-folder{line-height:43px}
 .storage-modal .form-group{margin-bottom:10px}
-.input-group .btn,.input-group .sign-in,.input-group .top-auth-button{height:34px}
 .tag-selector{padding:5px;margin-bottom:10px}
 .tag-selector .input-group{margin-bottom:5px}
-.search-options .dropdown-menu{width:500px;padding:10px 10px 0}
-.search-options .dropdown-menu .form-group label{font-weight:400}
+.search-options .dropdown-menu.filter-menu{width:500px;padding:10px 10px 0}
+.search-options .dropdown-menu.filter-menu .form-group label{font-weight:400}
+.btn-group-xs>.search-options .btn,.search-options .btn-group-xs>.btn,.search-options .btn-xs,.search-options .sign-in,.search-options .top-auth-button{margin-bottom:5px}
 .label-tag{background:#f2f2f2;font-size:14px;display:inline-block;color:#555;border:1px solid #f2f2f2}
-.label-tag:hover{background:#d4d4d4;border-color:#bcbcbc}
 .label-tag a{color:#666}
 .label-tag a .fa:before{margin-left:5px}
 .label-tag span{margin-right:5px;color:#555;font-weight:400}
-.btn-selection{border-color:#d4d4d4;background:#e6e6e6;vertical-align:top}
+.btn-add{color:#666;padding:0}
+.btn-add .fa:before{color:#4AB767}
 .tag-settings{background:#FFF}
 .tag-settings .active-tags{margin:15px 0 10px}
 .tag-settings .label-tag{margin:0 0 5px}
 .tag-settings .bg-warning{padding:5px;margin-top:5px;display:block;border-radius:3px}
-.tag-settings .btn-add{color:#666;padding:0}
-.tag-settings .btn-add .fa:before{color:#4AB767}
 .tag-settings .button-wrapper{margin-top:5px}
 .tag-settings .hidden-form{margin-top:10px}
 .tag-settings .content-box{margin-bottom:5px}
