@@ -57,34 +57,32 @@
 
 
 <div id="lookup-filter" style="margin-bottom:10px">
+
             <label class="control-label">Filter by Tag</label>
-            <div class="form-group" id="select-tag">
-            <div class="label label-tag"><span>brand:</span>tag <i class="fa fa-minus-circle"></i></div>
-
-            </div>
-
-
-            <button class="btn btn-link btn-add" id="show-tag-filter">
+            <button class="btn btn-link btn-add hidden" id="show-tag-filter">
         <i class="fa fa-pencil"></i>
     </button>
 
 
-            <div class="content-box tag-selector hidden-div">
+
+            
+
+
+            <div class="content-box tag-selector" style="height:200px;">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                <input type="text" class="form-control input-sm" placeholder="Search Tags">
+                  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                  <input type="text" class="form-control input-sm" placeholder="Search Tags">
                 </div>
 
-
                 <div class="scrollable-content">
-                    <div class="label label-tag" id="selected-tag"><a href="#"><span>brand:</span>levis</a>  <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a></div>
-                    <div class="label label-tag"><span>brand:</span>gap  <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a></div>
-                    <div class="label label-tag"><span>brand:</span>express  <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a></div>
+                    <div class="label label-tag" id="selected-tag"><a href="#"><span>brand:</span>levis</a> <i class="fa fa-plus-circle"></i></div>
+                    <div class="label label-tag"><span>brand:</span>express  <i class="fa fa-plus-circle"></i></div>
                 </div><!-- scrollable-content -->
             </div>
+
 </div><!-- lookup-filter -->
 
-<div id="timeline-filter">
+<div id="timeline-filter" style="margin-top:20px">
             <label class="control-label">Filter by Timeline</label>
 
             <div class="form-group">
@@ -242,9 +240,15 @@
 
 <div id="lookup">
 
-    <h3>Lookup</h3>
+    <h3>Lookup
 
-    <div class="active-tags">
+    <button class="btn btn-link btn-add" id="btn-add-tags">
+        <i class="fa fa-pencil"></i>
+    </button>
+
+    </h3>
+
+    <div class="active-tags content-box" style="height:100px; padding:5px;">
 
    <button class="btn btn-link btn-remove pull-right" id="remove-all-tags">
         <i class="fa fa-trash-o"></i> Clear All
@@ -260,7 +264,7 @@
      
     </div><!-- active-tags -->
 
-     <div class="editable-tags hidden">
+     <div class="editable-tags hidden content-box" style="height:100px; padding:5px;">
         <div class="label label-tag">
             <span>brand:</span>levis <i class="fa fa-minus-circle"></i>
         </div>
@@ -275,9 +279,7 @@
         <i class="fa fa-plus"></i> Add Tags
     </button>
     
-    <button class="btn btn-link btn-add" id="btn-add-tags">
-        <i class="fa fa-pencil"></i>
-    </button>
+    
 
     <div class="hidden-div">
 </br>
@@ -327,8 +329,12 @@
 </div>
 <div id="freeform">
 
-    <h3>Freeform</h3>
-    <div class="active-tags">
+    <h3>Freeform
+    <button class="btn btn-link btn-add" id="btn-freeform-add">
+        <i class="fa fa-pencil"></i>
+    </button></h3>
+
+    <div class="active-tags content-box" style="height:100px; padding:5px;">
 
    <button class="btn btn-link btn-remove pull-right">
         <i class="fa fa-trash-o"></i> Clear All
@@ -338,9 +344,8 @@
             <span>caption:</span>lorem ipsum dolor sit
         </div>
     </div><!-- active-tags -->
-    <button class="btn btn-link btn-add" id="btn-freeform-add">
-        <i class="fa fa-pencil"></i>
-    </button>
+
+
     <div class="hidden-div">
         <input type="text" class="form-control" placeholder="Enter Property Code" value="Caption text here lorem ipsum"></br>
          <input type="text" class="form-control" placeholder="Enter Property Code"></br>
@@ -358,7 +363,15 @@
 </div>
 <div id="timeline">
 
-    <h3>Timeline</h3>
+    <h3>Timeline
+
+
+
+    <button class="btn btn-link btn-add" id="add-timeline">
+        <i class="fa fa-pencil"></i>
+    </button>
+
+    </h3>
     
         <div class="active-tags">
 
@@ -377,11 +390,7 @@
         </div>
     </div><!-- active-tags -->
 
-    
 
-    <button class="btn btn-link btn-add" id="add-timeline">
-        <i class="fa fa-pencil"></i>
-    </button>
     <div class="hidden-div">
 
         <div class="active-tags">
@@ -861,14 +870,14 @@ $('#btn-add-new').hide();
 $("#btn-freeform-add").click(function () {
     $(this).addClass('hidden');
     $("#lookup,#timeline,.active-tags").addClass('hidden');
-    $(this).next('div').fadeIn("fast");
+    $("#freeform .hidden-div").fadeIn("fast");
 });
 
 $("#btn-add-tags").click(function () {
     $(this).addClass('hidden');
     $("#freeform,#timeline,.active-tags").addClass('hidden');
     $(".editable-tags").removeClass('hidden');
-    $(this).next('div').fadeIn("fast");
+    $("#lookup .hidden-div").fadeIn("fast");
 });
 
 $("#remove-all-tags").click(function () {
@@ -878,17 +887,16 @@ $("#remove-all-tags").click(function () {
 });
 
 
-
 $("#show-tag-filter").click(function () {
     $(this).addClass('hidden');
-    $(this).next('div').fadeIn("fast");
+    $("#lookup-filter .hidden-div").fadeIn("fast");
 });
 
 $("#add-timeline").click(function () {
     $(this).addClass('hidden');
     $(".editable-tags").removeClass('hidden');
     $("#freeform,#lookup,.active-tags").addClass('hidden');
-    $(this).next('div').fadeIn("fast");
+    $("#timeline .hidden-div").fadeIn("fast");
 });
 
 $(".btn-open").click(function () {
