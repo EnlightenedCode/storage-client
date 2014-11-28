@@ -2448,6 +2448,8 @@ ul.tree ul li:last-child:before{background:#fff;height:auto;top:15px;bottom:0}
 .btn-remove .fa:before{color:#666}
 .tag-settings{background:#FFF}
 .tag-settings .active-tags{margin:15px 0 10px}
+.tag-settings .active-tags.content-box{padding:5px 5px 0;max-height:150px;cursor:pointer;min-height:100px}
+.tag-settings .active-tags.content-box:hover{background:#fcfcfc}
 .tag-settings .label-tag{margin:0 0 5px}
 .tag-settings .bg-warning{padding:5px;margin-top:5px;display:block;border-radius:3px}
 .tag-settings .button-wrapper{margin-top:5px}

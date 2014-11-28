@@ -38,6 +38,45 @@
     </div>
   </div><!-- app-header -->
 
+ <div class="row row-no-padding hidden">
+      <div class="col-lg-12">
+        <div class="form-group search-bar left-inner-addon">
+            <i class="fa fa-search"></i>
+          <input type="text" class="form-control ng-pristine ng-valid" placeholder="Search for a File or Folder" ng-model="query">
+          <span class="input-group-btn">
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bar-wrapper hidden" id="files-toolbar">
+        <div class="bar">
+            <div class="col-sm-6">
+            <span class="ellipsed current-folder current-folder-icon ng-binding"><i class="fa fa-folder fa-lg"></i> / Really long folder name here</span>
+
+            
+            </div>
+
+            <div class="col-sm-6 text-right hidden-xs">
+        <!-- ngIf: storageModal -->
+                <button type="button" class="btn btn-lg" ng-show="!isTrashFolder()" ng-click="downloadButtonClick()" ng-disabled="!(filesDetails.checkedCount > 0 &amp;&amp; filesDetails.folderCheckedCount === 0 &amp;&amp; filesDetails.localFiles === false)" disabled="disabled"><i class="fa fa-cloud-download fa-lg"></i></button>
+                <button type="button" class="btn btn-lg" ng-show="!isTrashFolder()" ng-click="trashButtonClick()" ng-disabled="filesDetails.checkedCount < 1 &amp;&amp; filesDetails.folderCheckedCount < 1" disabled="disabled"><i class="fa fa-trash-o fa-lg"></i></button>
+        
+            </div>
+        </div>
+    </div>
+
+
+
+            
+            <div class="table-responsive">
+       
+            </div>
+
+            <!-- Modal -->
+
+
     <div class="row row-no-padding">
       <div class="col-lg-12">
         
@@ -58,9 +97,9 @@
 
 <div id="lookup-filter" style="margin-bottom:10px">
 
-            <label class="control-label">Filter by Tag</label>
+            <label class="control-label">Filter by Lookup</label>
             <button class="btn btn-link btn-add hidden" id="show-tag-filter">
-        <i class="fa fa-pencil"></i>
+        <i class="fa fa-pencil"></i> Edit
     </button>
 
 
@@ -73,7 +112,7 @@
             <div class="content-box tag-selector" style="height:150px;margin-top:5px">
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                  <input type="text" class="form-control input-sm" placeholder="Search Tags">
+                  <input type="text" class="form-control input-sm" placeholder="Search Lookup Tags">
                 </div>
 
                 <div class="scrollable-content">
@@ -248,12 +287,12 @@
     <h3>Lookup
 
     <button class="btn btn-link btn-add" id="btn-add-tags">
-        <i class="fa fa-pencil"></i>
+        <i class="fa fa-pencil"></i> Edit
     </button>
 
     </h3>
 
-    <div class="active-tags content-box" style="height:100px; padding:5px;">
+    <div class="active-tags content-box">
 
  
 
@@ -290,7 +329,7 @@
     <div class="content-box">
         <div class="search-bar left-inner-addon">
             <i class="fa fa-search"></i>
-            <input type="text" placeholder="Search Tags" class="form-control">
+            <input type="text" placeholder="Search Lookup Tags" class="form-control">
         </div><!-- left-inner-addon -->
 
 
@@ -320,6 +359,54 @@
             <div class="label label-tag">
                 <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
             </div>   
+            <div class="label label-tag">
+                <span>brand:</span>levis <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>        
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>        
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>        
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>
         </div>        
     </div><!-- content-box -->
     <div class="button-wrapper text-right">
@@ -338,10 +425,10 @@
 
     <h3>Freeform
     <button class="btn btn-link btn-add" id="btn-freeform-add">
-        <i class="fa fa-pencil"></i>
+        <i class="fa fa-pencil"></i> Edit
     </button></h3>
 
-    <div class="active-tags content-box" style="height:100px; padding:5px;">
+    <div class="active-tags content-box" >
 
 
 
@@ -375,12 +462,12 @@
 
 
     <button class="btn btn-link btn-add" id="add-timeline">
-        <i class="fa fa-pencil"></i>
+        <i class="fa fa-pencil"></i> Edit
     </button>
 
     </h3>
     
-        <div class="active-tags">
+        <div class="active-tags content-box" >
 
     
 
@@ -391,7 +478,7 @@
 
       <div class="editable-tags hidden">
         <div class="label label-tag" style="line-height:22px; white-space:normal; text-align:left">
-            Start 02-Jan-2014 End 21-Jan-2014 Trash 8:00:00AM to 05:30:00PM 60 Seconds Carry On 1 Weekly (Sun,Sat) <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+            Start 02-Jan-2014 End 21-Jan-2014 Trash 8:00:00AM to 05:30:00PM 60 Seconds Carry On 1 Weekly (Sun,Sat)
         </div>
     </div><!-- active-tags -->
 
@@ -876,13 +963,13 @@ $('.hidden-div').hide();
 $('.hidden-form').hide();
 $('#btn-add-new').hide();
 
-$("#btn-freeform-add").click(function () {
+$("#btn-freeform-add, #freeform .active-tags").click(function () {
     $(this).addClass('hidden');
     $("#lookup,#timeline,.active-tags").addClass('hidden');
     $("#freeform .hidden-div").fadeIn("fast");
 });
 
-$("#btn-add-tags").click(function () {
+$("#btn-add-tags, #lookup .active-tags").click(function () {
     $(this).addClass('hidden');
     $("#freeform,#timeline,.active-tags").addClass('hidden');
     $(".editable-tags").removeClass('hidden');
@@ -901,7 +988,7 @@ $("#show-tag-filter").click(function () {
     $("#lookup-filter .hidden-div").fadeIn("fast");
 });
 
-$("#add-timeline").click(function () {
+$("#add-timeline, #timeline .active-tags").click(function () {
     $(this).addClass('hidden');
     $(".editable-tags").removeClass('hidden');
     $("#freeform,#lookup,.active-tags").addClass('hidden');
