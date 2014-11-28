@@ -2444,6 +2444,8 @@ ul.tree ul li:last-child:before{background:#fff;height:auto;top:15px;bottom:0}
 .label-tag span{margin-right:5px;color:#555;font-weight:400}
 .btn-add{color:#666;padding:0}
 .btn-add .fa:before{color:#4AB767}
+.btn-remove{color:#666;padding:0}
+.btn-remove .fa:before{color:#666}
 .tag-settings{background:#FFF}
 .tag-settings .active-tags{margin:15px 0 10px}
 .tag-settings .label-tag{margin:0 0 5px}

@@ -98,15 +98,18 @@
             <i class="fa fa-times"></i>
         </button>
 
+
+<div id="lookup-filter" style="margin-bottom:10px">
             <label class="control-label">Filter by Tag</label>
             <div class="form-group" id="select-tag">
             <div class="label label-tag"><span>brand:</span>tag <i class="fa fa-minus-circle"></i></div>
 
-                <button class="btn btn-link btn-add">
-        <i class="fa fa-plus"></i> Add Tags
-    </button>
-
             </div>
+
+
+            <button class="btn btn-link btn-add" id="show-tag-filter">
+        <i class="fa fa-pencil"></i>
+    </button>
 
 
             <div class="content-box tag-selector hidden-div">
@@ -115,19 +118,6 @@
                 <input type="text" class="form-control input-sm" placeholder="Search Tags">
                 </div>
 
-                        <!-- Extra small button group -->
-<div class="btn-group">
-  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-    Show All Tags <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu">
-    <li class="active"><a href="#">All</a></li>
-    <li><a href="#">Brands</a></li>
-    <li><a href="#">Regions</a></li>
-    <li><a href="#">Video</a></li>
-    <li><a href="#">Image</a></li>
-  </ul>
-</div>
 
                 <div class="scrollable-content">
                     <div class="label label-tag" id="selected-tag"><a href="#"><span>brand:</span>levis</a>  <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a></div>
@@ -135,9 +125,11 @@
                     <div class="label label-tag"><span>brand:</span>express  <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a></div>
                 </div><!-- scrollable-content -->
             </div>
+</div><!-- lookup-filter -->
 
-
+<div id="timeline-filter">
             <label class="control-label">Filter by Timeline</label>
+
             <div class="form-group">
 
 
@@ -158,13 +150,15 @@
                     </div>
 
                 </div><!-- row -->
- <div class="button-wrapper text-right" style="margin-top:10px">
-            <button class="btn btn-sm btn-primary">Save <i class="fa fa-check"></i></button>
-            <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
-        </div>
+
 
             </div>
+</div><!-- timeline-filter -->
 
+ <div class="button-wrapper text-right" style="margin-top:10px; margin-bottom:10px;">
+            <button class="btn btn-sm btn-primary">Apply <i class="fa fa-check"></i></button>
+            <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
+        </div>
 
 
         </div><!-- /dropdown-menu --> 
@@ -289,51 +283,77 @@
 
 <div class="tag-settings">
 
-    <h3>Lookup Tags</h3>
+<div id="lookup">
+
+    <h3>Lookup</h3>
+
     <div class="active-tags">
+
+   <button class="btn btn-link btn-remove pull-right">
+        <i class="fa fa-trash-o"></i> Clear All
+    </button>
+
         <div class="label label-tag">
-            <span>brand:</span> levis <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+            <span>brand:</span>levis 
         </div>
         <div class="label label-tag">
-            <span>brand:</span> gap <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+            <span>brand:</span>gap 
+        </div>
+
+     
+    </div><!-- active-tags -->
+
+     <div class="editable-tags hidden">
+        <div class="label label-tag">
+            <span>brand:</span>levis <i class="fa fa-minus-circle"></i>
         </div>
         <div class="label label-tag">
-            <span>brand:</span> express <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+            <span>brand:</span>gap <i class="fa fa-minus-circle"></i>
         </div>
+
+     
     </div><!-- active-tags -->
     
-    <button class="btn btn-link btn-add">
-        <i class="fa fa-plus"></i> Add Tags
+    <button class="btn btn-link btn-add" id="btn-add-tags">
+        <i class="fa fa-pencil"></i>
     </button>
 
     <div class="hidden-div">
+</br>
+    <label>Add Tags</label>
     <div class="content-box">
         <div class="search-bar left-inner-addon">
             <i class="fa fa-search"></i>
             <input type="text" placeholder="Search Tags" class="form-control">
         </div><!-- left-inner-addon -->
 
-        <!-- Extra small button group -->
-<div class="btn-group">
-  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-    Show All Tags <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu">
-    <li class="active"><a href="#">All</a></li>
-    <li><a href="#">Brands</a></li>
-    <li><a href="#">Regions</a></li>
-    <li><a href="#">Video</a></li>
-    <li><a href="#">Image</a></li>
-  </ul>
-</div>
+
 
         <div class="scrollable-content">
             <div class="label label-tag">
                 <span>brand:</span>levis <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
             </div>
             <div class="label label-tag">
-                <span>brand:</span>levis <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
-            </div>     
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>        
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
+            <div class="label label-tag">
+                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+            </div>   
         </div>        
     </div><!-- content-box -->
     <div class="button-wrapper text-right">
@@ -342,28 +362,64 @@
         </div>
     </div><!-- hidden-div -->
 
-    <h3>Freeform Tags</h3>
+
+</div>
+<div id="freeform">
+
+    <h3>Freeform</h3>
     <div class="active-tags">
+
+   <button class="btn btn-link btn-remove pull-right">
+        <i class="fa fa-trash-o"></i> Clear All
+    </button>
+
         <div class="label label-tag">
-            <span>caption:</span>lorem ipsum dolor sit <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+            <span>caption:</span>lorem ipsum dolor sit
         </div>
     </div><!-- active-tags -->
-    <button class="btn btn-link btn-add">
-        <i class="fa fa-plus"></i> Add Property Code
+    <button class="btn btn-link btn-add" id="btn-freeform-add">
+        <i class="fa fa-pencil"></i>
     </button>
     <div class="hidden-div">
-        <input type="text" class="form-control" placeholder="Enter Property Code">
+        <input type="text" class="form-control" placeholder="Enter Property Code" value="Caption text here lorem ipsum"></br>
+         <input type="text" class="form-control" placeholder="Enter Property Code"></br>
+          <input type="text" class="form-control" placeholder="Enter Property Code"></br>
+           <input type="text" class="form-control" placeholder="Enter Property Code"></br>
+            <input type="text" class="form-control" placeholder="Enter Property Code"></br>
+             <input type="text" class="form-control" placeholder="Enter Property Code"></br>
+
         <div class="button-wrapper text-right">
             <button class="btn btn-sm btn-primary">Save <i class="fa fa-check"></i></button>
             <button class="btn btn-sm btn-default btn-close">Cancel <i class="fa fa-times"></i></button>
         </div>
     </div>
 
-    <h3>Timeline Tags</h3>
+</div>
+<div id="timeline">
+
+    <h3>Timeline</h3>
+    
+        <div class="active-tags">
+
+        <button class="btn btn-link btn-remove pull-right">
+        <i class="fa fa-trash-o"></i> Clear All
+    </button>
+
+        <div class="label label-tag">
+            Daily (Every 1 day(s)) <a href="#" class="remove-tag"></a>
+        </div>
+    </div><!-- active-tags -->
+
+      <div class="editable-tags hidden">
+        <div class="label label-tag">
+            Daily (Every 1 day(s)) <a href="#" class="remove-tag"> <i class="fa fa-minus-circle"></i></a>
+        </div>
+    </div><!-- active-tags -->
+
     
 
-    <button class="btn btn-link btn-add">
-        <i class="fa fa-plus"></i> Add Timeline
+    <button class="btn btn-link btn-add" id="add-timeline">
+        <i class="fa fa-pencil"></i>
     </button>
     <div class="hidden-div">
 
@@ -827,6 +883,7 @@
         
     </div>
 
+</div>
     
 </div><!-- Content Inventory -->
 
@@ -839,8 +896,28 @@ $(".remove-tag").click(function () {
 $('.hidden-div').hide();
 $('.hidden-form').hide();
 
-$(".btn-add").click(function () {
+$("#btn-freeform-add").click(function () {
     $(this).addClass('hidden');
+    $("#lookup,#timeline,.active-tags").addClass('hidden');
+    $(this).next('div').fadeIn("fast");
+});
+
+$("#btn-add-tags").click(function () {
+    $(this).addClass('hidden');
+    $("#freeform,#timeline,.active-tags").addClass('hidden');
+    $(".editable-tags").removeClass('hidden');
+    $(this).next('div').fadeIn("fast");
+});
+
+$("#show-tag-filter").click(function () {
+    $(this).addClass('hidden');
+    $(this).next('div').fadeIn("fast");
+});
+
+$("#add-timeline").click(function () {
+    $(this).addClass('hidden');
+    $(".editable-tags").removeClass('hidden');
+    $("#freeform,#lookup,.active-tags").addClass('hidden');
     $(this).next('div').fadeIn("fast");
 });
 
