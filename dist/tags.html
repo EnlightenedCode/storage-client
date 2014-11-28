@@ -246,7 +246,7 @@
 
     <div class="active-tags">
 
-   <button class="btn btn-link btn-remove pull-right">
+   <button class="btn btn-link btn-remove pull-right" id="remove-all-tags">
         <i class="fa fa-trash-o"></i> Clear All
     </button>
 
@@ -270,6 +270,10 @@
 
      
     </div><!-- active-tags -->
+
+    <button class="btn btn-link btn-add" id="btn-add-new">
+        <i class="fa fa-plus"></i> Add Tags
+    </button>
     
     <button class="btn btn-link btn-add" id="btn-add-tags">
         <i class="fa fa-pencil"></i>
@@ -852,6 +856,7 @@ $(".remove-tag").click(function () {
 
 $('.hidden-div').hide();
 $('.hidden-form').hide();
+$('#btn-add-new').hide();
 
 $("#btn-freeform-add").click(function () {
     $(this).addClass('hidden');
@@ -865,6 +870,14 @@ $("#btn-add-tags").click(function () {
     $(".editable-tags").removeClass('hidden');
     $(this).next('div').fadeIn("fast");
 });
+
+$("#remove-all-tags").click(function () {
+    $('#btn-add-new').show();
+    $(this).addClass('hidden');
+    $("#lookup .active-tags,#btn-add-tags").addClass('hidden');
+});
+
+
 
 $("#show-tag-filter").click(function () {
     $(this).addClass('hidden');
