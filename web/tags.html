@@ -107,11 +107,13 @@
     </button>
 
 
-
+<div class="content-box" style="padding:5px;">
+<div class="label label-tag" id="selected-tag"><a href="#"><span>brand:</span>gap</a> <i class="fa fa-minus-circle"></i></div>
+</div>
             
 
 
-            <div class="content-box tag-selector" style="height:200px;">
+            <div class="content-box tag-selector" style="height:150px;margin-top:5px">
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-search"></i></span>
                   <input type="text" class="form-control input-sm" placeholder="Search Tags">
@@ -283,6 +285,9 @@
 
 <div id="lookup">
 
+  <button class="btn btn-link btn-remove pull-right" id="remove-all-tags">
+        <i class="fa fa-trash-o"></i> Clear All
+    </button>
     <h3>Lookup
 
     <button class="btn btn-link btn-add" id="btn-add-tags">
@@ -293,9 +298,7 @@
 
     <div class="active-tags content-box" style="height:100px; padding:5px;">
 
-   <button class="btn btn-link btn-remove pull-right" id="remove-all-tags">
-        <i class="fa fa-trash-o"></i> Clear All
-    </button>
+ 
 
         <div class="label label-tag">
             <span>brand:</span>levis 
@@ -372,6 +375,10 @@
 </div>
 <div id="freeform">
 
+   <button class="btn btn-link btn-remove pull-right">
+        <i class="fa fa-trash-o"></i> Clear All
+    </button>
+
     <h3>Freeform
     <button class="btn btn-link btn-add" id="btn-freeform-add">
         <i class="fa fa-pencil"></i>
@@ -379,9 +386,7 @@
 
     <div class="active-tags content-box" style="height:100px; padding:5px;">
 
-   <button class="btn btn-link btn-remove pull-right">
-        <i class="fa fa-trash-o"></i> Clear All
-    </button>
+
 
         <div class="label label-tag">
             <span>caption:</span>lorem ipsum dolor sit
@@ -405,7 +410,9 @@
 
 </div>
 <div id="timeline">
-
+    <button class="btn btn-link btn-remove pull-right">
+        <i class="fa fa-trash-o"></i> Clear All
+    </button>
     <h3>Timeline
 
 
@@ -418,18 +425,16 @@
     
         <div class="active-tags">
 
-        <button class="btn btn-link btn-remove pull-right">
-        <i class="fa fa-trash-o"></i> Clear All
-    </button>
+    
 
-        <div class="label label-tag">
-            Daily (Every 1 day(s)) <a href="#" class="remove-tag"></a>
+        <div class="label label-tag" style="line-height:22px; white-space:normal; text-align:left">
+            Start 02-Jan-2014 End 21-Jan-2014 Trash 8:00:00AM to 05:30:00PM 60 Seconds Carry On 1 Weekly (Sun,Sat) <a href="#" class="remove-tag"></a>
         </div>
     </div><!-- active-tags -->
 
       <div class="editable-tags hidden">
-        <div class="label label-tag">
-            Daily (Every 1 day(s)) <a href="#" class="remove-tag"> <i class="fa fa-minus-circle"></i></a>
+        <div class="label label-tag" style="line-height:22px; white-space:normal; text-align:left">
+            Start 02-Jan-2014 End 21-Jan-2014 Trash 8:00:00AM to 05:30:00PM 60 Seconds Carry On 1 Weekly (Sun,Sat) <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
         </div>
     </div><!-- active-tags -->
 
@@ -437,8 +442,8 @@
     <div class="hidden-div">
 
         <div class="active-tags">
-        <div class="label label-tag">
-            (Daily (Every 1 day(s))) <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
+        <div class="label label-tag" style="line-height:22px; white-space:normal; text-align:left">
+            Start 02-Jan-2014 End 21-Jan-2014 Trash 8:00:00AM to 05:30:00PM 60 Seconds Carry On 1 Weekly (Sun,Sat) <a href="#" class="remove-tag"><i class="fa fa-minus-circle"></i></a>
         </div>
     </div><!-- active-tags -->
 
@@ -799,11 +804,15 @@
                     
                          <input type="text" class="form-control" value="60" style="width:70px;">
                    
-                    <label class="control-label"><input type="checkbox"> Carry On</label>
+                    
                     </div>
 
                     <div class="form-group">
                     <label class="control-label"><input type="radio"> Play Until Done</label>
+                    </div>
+
+                    <div class="form-group">
+                       <label class="control-label"><input type="checkbox"> Carry On</label>
                     </div>
 
                 </div>
