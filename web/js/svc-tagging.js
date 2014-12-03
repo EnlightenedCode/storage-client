@@ -1,23 +1,10 @@
 "use strict";
 angular.module("tagging", [])
-.controller("TaggingCtrl", ["$scope","$modalInstance", "tagGroups", function($scope, $modalInstance, tagGroups) {
-
-  $scope.tagGroups = tagGroups;
-
-  $scope.ok = function() {
-    $modalInstance.close();
-  };
-  $scope.cancel = function() {
-    $modalInstance.dismiss("cancel");
-  };
-}
-])
 .service("TaggingService", ["$modal", "$log",function($modal, $log){
     var svc = {};
     svc.taggingButtonClick = function(items, command){
-      var tagGroups = {};
       if(command === "union" || command === "copy"){
-        tagGroups = unionTagGroups(items);
+        svc.tagGroups = unionTagGroups(items);
       }
 
       svc.modalInstance = $modal.open({
@@ -25,7 +12,7 @@ angular.module("tagging", [])
         controller: "TaggingCtrl",
         resolve: {
           tagGroups: function () {
-            return tagGroups;
+            return svc.tagGroups;
           }
         }
       });
@@ -67,8 +54,8 @@ angular.module("tagging", [])
               var addFreeform = {};
               addFreeform.name = items[i].tags[x].name;
               addFreeform.value = items[i].tags[x].value;
-              if(uniqueFreeformValues.length < 1 || uniqueFreeformValues.lastIndexOf(addFreeform.name + addFreeform.value) === -1){
-                uniqueFreeformValues.push(addFreeform.name + addFreeform.value);
+              if(uniqueFreeformValues.length < 1 || uniqueFreeformValues.lastIndexOf(addFreeform.name) === -1){
+                uniqueFreeformValues.push(addFreeform.name);
                 freeformTags.push(addFreeform);
               }
             }
@@ -80,6 +67,5 @@ angular.module("tagging", [])
       tagGroups.freeformTags = freeformTags;
       return tagGroups;
     }
-
   }]);
 

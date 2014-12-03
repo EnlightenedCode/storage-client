@@ -173,6 +173,11 @@ casper.test.begin("Connecting to " + url, function suite(test) {
     // Waits for the popup to show
     casper.waitUntilVisible(".modal-dialog", function() {
       casper.test.assert(true, "tagging modal displayed");
+      casper.echo("Checking Lookup Tags Edit Screen and back button.");
+      this.click("button[ng-click='editLookup()']");
+      casper.test.assertVisible("div[title='Edit Lookup Tag View']");
+      this.click("button[ng-click='resetView()']");
+      casper.test.assertVisible("div[title='Main Tag View']");
       this.click("button[ng-click='cancel()']");
     });
     // Waits for the popup to disappear
@@ -182,7 +187,7 @@ casper.test.begin("Connecting to " + url, function suite(test) {
 
     // Clicks the Tagging icon, test if Modal becomes visible for file
     casper.then(function() {
-      this.click("a[ng-click='taggingButtonClick()']");
+      this.click("a[title='Tag File']");
       casper.test.assert(true, "tagging icon clicked for file");
     });
     // Waits for the popup to show
@@ -247,7 +252,7 @@ casper.test.begin("Connecting to " + url, function suite(test) {
 
         // Clicks the Tagging icon, test if Modal becomes visible for file
         casper.then(function() {
-          this.click("a[ng-click='taggingButtonClick()']");
+          this.click("a[title='Tag File']");
           casper.test.assert(true, "tagging icon clicked for file");
         });
         // Waits for the popup to show

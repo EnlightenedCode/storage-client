@@ -55,7 +55,7 @@
             <span translate="common.select"></span> <i class="fa fa-check fa-white icon-right"></i>
           </button>
   				<button type="button" class="btn btn-link" title="Download" ng-click="downloadButtonClick()" ng-hide="isTrashFolder() || !(filesDetails.checkedCount > 0 && filesDetails.folderCheckedCount === 0) || filesDetails.localFiles === true"><i class="fa fa-cloud-download fa-2x"></i></button>
-                <button type="button" class="btn btn-link" title="Tagging" ng-click="taggingButtonClick()" ng-hide="isTrashFolder() || filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.localFiles === true"><i class="fa fa-tag fa-2x"></i></button>
+                <button type="button" class="btn btn-link" title="Tagging" ng-click="taggingButtonClick()" ng-hide="isTrashFolder() || filesDetails.checkedCount + filesDetails.folderCheckedCount === 0"><i class="fa fa-tag fa-2x"></i></button>
                 <button type="button" class="btn btn-link" title="Copy Url" ng-hide="isTrashFolder() || (filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.checkedCount + filesDetails.folderCheckedCount > 1) || filesDetails.localFiles === true" ng-click="copyUrlButtonClick('lg')"><i class="fa fa-link fa-2x"></i></button>
   				<button type="button" class="btn btn-link" title="Move To Trash" ng-click="trashButtonClick()" ng-hide="isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1) || filesDetails.localFiles === true"><i class="fa fa-trash-o fa-2x"></i></button>
           <button type="button" class="btn btn-link" title="Restore From Trash" ng-click="restoreButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-2x"></i><i class="fa fa-share"></i></button>
@@ -197,64 +197,165 @@
 </script>
 <script type="text/ng-template" id="Tagging.html">
     <form>
-        <div class="modal-header">
-            <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">
-                <i class="fa fa-times"></i>
-            </button>
-            <h2 class="modal-title">{{'storage-client.tagging' | translate}}</h2>
-        </div>
-        <div class="modal-body">
-            <div class="tag-settings">
-                <div id="lookup">
-                    <button class="btn btn-link btn-remove pull-right" id="remove-all-tags">
-                        <i class="fa fa-trash-o"></i> Clear All
-                    </button>
-                    <h3>Lookup
-                        <button class="btn btn-link btn-add" id="btn-add-tags">
-                            <i class="fa fa-pencil"></i> Edit
+        <div class="tag-settings">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">
+                    <i class="fa fa-times"></i>
+                </button>
+                <h2 class="modal-title">{{'storage-client.tagging' | translate}}</h2>
+            </div>
+            <div class="modal-body" title="Main Tag View" ng-show="showMainTagView">
+                <div class="tag-settings">
+                    <div id="lookup">
+                        <button class="btn btn-link btn-remove pull-right" id="remove-all-tags">
+                            <i class="fa fa-trash-o"></i> Clear All
                         </button>
-                    </h3>
-                    <div class="active-tags content-box">
-                        <div class="label label-tag">
-                            <span>brand:</span>levis
-                        </div>
-                        <div class="label label-tag">
-                            <span>brand:</span>gap
-                        </div>
-                    </div><!-- active-tags -->
-                </div>
-                <div id="freeform">
-                    <button class="btn btn-link btn-remove pull-right">
-                        <i class="fa fa-trash-o"></i> Clear All
-                    </button>
-                    <h3>Freeform
-                        <button class="btn btn-link btn-add" id="btn-freeform-add">
-                            <i class="fa fa-pencil"></i> Edit
-                        </button></h3>
-                    <div class="active-tags content-box" >
-                        <div class="label label-tag">
-                            <span>caption:</span>lorem ipsum dolor sit
-                        </div>
-                    </div><!-- active-tags -->
-                </div>
-                <div id="timeline">
-                    <button class="btn btn-link btn-remove pull-right">
-                        <i class="fa fa-trash-o"></i> Clear All
-                    </button>
-                    <h3>Timeline
-                        <button class="btn btn-link btn-add" id="add-timeline">
-                            <i class="fa fa-pencil"></i> Edit
+                        <h3>Lookup
+                            <button class="btn btn-link btn-add" id="btn-add-tags" ng-click="editLookup()">
+                                <i class="fa fa-pencil"></i> Edit
+                            </button>
+                        </h3>
+                        <div class="active-tags content-box">
+                            <div class="label label-tag" ng-repeat="lookup in tagGroups.lookupTags">
+                                <span>{{ lookup.name }}:</span> {{ lookup.value }}
+                            </div>
+                        </div><!-- active-tags -->
+                    </div>
+                    <div id="freeform">
+                        <button class="btn btn-link btn-remove pull-right">
+                            <i class="fa fa-trash-o"></i> Clear All
                         </button>
-                    </h3>
-                    <div class="active-tags content-box" >
-                        <div class="label label-tag" style="line-height:22px; white-space:normal; text-align:left">
-                            Start 02-Jan-2014 End 21-Jan-2014 Trash 8:00:00AM to 05:30:00PM 60 Seconds Carry On 1 Weekly (Sun,Sat) <a href="#" class="remove-tag"></a>
-                        </div>
-                    </div><!-- active-tags -->
+                        <h3>Freeform
+                            <button class="btn btn-link btn-add" id="btn-freeform-add">
+                                <i class="fa fa-pencil"></i> Edit
+                            </button></h3>
+                        <div class="active-tags content-box" >
+                            <div class="label label-tag" ng-repeat="freeform in tagGroups.freeformTags">
+                                <span>{{ freeform.name }}:</span> {{ freeform.value }}
+                            </div>
+                        </div><!-- active-tags -->
+                    </div>
+                    <div id="timeline">
+                        <button class="btn btn-link btn-remove pull-right">
+                            <i class="fa fa-trash-o"></i> Clear All
+                        </button>
+                        <h3>Timeline
+                            <button class="btn btn-link btn-add" id="add-timeline">
+                                <i class="fa fa-pencil"></i> Edit
+                            </button>
+                        </h3>
+                        <div class="active-tags content-box" >
+                            <div class="label label-tag" style="line-height:22px; white-space:normal; text-align:left">
+                                Start 02-Jan-2014 End 21-Jan-2014 Trash 8:00:00AM to 05:30:00PM 60 Seconds Carry On 1 Weekly (Sun,Sat) <a href="#" class="remove-tag"></a>
+                            </div>
+                        </div><!-- active-tags -->
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
+            <div class="modal-body" title="Edit Lookup Tag View"  ng-show="showLookupEditView">
+                <div class="editable-tags">
+                    <label>Selected Tags</label>
+                    <div class="content-box" style="height:100px; padding:5px;">
+                        <div class="label label-tag">
+                            <span>brand:</span>levis <i class="fa fa-minus-circle"></i>
+                        </div>
+                        <div class="label label-tag">
+                            <span>brand:</span>gap <i class="fa fa-minus-circle"></i>
+                        </div>
+
+                    </div>
+                </div>
+                <div>
+                    </br>
+                    <label>Add Tags</label>
+                    <div class="content-box">
+                        <div class="search-bar left-inner-addon">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Search Lookup Tags" class="form-control">
+                        </div><!-- left-inner-addon -->
+                        <div class="scrollable-content">
+                            <div class="label label-tag">
+                                <span>brand:</span>levis <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>levis <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <div class="label label-tag">
+                                <span>brand:</span>tag <a href="#" class="add-tag"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                        </div>
+                    </div><!-- content-box -->
+                </div><!-- hidden-div -->
+            </div>
+            <div class="modal-footer">
+                <div class="button-wrapper text-right" ng-show="showLookupEditView">
+                    <button class="btn btn-primary">Save <i class="fa fa-check"></i></button>
+                    <button class="btn btn-default btn-close" ng-click="resetView()">Cancel <i class="fa fa-times"></i></button>
+                </div>
+            </div>
         </div>
     </form>
 </script>
