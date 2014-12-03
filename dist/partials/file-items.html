@@ -98,6 +98,7 @@
       <td class="file-name" ng-class="fileIsFolder(file) ? 'folder-type' : ''">
         <a ng-show="!fileIsFolder(file) && storageFull" class="non-clickable-file" href="" data-toggle="tooltip" title="{{file.name | fileNameFilter:currentDecodedFolder}}"><i class="fa fa-file"></i> {{file.name | fileNameFilter:currentDecodedFolder}}</a>
         <a ng-show="fileIsFolder(file) || !storageFull" href="" data-toggle="tooltip" title="{{file.name | fileNameFilter:currentDecodedFolder}}" ng-click="$emit('FileSelectAction', file)"><i class="fa" ng-class="fileIsFolder(file) ? 'fa-folder' : 'fa-file'"></i> {{file.name | fileNameFilter:currentDecodedFolder}}</a>
+        <a ng-hide="isTrashFolder()" title="Tag File" class="file-tags"><i class="fa fa-tag"></i></a>
       </td>
       <td class="type-col text-right hidden-xs">
         <span>{{file.name | fileTypeFilter}}</span>

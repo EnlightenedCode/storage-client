@@ -7,6 +7,7 @@
 //Cookie file will be saved so that password option is only required once.
 "use strict";
 
+var foundFile = false;
 var port = require("system").env.E2E_PORT || 8000;
 var url = "http://localhost:" + port + "/index.html";
 
@@ -16,8 +17,8 @@ var loginUrl = loginUrlRoot + "/_ah/login?continue=%2f";
 
 var imgdir = "test/e2e/storage-full/";
 var customHeaders = {
-    "Accept-Language": "en-US,en;q=0.8"
-  };
+  "Accept-Language": "en-US,en;q=0.8"
+};
 
 casper.options.waitTimeout = 50000;
 
@@ -100,7 +101,7 @@ casper.test.begin("Connecting to " + url, function suite(test) {
 
   // Waits for the redirect page to load
   casper.waitForUrl(/index\.html/, function() {
-    
+
   });
 
   // Waits for storage-modal iframe to load
@@ -159,7 +160,6 @@ casper.test.begin("Connecting to " + url, function suite(test) {
             return true;
           }
         }
-
         return false;
       });
     }, function() {
@@ -174,12 +174,50 @@ casper.test.begin("Connecting to " + url, function suite(test) {
 
     // Waits for the moving to trash info message to show
     casper.waitUntilVisible(".panel-info", function() {
-      casper.test.assert(true, "files are being moved to trash");
+      casper.test.assert(true, "folder is being moved to trash");
     });
 
     // Waits for the moving to trash info message to hide
     casper.waitWhileVisible(".panel-info", function() {
-      casper.test.assert(true, "files successfully moved to trash");
+      casper.test.assert(true, "folder successfully moved to trash");
+    });
+    // Marks the first file if found as selected
+    casper.then(function() {
+      foundFile = this.evaluate(function() {
+        var trs = document.querySelectorAll("#filesTable tbody tr");
+
+        for(var i = 0; i < trs.length; i++) {
+          if(trs[i].children[1].children[0].children[0].classList.contains("fa-file")) {
+            trs[i].children[0].children[0].click();
+            return true;
+            //break;
+          }
+        }
+        return false;
+      });
+      if(foundFile){
+        // Test that tagging button doesn't exist in trash
+        casper.echo("Checking tagging buttons visible on selected files.");
+        casper.test.assertVisible("a[title='Tag File']");
+        casper.test.assertVisible("button[title='Tagging']");
+        casper.echo("file found and tag icons and buttons visible.");
+
+        // Clicks the Trash button, to send the folder to the Trash
+        casper.then(function() {
+          this.click("button[ng-click='trashButtonClick()']");
+          casper.test.assert(true, "send to trash button clicked");
+        });
+
+        // Waits for the moving to trash info message to show
+        casper.waitUntilVisible(".panel-info", function() {
+          casper.test.assert(true, "files are being moved to trash");
+        });
+
+        // Waits for the moving to trash info message to hide
+        casper.waitWhileVisible(".panel-info", function() {
+          casper.test.assert(true, "files successfully moved to trash");
+        });
+      }
     });
 
     // Clicks the Show Trash button, to list the files on Trash
@@ -189,7 +227,7 @@ casper.test.begin("Connecting to " + url, function suite(test) {
       this.click("a[title='Trash']" + sufix);
       // When using PhantomJS, setting the locale is ignored (it does not happen with SlimerJS)
       //this.click("a[title='Papelera']" + sufix);
-      
+
       casper.test.assert(true, "trash button clicked");
     });
 
@@ -219,8 +257,13 @@ casper.test.begin("Connecting to " + url, function suite(test) {
             break;
           }
         }
-      });
 
+      });
+      // Test that tagging button doesn't exist in trash
+      casper.echo("Checking tagging buttons on selected folder in trash not visible");
+      casper.test.assertNotVisible("a[title='Tag File']");
+      casper.test.assertNotVisible("button[title='Tagging']");
+      casper.echo("folder found and tag icons and buttons not visible");
       casper.test.assert(true, "test-folder in trash checked");
     });
 
@@ -255,6 +298,40 @@ casper.test.begin("Connecting to " + url, function suite(test) {
     // Checks the delete folder does not show in the file listing anymore
     casper.then(function() {
       casper.test.assertDoesntExist("a[title='test-folder/']");
+    });
+
+    // Marks the first file if found as selected
+    casper.then(function() {
+      this.evaluate(function () {
+        var trs = document.querySelectorAll("#filesTable tbody tr");
+
+        for (var i = 0; i < trs.length; i++) {
+          if (trs[i].children[1].children[0].children[0].classList.contains("fa-file") &&
+            trs[i].children[1].children[0].textContent !== " /Previous Folder") {
+            trs[i].children[0].children[0].click();
+            break;
+          }
+        }
+      });
+
+      if (foundFile) {
+        // Checks if file is found that you can restore it from trash
+        casper.then(function () {
+          casper.test.assertVisible("button[title='Restore From Trash']");
+          this.click("button[ng-click='restoreButtonClick()']");
+          casper.test.assert(true, "restore button clicked");
+        });
+
+        // Waits for the moving to restoring message to show
+        casper.waitUntilVisible(".panel-info", function () {
+          casper.test.assert(true, "file is being restored");
+        });
+
+        // Waits for the moving to trash info message to hide
+        casper.waitWhileVisible(".panel-info", function () {
+          casper.test.assert(true, "file successfully restored");
+        });
+      }
     });
   });
 

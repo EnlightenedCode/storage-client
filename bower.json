@@ -6,10 +6,10 @@
     "angular-resource": "~1.2.6",
     "jQuery": "~1.11.1",
     "q": "~1.0.1",
-    "rv-common-style": "https://github.com/Rise-Vision/common-style.git",
+    "rv-common-style": "https://github.com/Rise-Vision/common-style.git#feature/file-tags",
     "rv-common-header": "https://github.com/Rise-Vision/common-header.git",
     "rv-subscription-status": "https://github.com/Rise-Vision/component-subscription-status.git#master",
-    "rv-common-i18n": "https://github.com/Rise-Vision/common-i18n.git",
+    "rv-common-i18n": "https://github.com/Rise-Vision/common-i18n.git#feature/main-tagging",
     "rv-widget-settings-ui-core": "https://github.com/Rise-Vision/widget-settings-ui-core.git",
     "angular-file-upload": "https://github.com/tejohnso/angular-file-upload.git",
     "angular-ui-router": "~0.2.11"
