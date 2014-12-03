@@ -17,13 +17,6 @@
     "angular-file-upload": "https://github.com/tejohnso/angular-file-upload.git",
     "angular-ui-router": "~0.2.11"
   },
-  "overrides": {
-    "jQuery.dotdotdot": {
-      "main": [
-        "src/js/jquery.dotdotdot.js"
-      ]
-    }
-  },
   "resolutions": {
     "angular": ">=1",
     "jquery": "~1.11.1",

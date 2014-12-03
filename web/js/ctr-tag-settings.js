@@ -27,6 +27,8 @@ angular.module("tagging")
       $scope.oldValuesOfTag = "";
       $scope.duplicates = false;
       $scope.sameTagName = false;
+      $scope.accessDenied = false;
+
       $scope.addTags = function(){
         $scope.selectedTag = {};
         $scope.buttonsDisabled = $scope.selectedTag.values === "";
@@ -52,6 +54,7 @@ angular.module("tagging")
       };
 
       $scope.resetView = function(){
+        $scope.accessDenied = false;
         $scope.oldNameOfTag = "";
         $scope.oldValuesOfTag = "";
         localData.loadLocalData().then(function(){
@@ -73,16 +76,24 @@ angular.module("tagging")
 
         $scope.selectedTag.type = ($scope.tagType) ? "FREEFORM" : "LOOKUP";
         $scope.buttonsDisabled = true;
-        taggingSvc.updateTagConfig($scope.selectedTag, $scope.oldNameOfTag).then(function(){
-          $scope.resetView();
+        taggingSvc.updateTagConfig($scope.selectedTag, $scope.oldNameOfTag).then(function(resp){
+            if(resp.code === 200) {
+              $scope.resetView();
+            } else {
+              $scope.accessDenied = true;
+            }
         });
       };
 
       $scope.deleteTag = function(){
         $scope.selectedTag.name = "";
         $scope.buttonsDisabled = true;
-        taggingSvc.updateTagConfig($scope.selectedTag).then(function(){
-          $scope.resetView();
+        taggingSvc.updateTagConfig($scope.selectedTag).then(function(resp){
+          if(resp.code === 200) {
+            $scope.resetView();
+          } else {
+            $scope.accessDenied = true;
+          }
         });
       };
 

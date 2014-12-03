@@ -72,11 +72,14 @@
     <form name="updateTag">
         <div class="app-header add-top add-bottom hidden-sm hidden-md hidden-lg">
             <div class="global-actions">
-                <button type="button" class="btn btn-lg btn-danger" ng-hide="showAddView" ng-click="deleteTag()" ng-disabled="!updateTag.$valid">
+                <div ng-show="accessDenied">
+                    <div class="alert alert-danger text-left" role="alert">{{"storage-client.access-denied" | translate}}</div>
+                </div>
+                <button type="button" class="btn btn-lg btn-danger" ng-hide="showAddView" ng-click="deleteTag()" ng-disabled="accessDenied || !updateTag.$valid">
                     Delete <i class="fa fa-white fa-trash-o icon-right"></i>
                 </button>
                 <!-- Indicates a successful or positive action -->
-                <button type="button" class="btn btn-lg btn-primary" ng-click="updateOrAddTag()" ng-disabled="(sameTagName && showAddView) || duplicates || oldNameOfTag === selectedTag.name && oldValuesOfTag.toString() === selectedTag.values.toString()  || !updateTag.$valid">
+                <button type="button" class="btn btn-lg btn-primary" ng-click="updateOrAddTag()" ng-disabled="accessDenied || (sameTagName && showAddView) || duplicates || oldNameOfTag === selectedTag.name && oldValuesOfTag.toString() === selectedTag.values.toString()  || !updateTag.$valid">
                     Save <i class="fa fa-white fa-check icon-right"></i>
                 </button>
                 <!-- Indicates cancel or non-destructive action -->
@@ -99,20 +102,23 @@
             <input id="tagSettingValues" ng-keyup="hasDuplicates(selectedTag.values)" type="text" class="form-control" placeholder="Enter Values Separated by Commas" ng-model="selectedTag.values" ng-list ng-required="!tagType">
         </div>
         <div class="alert alert-danger" ng-show="sameTagName && showAddView">
-            Tag definition name already exists.
+            {{'storage-client.tag-definition-exists' | translate}}
         </div>
         <div class="alert alert-danger" ng-show="duplicates">
-            Values for a Lookup Tag must all be unique.
+            {{'storage-client.tag-values-always-unique' | translate}}
         </div>
 
         <div class="add-top add-bottom text-right hidden-xs">
             <!-- Indicates delete or destructive action -->
+            <div ng-show="accessDenied">
+                <div class="alert alert-danger text-left" role="alert">{{"storage-client.access-denied" | translate}}</div>
+            </div>
             <button type="button" class="btn btn-danger pull-left" ng-hide="showAddView" ng-click="openConfirm()" ng-disabled="!updateTag.$valid">
                 Delete <i class="fa fa-white fa-trash-o icon-right"></i>
             </button>
             <!-- Indicates a successful or positive action -->
             <button type="button" class="btn btn-primary" ng-click="updateOrAddTag()"
-                    ng-disabled="(sameTagName && showAddView) || duplicates || oldNameOfTag === selectedTag.name && oldValuesOfTag.toString() === selectedTag.values.toString()  || !updateTag.$valid">
+                    ng-disabled="accessDenied || (sameTagName && showAddView) || duplicates || oldNameOfTag === selectedTag.name && oldValuesOfTag.toString() === selectedTag.values.toString()  || !updateTag.$valid">
                 Save <i class="fa fa-white fa-check icon-right"></i>
             </button>
             <!-- Indicates cancel or non-destructive action -->
@@ -129,8 +135,8 @@
                 <i class="fa fa-times"></i>
             </button>
         </div>
-        <div class="modal-body" autofocus="autofocus">
-            <p>This Tag is about to be permanently deleted and it cannot be recovered</p>
+        <div class="modal-body">
+            <p>{{'storage-client.tag-definition-confirm-delete' | translate}}</p>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" ng-click="ok()">

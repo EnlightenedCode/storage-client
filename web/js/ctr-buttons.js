@@ -30,17 +30,42 @@ angular.module("medialibrary")
     };
 }
 ])
-.controller("NewFolderCtrl", ["$scope","$modalInstance", "FileListService",
-function($scope, $modalInstance, listSvc) {
+.controller("NewFolderCtrl", ["$scope","$modalInstance", "FileListService","GAPIRequestService","$stateParams",
+    "$rootScope",
+function($scope, $modalInstance, listSvc, requestSvc, $stateParams, $rootScope) {
     $scope.duplicateFolderSpecified = false;
+    $scope.accessDenied = false;
+    $scope.serverError = false;
     $scope.ok = function() {
+        var requestParams;
         if (!$scope.folderName) {$scope.folderName = "";}
         $scope.folderName = $scope.folderName.replace(/\//g,"");
         if (listSvc.getFileNameIndex($scope.folderName + "/") > -1) {
           $scope.duplicateFolderSpecified = true;
           return;
         }
-        $modalInstance.close($scope.folderName);
+        if ($scope.folderName !== "") {
+          requestParams =
+          {
+            "companyId": $stateParams.companyId
+            , "folder": decodeURIComponent($stateParams.folderPath || "") +
+          $scope.folderName
+          };
+          requestSvc.executeRequest("storage.createFolder", requestParams)
+            .then(function (resp) {
+              console.log(resp);
+              if (resp.code === 200) {
+                $rootScope.$emit("refreshSubscriptionStatus", "trial-available");
+                listSvc.refreshFilesList();
+                $modalInstance.close($scope.folderName);
+              } else if (resp.code === 403) {
+                $scope.accessDenied = true;
+              } else {
+                $scope.respCode = resp.code;
+                $scope.accessDenied = true;
+              }
+            });
+        }
     };
     $scope.cancel = function() {
         $modalInstance.dismiss("cancel");
@@ -117,7 +142,7 @@ function ($scope,$rootScope, $stateParams, $window, $modal, $log, $timeout, $fil
   };
 
   $scope.uploadButtonClick = function() {
-    $("#file").click();
+      $("#file").click();
   };
 
   $scope.downloadButtonClick = function() {
@@ -128,15 +153,15 @@ function ($scope,$rootScope, $stateParams, $window, $modal, $log, $timeout, $fil
   };
 
   $scope.deleteButtonClick = function(size) {
-    $scope.confirmDeleteFilesAction(size);
+      $scope.confirmDeleteFilesAction(size);
   };
 
   $scope.trashButtonClick = function() {
-    $scope.processFilesAction("trash");
+      $scope.processFilesAction("trash");
   };
 
   $scope.restoreButtonClick = function() {
-    $scope.processFilesAction("restore");
+      $scope.processFilesAction("restore");
   };
 
   $scope.removePendingOperation = function(file) {
@@ -261,8 +286,12 @@ function ($scope,$rootScope, $stateParams, $window, $modal, $log, $timeout, $fil
 
     selectedFiles.forEach(function(file) {
       file.action = action;
-
-      $scope.pendingOperations.push(file);
+      var pendingFileNames = $scope.pendingOperations.map(function(i){
+        return i.name;
+      });
+      if(pendingFileNames.indexOf(file.name) === -1){
+        $scope.pendingOperations.push(file);
+      }
     });
 
     listSvc.removeFiles(selectedFiles);
@@ -284,11 +313,16 @@ function ($scope,$rootScope, $stateParams, $window, $modal, $log, $timeout, $fil
       .then(function(resp) {
           if (!resp.result) {
             $scope.statusDetails.code = resp.code;
-            
+
+            if(resp.code === 403){
+              $translate("storage-client.access-denied").then(function(msg) {
+                $scope.statusDetails.message = msg;
+              });
+            } else {
             $translate("storage-client." + resp.message, { username: resp.userEmail }).then(function(msg) {
               $scope.statusDetails.message = msg;
             });
-
+            }
             selectedFiles.forEach(function(file) {
               file.actionFailed = true;
 
@@ -316,27 +350,16 @@ function ($scope,$rootScope, $stateParams, $window, $modal, $log, $timeout, $fil
       $scope.shouldBeOpen = true;
 
       $scope.modalInstance = $modal.open({
-          templateUrl: "newFolderModal.html",
-          controller: "NewFolderCtrl",
-          size: size
+        templateUrl: "newFolderModal.html",
+        controller: "NewFolderCtrl",
+        size: size
       });
 
-      $scope.modalInstance.result.then(function(newFolderName){
-          //do what you need if user presses ok
-          if (newFolderName === "") {return;}
-          var requestParams =
-          {"companyId":$stateParams.companyId
-              ,"folder": decodeURIComponent($stateParams.folderPath || "") +
-              newFolderName};
-
-          requestSvc.executeRequest("storage.createFolder", requestParams)
-              .then(function() {
-                $rootScope.$emit("refreshSubscriptionStatus", "trial-available");
-                listSvc.refreshFilesList();
-              });
-      }, function (){
-          // do what you need to do if user cancels
-          $log.info("Modal dismissed at: " + new Date());
+      $scope.modalInstance.result.then(function () {
+        //do what you need if user presses ok
+      }, function () {
+        // do what you need to do if user cancels
+        $log.info("Modal dismissed at: " + new Date());
       });
   };
 
@@ -352,19 +375,19 @@ function ($scope,$rootScope, $stateParams, $window, $modal, $log, $timeout, $fil
   }
 
   $scope.taggingButtonClick = function(){
-    var fileNames = getSelectedFiles().map(function(i){
-      return i.name;
-    });
-    var filesWithTags = localData.getFilesWithTags().filter(function(i){
-      return fileNames.indexOf(i.name) > -1;
-    });
+      var fileNames = getSelectedFiles().map(function (i) {
+        return i.name;
+      });
+      var filesWithTags = localData.getFilesWithTags().filter(function (i) {
+        return fileNames.indexOf(i.name) > -1;
+      });
 
-    //to remember checked files
-    listSvc.taggingCheckedItems = filesWithTags.map(function(i){
-      return i.name;
-    });
-    listSvc.checkedTagging = true;
-    taggingSvc.taggingButtonClick(filesWithTags, "union");
+      //to remember checked files
+      listSvc.taggingCheckedItems = filesWithTags.map(function (i) {
+        return i.name;
+      });
+      listSvc.checkedTagging = true;
+      taggingSvc.taggingButtonClick(filesWithTags, "union");
   };
 
   function getActivePendingOperations() {

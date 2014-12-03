@@ -6,14 +6,16 @@ function uploadURIService ($q, gapiRequestor, OAuthService, $stateParams, $inter
 
   var uriFailed = "storage-client.upload-uri-request-failed";
   var uriFailedMail = "storage-client.upload-uri-request-failed-mail";
+  var accessDenied = "storage-client.access-denied";
   var inactiveSubscription = "storage-client.upload-inactive-subscription";
   var verifyCompany = "storage-client.upload-verify-company";
 
-  $translate([uriFailed, uriFailedMail, inactiveSubscription, verifyCompany], { username: "{{username}}" }).then(function(values) {
+$translate([uriFailed, uriFailedMail, inactiveSubscription, verifyCompany, accessDenied], { username: "{{username}}" }).then(function(values) {
     uriFailed = values[uriFailed];
     uriFailedMail = $interpolate(values[uriFailedMail]);
     inactiveSubscription = $interpolate(values[inactiveSubscription]);
     verifyCompany = $interpolate(values[verifyCompany]);
+    accessDenied = values[accessDenied];
   });
 
   svc.getURI = function getURI(file) {
@@ -38,11 +40,13 @@ function uploadURIService ($q, gapiRequestor, OAuthService, $stateParams, $inter
         else if(resp.message === "upload-verify-company") {
           resp.message = verifyCompany({ username: resp.userEmail });
         }
+        else if(resp.code === 403){
+          resp.message = accessDenied;
+        }
         else {
           resp.message = resp.userEmail ? uriFailedMail({ username: resp.userEmail })
                                         : uriFailed;          
         }
-
         return $q.reject(resp.message);
       } else {
         return resp.message;

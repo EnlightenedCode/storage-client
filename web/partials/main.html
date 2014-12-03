@@ -173,13 +173,20 @@
         <div class="modal-body" autofocus="autofocus">
           <div class="form-group">
             <input id="newFolderInput" type="text" class="form-control" ng-model="folderName" focus-me="{{shouldBeOpen}}" placeholder="Enter Folder Name" ng-focus="duplicateFolderSpecified=false" autofocus="autofocus">
+            <br>
             <div ng-show="duplicateFolderSpecified">
               <div class="alert alert-warning" role="alert">{{"storage-client.duplicate-folder" | translate}}</div>
+            </div>
+            <div ng-show="accessDenied">
+              <div class="alert alert-danger" role="alert">{{"storage-client.access-denied" | translate}}</div>
+            </div>
+            <div ng-show="serverError">
+              <div class="alert alert-danger" role="alert">{{"storage-client.server-error" | translate}} {{respCode}}</div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary btn-fixed-width" ng-click="ok()">
+            <button class="btn btn-primary btn-fixed-width" ng-click="ok()" ng-disabled="accessDenied || serverError">
               <span translate="common.save"></span> <i class="fa fa-white fa-check icon-right"></i>
             </button>
             <button class="btn btn-default btn-fixed-width" ng-click="cancel()">
@@ -311,7 +318,7 @@
                         (selectedTimeline.startDate.getMonth() > selectedTimeline.endDate.getMonth() ||
                         selectedTimeline.startDate.getFullYear() > selectedTimeline.endDate.getFullYear() ||
                         selectedTimeline.startDate.getDate() > selectedTimeline.endDate.getDate())">
-                            Start Date must be before End Date.
+                            {{'storage-client.start-date-before-end-date' | translate}}
                         </div>
                     </section>
 
@@ -333,7 +340,7 @@
                             </div><!--col-sm-6-->
                         </div>
                         <div class="alert alert-danger" ng-show="selectedTimeline.setTime === 'false' && selectedTimeline.startTime > selectedTimeline.endTime">
-                            Start Time must be before End Time.
+                            {{'storage-client.start-time-before-end-time' | translate}}
                         </div>
                     </section>
 
@@ -456,8 +463,12 @@
                 </div><!--timeline-->
             </div>
             <div class="modal-footer">
+                <div ng-show="accessDenied">
+                    <div class="alert alert-danger text-left" role="alert">{{"storage-client.access-denied" | translate}}</div>
+                </div>
+                <br>
                 <div class="button-wrapper text-right" ng-show="!showMainTagView">
-                    <button class="btn btn-primary btn-fixed-width" ng-disabled="(invalidLookupTag && showLookupEditView) || (changedLookup && showLookupEditView) ||
+                    <button class="btn btn-primary btn-fixed-width" ng-disabled="accessDenied || (invalidLookupTag && showLookupEditView) || (changedLookup && showLookupEditView) ||
                     (selectedTimeline.setDate === 'false' &&
                         (selectedTimeline.startDate.getMonth() > selectedTimeline.endDate.getMonth() ||
                         selectedTimeline.startDate.getFullYear() > selectedTimeline.endDate.getFullYear() ||

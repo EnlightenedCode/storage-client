@@ -12,6 +12,7 @@ angular.module("tagging", [])
     svc.filterStartDate = undefined;
     svc.filterEndDate = undefined;
     svc.justAddedTimeline = false;
+    svc.errorHandle = false;
       svc.options = {week:["First", "Second", "Third", "Fourth", "Last"],
     day: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     month: ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -56,6 +57,7 @@ angular.module("tagging", [])
 
     //unit tested
     svc.clearAllLookupTagsAndSave = function(){
+      var deferred = $q.defer();
       var namesOfFiles = svc.selected.files.map(function(i){
         return i.name;
       });
@@ -63,8 +65,15 @@ angular.module("tagging", [])
       deleteObjects.forEach(function(i){
         i.delete = true;
       });
-      svc.tagGroups.lookupTags.splice(0, svc.tagGroups.lookupTags.length);
-      return svc.updateLookupTags(namesOfFiles, deleteObjects, "LOOKUP");
+      svc.updateLookupTags(namesOfFiles, deleteObjects, "LOOKUP").then(function(resp){
+        if(resp !== undefined && resp[0].code === 200){
+          svc.tagGroups.lookupTags.splice(0, svc.tagGroups.lookupTags.length);
+        } else {
+          svc.errorHandle = true;
+        }
+        deferred.resolve();
+      });
+      return deferred.promise;
     };
 
     //unit tested
@@ -73,7 +82,19 @@ angular.module("tagging", [])
         return i.name;
       });
 
-      return svc.clearTimeLineOnly(namesOfFiles , svc.tagGroups.timelineTag, "TIMELINE");
+      return svc.clearTimeLineOnly(namesOfFiles , svc.tagGroups.timelineTag, "TIMELINE").then(function(resp){
+        var deferred = $q.defer();
+        if(resp !== undefined && resp[0].code === 200) {
+          svc.tagGroups.timelineTag = null;
+          svc.selected.timelineTag = null;
+          localData.clearSelectedTimelines(namesOfFiles);
+        } else {
+          //update locally
+          svc.errorHandle = true;
+        }
+        deferred.resolve();
+        return deferred.promise;
+      });
     };
 
     //unit tested
@@ -85,9 +106,16 @@ angular.module("tagging", [])
 
     //unit tested
     svc.clearAllFreeformTagsAndSave = function(){
-      svc.clearAllFreeformTags();
-      return svc.saveChangesToTags(svc.selected.freeformTags, "FREEFORM").then(function(){
-        svc.tagGroups.freeformTags.splice(0, svc.tagGroups.freeformTags.length);
+      return svc.saveChangesToTags(svc.selected.freeformTags, "FREEFORM").then(function(resp){
+        var deferred = $q.defer();
+        if(resp !== undefined && resp[0].code === 200) {
+          svc.clearAllFreeformTags();
+          svc.tagGroups.freeformTags.splice(0, svc.tagGroups.freeformTags.length);
+        } else {
+          svc.errorHandle = true;
+        }
+        deferred.resolve();
+        return deferred.promise;
       });
     };
 
@@ -111,22 +139,34 @@ angular.module("tagging", [])
         return i.name;
       });
       if(type === "FREEFORM"){
-        return svc.updateFreeformTags(namesOfFiles, selectedItems, type).then(function(){
-          selectedItems = cleanEmptyFreeformTags(selectedItems);
-          localData.updateTags(namesOfFiles, type, selectedItems);
+        return svc.updateFreeformTags(namesOfFiles, selectedItems, type).then(function(resp){
+          if(resp !== undefined && resp[0].code === 200){
+            selectedItems = cleanEmptyFreeformTags(selectedItems);
+            localData.updateTags(namesOfFiles, type, selectedItems);
+          } else {
+            svc.errorHandle = true;
+          }
         });
       }
       if(type === "LOOKUP"){
-        return svc.updateLookupTags(namesOfFiles, selectedItems, type).then(function(){
-          selectedItems = (selectedItems === null) ? [] : selectedItems;
-          localData.updateTags(namesOfFiles, type, selectedItems);
+        return svc.updateLookupTags(namesOfFiles, selectedItems, type).then(function(resp){
+          if(resp !== undefined && resp[0].code === 200){
+            selectedItems = (selectedItems === null) ? [] : selectedItems;
+            localData.updateTags(namesOfFiles, type, selectedItems);
+          } else {
+            svc.errorHandle = true;
+          }
         });
       }
       if(type === "TIMELINE"){
         return svc.updateTimelineTag(namesOfFiles, selectedItems, type).then(function(resp){
-          resp.forEach(function(i){
-            localData.updateTimelineTag(i);
-          });
+          if(resp !== undefined && resp[0].code === 200){
+            resp.forEach(function(i){
+              localData.updateTimelineTag(i);
+            });
+          } else {
+            svc.errorHandle = true;
+          }
         });
       }
       if (!$stateParams.companyId) {
@@ -160,12 +200,7 @@ angular.module("tagging", [])
           }
       });
 
-      //update locally
-      svc.tagGroups.timelineTag = null;
-      svc.selected.timelineTag = null;
-//    ========
 
-      localData.clearSelectedTimelines(namesOfFiles);
       return $q.all(deletePromises);
     };
 
@@ -196,7 +231,10 @@ angular.module("tagging", [])
             addParams.values = JSON.stringify(selectedItems[0]);
 
             addPromises.push(requestor.executeRequest("storage.filetag.put", addParams).then(function (resp) {
+              var deferred = $q.defer();
               timelinesFilesToAdd.push(resp.item);
+              deferred.resolve(resp);
+              return deferred.promise;
             }));
           } else {
             addParams = {};
@@ -207,15 +245,28 @@ angular.module("tagging", [])
 
             addParams.values = JSON.stringify(selectedItems[0]);
             addPromises.push(requestor.executeRequest("storage.filetag.put", addParams).then(function (resp) {
+              var deferred = $q.defer();
               timelinesFilesToAdd.push(resp.item);
+              deferred.resolve(resp);
+              return deferred.promise;
             }));
           }
         });
       });
-      return $q.all(deletePromises).then(function(){
-        return $q.all(addPromises).then(function(){
+      return $q.all(deletePromises).then(function(resp){
+        var deferred = $q.defer();
+        if(resp[0].code === 403){
+          deferred.resolve(resp);
+          return deferred.promise;
+        }
+        return $q.all(addPromises).then(function(resp){
+
           var defer = $q.defer();
-          defer.resolve(timelinesFilesToAdd);
+          if(resp[0].code === 200){
+            defer.resolve(timelinesFilesToAdd);
+          } else{
+            defer.resolve(resp);
+          }
           return defer.promise;
         });
       });
@@ -236,7 +287,7 @@ angular.module("tagging", [])
           }
 
           addPromises.push(requestor.executeRequest("storage.filetag.put", addParams).then(function(resp){
-
+            var deferred = $q.defer();
             var selItemNames = selectedItems.map(function(elem){
               return elem.name;
             });
@@ -247,10 +298,17 @@ angular.module("tagging", [])
               selectedItems[indx].creationDate = resp.item.creationDate;selectedItems[indx].id = resp.item.id;
               selectedItems[indx].objectId = resp.item.objectId;
             }
+            deferred.resolve(resp);
+            return deferred.promise;
           }));
         });
       });
-      return $q.all(deletePromises).then(function(){
+      return $q.all(deletePromises).then(function(resp){
+        var deferred = $q.defer();
+        if(resp.code === 403){
+          deferred.resolve(resp);
+          return deferred.promise;
+        }
         return $q.all(addPromises);
       });
     };
@@ -316,9 +374,7 @@ angular.module("tagging", [])
           if(entryObjectToDelete.length > 0){
             var params = {};
             params.id = entryObjectToDelete[0].id;
-            deletePromises.push(requestor.executeRequest("storage.filetag.delete", params).then(function(resp){
-              console.log(resp);
-            }));
+            deletePromises.push(requestor.executeRequest("storage.filetag.delete", params));
           }
         });
       });
@@ -335,7 +391,7 @@ angular.module("tagging", [])
 
           addPromises.push(requestor.executeRequest("storage.filetag.put", addParams).then(function(resp){
             console.log(resp);
-
+            var deferred = $q.defer();
             var selItemNames = selectedItems.map(function(elem){
               return elem.name;
             });
@@ -350,11 +406,17 @@ angular.module("tagging", [])
             } else {
               console.log(resp.code);
             }
-
+            deferred.resolve(resp);
+            return deferred.promise;
           }));
         });
       });
-      return $q.all(deletePromises).then(function(){
+      return $q.all(deletePromises).then(function(resp){
+        var deferred = $q.defer();
+        if(resp.code === 403){
+          deferred.resolve(resp);
+          return deferred.promise;
+        }
         return $q.all(addPromises);
       });
     };
@@ -449,16 +511,20 @@ angular.module("tagging", [])
       var params;
       if((oldName !== "" && oldName !== selectedTag.name) ||
         selectedTag.name === ""){
-      params = {};
+        params = {};
 
-      params.id = tagDefFound[0].id;
-      requestor.executeRequest("storage.tagdef.delete", params).then(function () {
-        localData.refreshConfigTags().then(function(){
-          deferred.resolve();
+        params.id = tagDefFound[0].id;
+        requestor.executeRequest("storage.tagdef.delete", params).then(function (resp) {
+          if(resp.code === 200){
+            localData.refreshConfigTags().then(function(){
+              deferred.resolve();
+            });
+          } else {
+            deferred.resolve(resp);
+          }
+        }, function(message){
+          deferred.reject(message);
         });
-      }, function(message){
-        deferred.reject(message);
-      });
       }
 
       if(selectedTag.name !== ""){
@@ -469,10 +535,14 @@ angular.module("tagging", [])
         if(selectedTag.type === "LOOKUP") {
           params.values = selectedTag.values;
         }
-        requestor.executeRequest("storage.tagdef.put", params).then(function () {
-          localData.refreshConfigTags().then(function(){
-            deferred.resolve();
-          });
+        requestor.executeRequest("storage.tagdef.put", params).then(function (resp) {
+          if(resp.code === 200){
+            localData.refreshConfigTags().then(function(){
+              deferred.resolve();
+            });
+          } else {
+            deferred.resolve(resp);
+          }
         });
       }
       return deferred.promise;
@@ -670,6 +740,7 @@ angular.module("tagging", [])
         //do what you need if user presses ok
       }, function (){
         // do what you need to do if user cancels
+        svc.errorHandle = false;
         svc.justAddedTimeline = false;
         svc.selected.timelineTag = null;
         svc.timelineClear = false;

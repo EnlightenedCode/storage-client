@@ -133,18 +133,18 @@ taggingSvc,  localData) {
   };
 
   $scope.taggingButtonClick = function(item, command){
-    $scope.selectAllCheckboxes();
-    $scope.selectAllCheckboxes();
-    if(item.isChecked === undefined || item.isChecked === false){
-      item.isChecked = true;
-      $scope.fileCheckToggled(item);
-    }
-    var items = [];
-    items.push(item);
-    //to remember checked files
-    listSvc.taggingCheckedItems = [item.name];
-    listSvc.checkedTagging = true;
-    taggingSvc.taggingButtonClick(items, command);
+      $scope.selectAllCheckboxes();
+      $scope.selectAllCheckboxes();
+      if(item.isChecked === undefined || item.isChecked === false){
+        item.isChecked = true;
+        $scope.fileCheckToggled(item);
+      }
+      var items = [];
+      items.push(item);
+      //to remember checked files
+      listSvc.taggingCheckedItems = [item.name];
+      listSvc.checkedTagging = true;
+      taggingSvc.taggingButtonClick(items, command);
   };
 
   $scope.filterTags = function(){

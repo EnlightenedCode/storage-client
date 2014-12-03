@@ -5,7 +5,7 @@ angular.module("storageFull")
     function($scope, $location, $timeout, userState, usSpinnerService, $state) {
   $scope.userState = userState;
   $scope.currentState = null;
-
+  $scope.hasProtectedRole = false;
   $scope.navOptions = [{
     title: "Platform",
     link: "http://rva.risevision.com/",
@@ -33,6 +33,12 @@ angular.module("storageFull")
       }
     });
 
+  //$scope.$watch(function(){
+  //  return (userState.hasRole("cp") || userState.hasRole("ce") ||  userState.hasRole("ua"));
+  //}, function(hasRole){
+  //    $scope.hasProtectedRole = hasRole;
+  //
+  //});
   $scope.$watch(function () {
       return userState.getSelectedCompanyId();
     }, 

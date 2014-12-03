@@ -15,6 +15,7 @@ angular.module("tagging")
 
     return timelineCount;
   };
+  $scope.accessDenied = taggingSvc.errorHandle;
   $scope.selectedFiles = taggingSvc.selected.files;
   $scope.noTimeline = false;
   $scope.tagGroups = taggingSvc.tagGroups;
@@ -199,19 +200,19 @@ angular.module("tagging")
     var defer = $q.defer();
     if($scope.showLookupEditView){
       taggingSvc.saveChangesToTags(taggingSvc.selected.lookupTags, "LOOKUP").then(function(){
-        defer.resolve();
+        (taggingSvc.errorHandle) ? defer.reject() : defer.resolve();
       });
     }
     if($scope.showFreeformEditView){
       taggingSvc.saveChangesToTags($scope.selectedFreeformTags, "FREEFORM").then(function(){
-        defer.resolve();
+        (taggingSvc.errorHandle) ? defer.reject() : defer.resolve();
       });
     }
     if($scope.showTimelineEditView){
       taggingSvc.transformTimelineForSaving($scope.selectedTimeline);
       taggingSvc.saveChangesToTags(taggingSvc.selected.timelineTag, "TIMELINE").then(function(){
-        $scope.timelineTagObj = angular.copy($scope.selectedTimeline);
-        defer.resolve();
+        (taggingSvc.errorHandle) ? defer.reject() : $scope.timelineTagObj = angular.copy($scope.selectedTimeline); defer.resolve();
+
       });
 
     }
@@ -223,8 +224,9 @@ angular.module("tagging")
         $scope.tagGroups.timelineTag === null) && $scope.noTimeline === false && $scope.timelineTagCount() > 0);
         $scope.resetView();
       });
-
-
+    }, function(){
+      $scope.accessDenied = taggingSvc.errorHandle;
+      $scope.waitForResponse = false;
     });
   };
 
@@ -250,9 +252,14 @@ angular.module("tagging")
   $scope.clearAllLookupTags = function(){
     $scope.clearLookupDisable = true;
     if($scope.showMainTagView){
-      taggingSvc.selected.lookupTags = [];
       taggingSvc.clearAllLookupTagsAndSave().then(function(){
-        $scope.refreshMainList();
+        if (taggingSvc.errorHandle){
+          $scope.accessDenied = taggingSvc.errorHandle;
+          $scope.waitForResponse = false;
+        } else{
+          taggingSvc.selected.lookupTags = [];
+          $scope.refreshMainList();
+        }
       });
     } else {
       taggingSvc.clearAllLookupTags();
@@ -291,7 +298,12 @@ angular.module("tagging")
     $scope.clearFreeformDisable = true;
     if($scope.showMainTagView){
       taggingSvc.clearAllFreeformTagsAndSave().then(function(){
-        $scope.refreshMainList();
+        if (taggingSvc.errorHandle){
+          $scope.accessDenied = taggingSvc.errorHandle;
+          $scope.waitForResponse = false;
+        } else{
+          $scope.refreshMainList();
+        }
       });
     } else {
       taggingSvc.clearAllFreeformTags();
@@ -303,7 +315,12 @@ angular.module("tagging")
     $scope.noTimeline = true;
     if($scope.showMainTagView){
       taggingSvc.clearAllTimelineTagsAndSave().then(function(){
-        $scope.refreshMainList();
+        if (taggingSvc.errorHandle){
+          $scope.accessDenied = taggingSvc.errorHandle;
+          $scope.waitForResponse = false;
+        } else{
+          $scope.refreshMainList();
+        }
       });
       $scope.refreshChanges();
     }
@@ -343,6 +360,8 @@ angular.module("tagging")
   };
 
   $scope.resetView = function(){
+    taggingSvc.errorHandle = false;
+    $scope.accessDenied = taggingSvc.errorHandle;
     $scope.waitForResponse = false;
     $scope.tagQuery = null;
     $scope.refreshChanges();
