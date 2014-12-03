@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- *** Storage Meta *** -->
+    <!-- Place this data between the <head> tags of your website -->
+    <title>Rise Vision Storage | Storage for digital signage content</title>
+    <meta name="description" content="Rise Vision Storage is a media library for all of your digital signage content assets" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Schema.org markup for Google+ -->
+    <meta itemprop="name" content="Rise Vision Storage">
+    <meta itemprop="description" content="Rise Vision Storage is a media library for all of your digital signage content assets">
+    <meta itemprop="image" content="https://s3.amazonaws.com/Store-Products/Rise-Vision/storage_image.png">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@RiseVision">
+    <meta name="twitter:title" content="Rise Vision Storage">
+    <meta name="twitter:description" content="Rise Vision Storage is a media library for all of your digital signage content assets">
+    <meta name="twitter:image:src" content="https://s3.amazonaws.com/Store-Products/Rise-Vision/storage_image.png">
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="Rise Vision Storage" />
+    <meta property="og:type" content="product" />
+    <meta property="og:url" content="http://storage.risevision.com/" />
+    <meta property="og:image" content="https://s3.amazonaws.com/Store-Products/Rise-Vision/storage_image.png" />
+    <meta property="og:description" content="Rise Vision Storage is a media library for all of your digital signage content assets" />
+
+    <link rel="icon" href="storage.ico" />
+
+    <link rel="stylesheet" href="css/all-stg-local.min.css"/>
+  </head>
+
+  <body class="storage-full">
+    <div ng-app="storageFull">
+      <analytics analytics-account-id="'UA-82239-1'"></analytics>
+      
+      <div ng-controller="FullScreenLocalController">
+        <common-header nav-options="navOptions" hide-shopping-cart="true" hide-help-menu="true">
+        </common-header>
+      
+        <div class="container">
+          <div class="notifications alert alert-info alert-dismissable" ng-show="!userState.isLoggedIn() || currentState">
+            <span id="msg-not-authenticated" ng-show="!userState.isLoggedIn()">
+              <span translate="common.required-credentials"></span>
+            </span>
+            <span id="msg-logging-in" ng-show="currentState == 'loggingIn'">
+              <span translate="common.logging-in"></span>
+            </span>
+            <span id="msg-loading-files" ng-show="currentState == 'loadingFiles'">
+              <span translate="storage-client.loading-files" translate-values="{ username: userState.getUsername() }"></span>
+            </span>
+          </div>
+
+          <div>
+            <span us-spinner="{ radius:30, width:8, length: 16 }" spinner-key="spn-stg-full"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script/full-local.min.js"></script>
+  </body>
+</html>

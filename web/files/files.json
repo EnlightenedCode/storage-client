@@ -8,14 +8,18 @@
     "size": 20272302,
     "eTag": "\"75f64546e0f5f1a8cb2304b87d38b4d9\"",
     "tags": [{
-        "type": "Lookup",
-        "name": "brand",
-        "values": ["levis", "gap"]
-      }, {
-        "type": "Lookup",
-        "name": "style",
-        "values": ["casual", "informal", "edgy"]
-      }]
+      "type": "Lookup",
+      "name": "brand",
+      "values": ["levis", "gap"]
+    }, {
+      "type": "Lookup",
+      "name": "style",
+      "values": ["casual", "informal", "edgy"]
+    }, {
+      "type": "Freeform",
+      "name": "property code",
+      "value": "214034"
+    }]
   },
   {
     "name": "30 seconds countdown.mp4",
@@ -26,14 +30,22 @@
     "size": 697637,
     "eTag": "\"d3be22dd70a778c0dcbe76e8a447d094\"",
     "tags": [{
-        "type": "Lookup",
-        "name": "brand",
-        "values": ["calvin klein", "armani"]
-      }, {
-        "type": "Lookup",
-        "name": "style",
-        "values": ["business", "informal"]
-      }]
+      "type": "Lookup",
+      "name": "brand",
+      "values": ["calvin klein", "armani"]
+    }, {
+      "type": "Lookup",
+      "name": "style",
+      "values": ["business", "informal"]
+    }, {
+      "type": "Freeform",
+      "name": "property code",
+      "value": "214034"
+    }, {
+      "type": "Freeform",
+      "name": "caption",
+      "value": "some caption description"
+    }]
   },
   {
     "name": "30+seconds+countdown.mp4",

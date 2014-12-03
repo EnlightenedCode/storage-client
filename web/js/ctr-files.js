@@ -118,7 +118,11 @@ $window, STORAGE_API_URL, STORAGE_CLIENT_API, $state, $translate, FULLSCREEN, ta
     return file.name === "--TRASH--/";
   };
 
-  $scope.taggingButtonClick = taggingSvc.taggingButtonClick;
+  $scope.taggingButtonClick = function(item, command){
+    var items = [];
+    items.push(item);
+    taggingSvc.taggingButtonClick(items, command);
+  };
 
   $scope.$on("FileSelectAction", function(event, file) {
     var folderSelfLinkUrl = STORAGE_CLIENT_API + bucketName +"/o?prefix=";

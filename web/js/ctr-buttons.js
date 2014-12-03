@@ -333,7 +333,9 @@ function ($scope, $stateParams, $window, $modal, $log, $timeout, $filter, listSv
     return selectedFiles;
   }
 
-  $scope.taggingButtonClick = taggingSvc.taggingButtonClick;
+  $scope.taggingButtonClick = function(){
+    taggingSvc.taggingButtonClick(getSelectedFiles(), "union");
+  };
 
   function getActivePendingOperations() {
     var ops = $scope.pendingOperations;

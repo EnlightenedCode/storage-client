@@ -55,7 +55,7 @@
             <span translate="common.select"></span> <i class="fa fa-check fa-white icon-right"></i>
           </button>
   				<button type="button" class="btn btn-link" title="Download" ng-click="downloadButtonClick()" ng-hide="isTrashFolder() || !(filesDetails.checkedCount > 0 && filesDetails.folderCheckedCount === 0) || filesDetails.localFiles === true"><i class="fa fa-cloud-download fa-2x"></i></button>
-                <button type="button" class="btn btn-link" title="Tagging" ng-click="taggingButtonClick()" ng-hide="isTrashFolder() || filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.localFiles === true"><i class="fa fa-tag fa-2x"></i></button>
+                <button type="button" class="btn btn-link" title="Tagging" ng-click="taggingButtonClick()" ng-hide="isTrashFolder() || filesDetails.checkedCount + filesDetails.folderCheckedCount === 0"><i class="fa fa-tag fa-2x"></i></button>
                 <button type="button" class="btn btn-link" title="Copy Url" ng-hide="isTrashFolder() || (filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.checkedCount + filesDetails.folderCheckedCount > 1) || filesDetails.localFiles === true" ng-click="copyUrlButtonClick('lg')"><i class="fa fa-link fa-2x"></i></button>
   				<button type="button" class="btn btn-link" title="Move To Trash" ng-click="trashButtonClick()" ng-hide="isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1) || filesDetails.localFiles === true"><i class="fa fa-trash-o fa-2x"></i></button>
           <button type="button" class="btn btn-link" title="Restore From Trash" ng-click="restoreButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-2x"></i><i class="fa fa-share"></i></button>
@@ -215,11 +215,8 @@
                         </button>
                     </h3>
                     <div class="active-tags content-box">
-                        <div class="label label-tag">
-                            <span>brand:</span>levis
-                        </div>
-                        <div class="label label-tag">
-                            <span>brand:</span>gap
+                        <div class="label label-tag" ng-repeat="lookup in tagGroups.lookupTags">
+                            <span>{{ lookup.name }}:</span> {{ lookup.value }}
                         </div>
                     </div><!-- active-tags -->
                 </div>
@@ -232,8 +229,8 @@
                             <i class="fa fa-pencil"></i> Edit
                         </button></h3>
                     <div class="active-tags content-box" >
-                        <div class="label label-tag">
-                            <span>caption:</span>lorem ipsum dolor sit
+                        <div class="label label-tag" ng-repeat="freeform in tagGroups.freeformTags">
+                            <span>{{ freeform.name }}:</span> {{ freeform.value }}
                         </div>
                     </div><!-- active-tags -->
                 </div>
