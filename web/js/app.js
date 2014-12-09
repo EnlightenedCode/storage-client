@@ -7,6 +7,7 @@ angular.module("medialibrary", [
   "medialibraryServices",
   "gapi-auth",
   "cookieTester",
+  "tagging",
   "gapi-file",
   "angularFileUpload",
   "multi-download",

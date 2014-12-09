@@ -55,7 +55,7 @@
             <span translate="common.select"></span> <i class="fa fa-check fa-white icon-right"></i>
           </button>
   				<button type="button" class="btn btn-link" title="Download" ng-click="downloadButtonClick()" ng-hide="isTrashFolder() || !(filesDetails.checkedCount > 0 && filesDetails.folderCheckedCount === 0) || filesDetails.localFiles === true"><i class="fa fa-cloud-download fa-2x"></i></button>
-                <button type="button" class="btn btn-link" title="Tagging" ng-hide="isTrashFolder() || filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.localFiles === true"><i class="fa fa-tag fa-2x"></i></button>
+                <button type="button" class="btn btn-link" title="Tagging" ng-click="taggingButtonClick()" ng-hide="isTrashFolder() || filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.localFiles === true"><i class="fa fa-tag fa-2x"></i></button>
                 <button type="button" class="btn btn-link" title="Copy Url" ng-hide="isTrashFolder() || (filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.checkedCount + filesDetails.folderCheckedCount > 1) || filesDetails.localFiles === true" ng-click="copyUrlButtonClick('lg')"><i class="fa fa-link fa-2x"></i></button>
   				<button type="button" class="btn btn-link" title="Move To Trash" ng-click="trashButtonClick()" ng-hide="isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1) || filesDetails.localFiles === true"><i class="fa fa-trash-o fa-2x"></i></button>
           <button type="button" class="btn btn-link" title="Restore From Trash" ng-click="restoreButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-2x"></i><i class="fa fa-share"></i></button>
@@ -190,6 +190,69 @@
             <button type="button" class="close" ng-click="cancel()" aria-hidden="true"><i class="fa fa-times"></i></button>
             <h5 class="ellipsed span12 text-left">Link To "{{copyFile.name}}"</h5>
             <input type="text" class="ellipsed form-control" id="copyUrlInput" autofocus="autofocus">
+        </div>
+        <div class="modal-footer">
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="Tagging.html">
+    <form>
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">
+                <i class="fa fa-times"></i>
+            </button>
+            <h2 class="modal-title">{{'storage-client.tagging' | translate}}</h2>
+        </div>
+        <div class="modal-body">
+            <div class="tag-settings">
+                <div id="lookup">
+                    <button class="btn btn-link btn-remove pull-right" id="remove-all-tags">
+                        <i class="fa fa-trash-o"></i> Clear All
+                    </button>
+                    <h3>Lookup
+                        <button class="btn btn-link btn-add" id="btn-add-tags">
+                            <i class="fa fa-pencil"></i> Edit
+                        </button>
+                    </h3>
+                    <div class="active-tags content-box">
+                        <div class="label label-tag">
+                            <span>brand:</span>levis
+                        </div>
+                        <div class="label label-tag">
+                            <span>brand:</span>gap
+                        </div>
+                    </div><!-- active-tags -->
+                </div>
+                <div id="freeform">
+                    <button class="btn btn-link btn-remove pull-right">
+                        <i class="fa fa-trash-o"></i> Clear All
+                    </button>
+                    <h3>Freeform
+                        <button class="btn btn-link btn-add" id="btn-freeform-add">
+                            <i class="fa fa-pencil"></i> Edit
+                        </button></h3>
+                    <div class="active-tags content-box" >
+                        <div class="label label-tag">
+                            <span>caption:</span>lorem ipsum dolor sit
+                        </div>
+                    </div><!-- active-tags -->
+                </div>
+                <div id="timeline">
+                    <button class="btn btn-link btn-remove pull-right">
+                        <i class="fa fa-trash-o"></i> Clear All
+                    </button>
+                    <h3>Timeline
+                        <button class="btn btn-link btn-add" id="add-timeline">
+                            <i class="fa fa-pencil"></i> Edit
+                        </button>
+                    </h3>
+                    <div class="active-tags content-box" >
+                        <div class="label label-tag" style="line-height:22px; white-space:normal; text-align:left">
+                            Start 02-Jan-2014 End 21-Jan-2014 Trash 8:00:00AM to 05:30:00PM 60 Seconds Carry On 1 Weekly (Sun,Sat) <a href="#" class="remove-tag"></a>
+                        </div>
+                    </div><!-- active-tags -->
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
         </div>

@@ -49,9 +49,9 @@ function($scope, $modalInstance, listSvc) {
 ])
 .controller("ButtonsController",
 ["$scope", "$stateParams", "$window","$modal", "$log", "$timeout", "$filter", "FileListService",
-"GAPIRequestService", "STORAGE_API_URL", "DownloadService", "$q", "$translate", "$state", "STORAGE_CLIENT_API", "FULLSCREEN",
+"GAPIRequestService", "STORAGE_API_URL", "DownloadService", "$q", "$translate", "$state", "STORAGE_CLIENT_API", "FULLSCREEN", "TaggingService",
 function ($scope, $stateParams, $window, $modal, $log, $timeout, $filter, listSvc, requestSvc,
-          STORAGE_API_URL, downloadSvc, $q, $translate, $state, STORAGE_CLIENT_API, FULLSCREEN) {
+          STORAGE_API_URL, downloadSvc, $q, $translate, $state, STORAGE_CLIENT_API, FULLSCREEN, taggingSvc) {
   $scope.storageModal = ($window.location.href.indexOf("storage-modal.html") > -1);
   var bucketName = "risemedialibrary-" + $stateParams.companyId;
   var bucketUrl = STORAGE_API_URL + bucketName + "/";
@@ -332,6 +332,8 @@ function ($scope, $stateParams, $window, $modal, $log, $timeout, $filter, listSv
     }
     return selectedFiles;
   }
+
+  $scope.taggingButtonClick = taggingSvc.taggingButtonClick;
 
   function getActivePendingOperations() {
     var ops = $scope.pendingOperations;
