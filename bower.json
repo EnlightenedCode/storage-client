@@ -20,6 +20,8 @@
     "jquery": "~1.11.1",
     "angular-mocks": "~1.2.24",
     "angular-translate": "~2.4.2",
-    "angular-translate-loader-static-files": "~2.4.2"
+    "angular-translate-loader-static-files": "~2.4.2",
+    "rv-common-i18n": "feature/main-tagging",
+    "rv-common-style": "feature/file-tags-2"
   }
 }

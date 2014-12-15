@@ -5,11 +5,15 @@ describe("TaggingCtrl", function() {
   var TaggingCtrl
     ,scope = {}
     ,modalInstance = {}
-    ,tagGroups = {};
-
+    ,tagGroups = {}
+    ,availableLookupTags ={}
+    ,selectedLookupTags = {}
+    ,taggingSvc = {};
   beforeEach(inject(function($controller) {
     TaggingCtrl = $controller("TaggingCtrl"
-      ,{$scope: scope, $modalInstance: modalInstance, tagGroups: tagGroups});
+      ,{$scope: scope, $modalInstance: modalInstance, tagGroups: tagGroups,
+        availableLookupTags: availableLookupTags, selectedLookupTags: selectedLookupTags
+      , TaggingService: taggingSvc});
   }));
 
   it("should be defined", function() {
@@ -31,7 +35,28 @@ describe("TaggingCtrl", function() {
     expect(scope.editLookup).to.exist;
   });
 
-  it("should provide a tagGroups variable ", function() {
+  it("should should provide a addToSelectedLookupTag function ", function() {
+    expect(scope.addToSelectedLookupTag).to.exist;
+  });
+
+  it("should should provide an removeFromSelectedLookupTag function ", function() {
+    expect(scope.removeFromSelectedLookupTag).to.exist;
+  });
+
+  it("should should provide an saveChangesToLookupTags function ", function() {
+    expect(scope.saveChangesToLookupTags).to.exist;
+  });
+
+  it("should provide tagGroups variable ", function() {
     expect(scope.tagGroups).to.exist;
   });
+
+  it("should provide availableLookupTags variable ", function() {
+    expect(scope.availableLookupTags).to.exist;
+  });
+
+  it("should provide selectedLookupTags variable ", function() {
+    expect(scope.selectedLookupTags).to.exist;
+  });
+
 });

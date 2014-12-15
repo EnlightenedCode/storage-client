@@ -178,6 +178,11 @@ casper.test.begin("Connecting to " + url, function suite(test) {
       casper.test.assertVisible("div[title='Edit Lookup Tag View']");
       this.click("button[ng-click='resetView()']");
       casper.test.assertVisible("div[title='Main Tag View']");
+      casper.echo("Checking click on lookup tag box goes to Edit screen");
+      this.click("div[id='lookupEditBox']");
+      casper.test.assertVisible("div[title='Edit Lookup Tag View']");
+      //**** put here future e2e tests for add and remove functions on lookup Tags
+      //****
       this.click("button[ng-click='cancel()']");
     });
     // Waits for the popup to disappear

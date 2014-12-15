@@ -1,0 +1,54 @@
+  <button type="button" class="close pull-right" ng-click="toggleDialog()">
+    <i class="fa fa-times"></i>
+  </button>
+
+  <div id="lookup-filter" style="margin-bottom:10px">
+    <label class="control-label">Filter by Lookup</label>
+
+    <div class="content-box" style="padding:5px;min-height:34px;">
+      <div class="label label-tag" ng-repeat="tag in selectedTags">
+        <span>{{tag.name}}:</span>{{tag.value}} <i class="fa fa-minus-circle" style="cursor: pointer;" ng-click="deselectTag(tag)"></i>
+      </div>
+    </div>
+
+    <div class="content-box tag-selector" style="height:150px;margin-top:5px">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control input-sm" placeholder="Search Lookup Tags" ng-model="tagFilter">
+      </div>
+
+      <div class="scrollable-content">
+        <div class="label label-tag" ng-repeat="tag in tags | filter:tagFilter">
+          <span>{{tag.name}}:</span>{{tag.value}} <i class="fa fa-plus-circle" style="cursor: pointer;" ng-click="selectTag(tag)"></i>
+        </div>
+      </div><!-- scrollable-content -->
+    </div>
+  </div><!-- lookup-filter -->
+
+  <div id="timeline-filter" style="margin-top:20px">
+    <label class="control-label">Filter by Timeline</label>
+
+    <div class="form-group">
+      <div class="row row-no-padding">
+        <div class="col-xs-6">
+          <label class="control-label">Start Date</label>
+          <div class="input-group">
+            <input type="text" class="form-control input-sm" placeholder="DD-MMM-YYYY">
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          </div>  
+        </div>
+        <div class="col-xs-6">
+          <label class="control-label">End Date</label>
+          <div class="input-group">
+            <input type="text" class="form-control input-sm" placeholder="DD-MMM-YYYY">
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          </div> 
+        </div>
+      </div><!-- row -->
+    </div>
+  </div><!-- timeline-filter -->
+
+  <div class="button-wrapper text-right" style="margin-top:10px; margin-bottom:10px;">
+    <button class="btn btn-sm btn-primary">Apply <i class="fa fa-check"></i></button>
+    <button class="btn btn-sm btn-default btn-close" ng-click="toggleDialog()">Cancel <i class="fa fa-times"></i></button>
+  </div>
