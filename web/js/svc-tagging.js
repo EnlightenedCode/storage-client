@@ -8,12 +8,8 @@ angular.module("tagging", [])
     svc.available = {};
     svc.selected = {};
 
+    //unit tested
     svc.refreshLocalStore = function(){
-      if ($stateParams.companyId) {
-      // placeholder code for live calls for these files
-        var placeholder = 0;
-        placeholder = 0;
-      }
       if (typeof localData.getFiles() === "undefined") {
         return localData.loadLocalData();
       }
@@ -24,24 +20,41 @@ angular.module("tagging", [])
       return fake.promise;
     };
 
+    //unit tested
+    svc.clearAllLookupTags = function(){
+      svc.available.lookupTags.push.apply(svc.available.lookupTags, svc.selected.lookupTags);
+      svc.selected.lookupTags.splice(0, svc.selected.lookupTags.length);
+    };
+
+    //unit tested
+    svc.clearAllLookupTagsAndSave = function(){
+      svc.clearAllLookupTags();
+      svc.tagGroups.lookupTags.splice(0, svc.tagGroups.lookupTags.length);
+      svc.saveChangesToLookupTags();
+    };
+
+    //unit tested
     svc.addToSelectedLookupTag = function (tag){
       var status = "";
-      status = takeItemFromOneArrayToAnother(tag, svc.available.lookupTags, svc.tagGroups.lookupTags);
+      status = takeItemFromOneArrayToAnother(tag, svc.available.lookupTags, svc.selected.lookupTags);
       return status;
     };
 
+    //unit tested
     svc.removeFromSelectedLookupTag = function (tag){
       var status = "";
-      status = takeItemFromOneArrayToAnother(tag, svc.tagGroups.lookupTags, svc.available.lookupTags);
+      status = takeItemFromOneArrayToAnother(tag, svc.selected.lookupTags, svc.available.lookupTags);
       return status;
     };
 
+    //unit tested
     svc.saveChangesToLookupTags = function(){
       var namesOfFiles = svc.selected.files.map(function(i){
         return i.name;
       });
-      localData.updateTags(namesOfFiles, "Lookup", svc.tagGroups.lookupTags);
-      //syncToDatastore(svc.tagGroups.lookupTags);
+      if (!$stateParams.companyId) {
+        localData.updateTags(namesOfFiles, "Lookup", svc.selected.lookupTags);
+      }
     };
 
     svc.taggingButtonClick = function(items, command) {
@@ -50,6 +63,7 @@ angular.module("tagging", [])
       });
     };
 
+    //unit tested
     svc.getFlattenedTagsConfigList = function(type) {
       var tags = localData.getTagConfigs();
       var res = [];
@@ -57,14 +71,29 @@ angular.module("tagging", [])
       for(var i = 0; i < tags.length; i++) {
         var tagDef = tags[i];
 
-        if(tagDef.type === type) {
+        if(tagDef.type === "Lookup" && type === "Lookup") {
           for(var j = 0; j < tagDef.values.length; j++) {
             res.push({ name: tagDef.name, value: tagDef.values[j] });
           }
         }
+        if(tagDef.type === "Freeform" && type === "Freeform") {
+            res.push({ name: tagDef.name});
+        }
       }
-
       return res;
+    };
+
+    //unit tested
+    svc.refreshSelection = function(items, command) {
+        if(command === "union"){
+          var selectedFiles = getSelectedFiles(items);
+          svc.selected.files = selectedFiles;
+          svc.command = command;
+          svc.tagGroups = unionTagGroups(selectedFiles);
+          svc.selected.lookupTags = angular.copy(svc.tagGroups.lookupTags);
+        }
+        svc.configTags = transformAvailableTags(localData.getTagConfigs());
+        svc.available.lookupTags = getAvailableTags(svc.configTags.lookupTags, svc.tagGroups.lookupTags);
     };
 
     // Load localStore upon svc creation if in local
@@ -76,15 +105,8 @@ angular.module("tagging", [])
 
     //Helper functions
     function setupTagModal(items, command){
-      if(command === "union" || command === "copy"){
-        var selectedFiles = getSelectedFiles(items);
-        svc.selected.files = selectedFiles;
-        svc.tagGroups = unionTagGroups(selectedFiles);
-      }
-      svc.configTags = transformAvailableTags(localData.getTagConfigs());
-
-      svc.available.lookupTags = getAvailableTags(svc.configTags.lookupTags, svc.tagGroups.lookupTags);
-
+      svc.selectedItems = items;
+      svc.refreshSelection(items, command);
       svc.modalInstance = $modal.open({
         templateUrl: "Tagging.html",
         controller: "TaggingCtrl",
@@ -96,7 +118,7 @@ angular.module("tagging", [])
             return svc.available.lookupTags;
           },
           selectedLookupTags: function(){
-            return svc.tagGroups.lookupTags;
+            return svc.selected.lookupTags;
           }
         }
       });
@@ -128,6 +150,7 @@ angular.module("tagging", [])
         var fileNames = files.map(function(i){
           return i.name;
         });
+
         selectedFiles = localData.getFiles().filter(function(i){
           return fileNames.indexOf(i.name) > -1;
         });
@@ -160,23 +183,17 @@ angular.module("tagging", [])
       return status;
     }
 
-    function transformAvailableTags(items) {
+    function transformAvailableTags() {
       var configTags = {};
-      var lookupTags = [];
-      for ( var i = 0; i < items.length; i++ ){
-        if(typeof items[i].values !== "undefined") {
-          for (var x = 0; x < items[i].values.length; x++) {
-            var addAvailableLookup = {};
-            addAvailableLookup.name = items[i].name;
-            addAvailableLookup.value = items[i].values[x];
-            lookupTags.push(addAvailableLookup);
-          }
-        }
-      }
-      configTags.lookupTags = lookupTags;
+      configTags.lookupTags = svc.getFlattenedTagsConfigList("Lookup");
+      configTags.freeformTags = svc.getFlattenedTagsConfigList("Freeform");
       return configTags;
     }
-
+    function mapNameToArray(array){
+      return array.map(function(i){
+        return i.name;
+      });
+    }
     function unionTagGroups(items) {
       var tagGroups = {};
       var lookupTags = [];
@@ -202,9 +219,15 @@ angular.module("tagging", [])
               var addFreeform = {};
               addFreeform.name = items[i].tags[x].name;
               addFreeform.value = items[i].tags[x].value;
-              if(uniqueFreeformValues.length < 1 || uniqueFreeformValues.lastIndexOf(addFreeform.name) === -1){
+              if(uniqueFreeformValues.length < 1 || uniqueFreeformValues.indexOf(addFreeform.name) === -1){
                 uniqueFreeformValues.push(addFreeform.name);
                 freeformTags.push(addFreeform);
+              } else if(uniqueFreeformValues.indexOf(addFreeform.name) > -1) {
+                var namesOfFreeforms = mapNameToArray(freeformTags);
+                var changeIdx = namesOfFreeforms.indexOf(addFreeform.name);
+                if(freeformTags[changeIdx].value !== addFreeform.value) {
+                  freeformTags[changeIdx].value = freeformTags[changeIdx].value + ", " + addFreeform.value;
+                }
               }
             }
           }

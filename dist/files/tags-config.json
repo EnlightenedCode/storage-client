@@ -1,0 +1,15 @@
+[
+  {
+    "type": "Lookup",
+    "name": "brand",
+    "values": ["calvin klein", "armani", "levis", "gap", "diesel", "tommy", "hugo"]
+  }, {
+    "type": "Lookup",
+    "name": "style",
+    "values": ["business", "informal", "casual", "edgy", "urban"]
+  }, {
+    "type": "Lookup",
+    "name": "size",
+    "values": ["small", "medium", "large"]
+  }
+]

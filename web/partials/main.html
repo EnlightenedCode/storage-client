@@ -60,7 +60,7 @@
             <span translate="common.select"></span> <i class="fa fa-check fa-white icon-right"></i>
           </button>
   				<button type="button" class="btn btn-link" title="Download" ng-click="downloadButtonClick()" ng-hide="isTrashFolder() || !(filesDetails.checkedCount > 0 && filesDetails.folderCheckedCount === 0) || filesDetails.localFiles === true"><i class="fa fa-cloud-download fa-2x"></i></button>
-                <button type="button" class="btn btn-link" title="Tagging" ng-click="taggingButtonClick()" ng-hide="isTrashFolder() || filesDetails.checkedCount + filesDetails.folderCheckedCount === 0"><i class="fa fa-tag fa-2x"></i></button>
+                <button type="button" class="btn btn-link" title="Tagging" ng-click="taggingButtonClick()" ng-hide="isTrashFolder() || !(filesDetails.checkedCount > 0 && filesDetails.folderCheckedCount === 0)"><i class="fa fa-tag fa-2x"></i></button>
                 <button type="button" class="btn btn-link" title="Copy Url" ng-hide="isTrashFolder() || (filesDetails.checkedCount + filesDetails.folderCheckedCount === 0 || filesDetails.checkedCount + filesDetails.folderCheckedCount > 1) || filesDetails.localFiles === true" ng-click="copyUrlButtonClick('lg')"><i class="fa fa-link fa-2x"></i></button>
   				<button type="button" class="btn btn-link" title="Move To Trash" ng-click="trashButtonClick()" ng-hide="isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1) || filesDetails.localFiles === true"><i class="fa fa-trash-o fa-2x"></i></button>
           <button type="button" class="btn btn-link" title="Restore From Trash" ng-click="restoreButtonClick()" ng-hide="!isTrashFolder() || (filesDetails.checkedCount < 1 && filesDetails.folderCheckedCount < 1)"><i class="fa fa-trash-o fa-2x"></i><i class="fa fa-share"></i></button>
@@ -212,7 +212,7 @@
             <div class="modal-body" title="Main Tag View" ng-show="showMainTagView">
                 <div class="tag-settings">
                     <div id="lookup">
-                        <button class="btn btn-link btn-remove pull-right" id="remove-all-tags">
+                        <button class="btn btn-link btn-remove pull-right" id="remove-all-tags" ng-click="clearAllLookupTags()">
                             <i class="fa fa-trash-o"></i> Clear All
                         </button>
                         <h3>Lookup
@@ -258,6 +258,13 @@
                 </div>
             </div>
             <div class="modal-body" title="Edit Lookup Tag View"  ng-show="showLookupEditView">
+                <div>
+                    <button class="btn btn-link btn-remove pull-right" id="remove-all-tags-edit" ng-click="clearAllLookupTags()">
+                        <i class="fa fa-trash-o"></i> Clear All
+                    </button>
+                    <h3>Lookup
+                    </h3>
+                </div>
                 <div class="editable-tags">
                     <label>Selected Tags</label>
                     <div class="content-box" style="height:100px; padding:5px;">
@@ -272,10 +279,10 @@
                     <div class="content-box">
                         <div class="search-bar left-inner-addon">
                             <i class="fa fa-search"></i>
-                            <input type="text" placeholder="Search Lookup Tags" class="form-control">
+                            <input type="text" placeholder="Search Lookup Tags" class="form-control" ng-model="tagQuery">
                         </div><!-- left-inner-addon -->
                         <div class="scrollable-content">
-                            <div class="label label-tag" ng-repeat="lookup in availableLookupTags" ng-click="addToSelectedLookupTag(lookup)">
+                            <div class="label label-tag" ng-repeat="lookup in availableLookupTags | filter:tagQuery" ng-click="addToSelectedLookupTag(lookup)">
                                 <span>{{ lookup.name }}:</span> {{ lookup.value }} <i class="fa fa-plus-circle"></i>
                             </div>
                         </div>

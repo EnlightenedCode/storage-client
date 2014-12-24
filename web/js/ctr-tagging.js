@@ -19,7 +19,23 @@ angular.module("tagging")
   };
   $scope.saveChangesToLookupTags = function(){
     taggingSvc.saveChangesToLookupTags();
+    $scope.refreshChanges();
     $scope.resetView();
+  };
+
+  $scope.refreshChanges = function(){
+      taggingSvc.refreshSelection (taggingSvc.selectedItems, taggingSvc.command);
+      $scope.tagGroups = taggingSvc.tagGroups;
+      $scope.availableLookupTags = taggingSvc.available.lookupTags;
+      $scope.selectedLookupTags = taggingSvc.selected.lookupTags;
+  };
+
+  $scope.clearAllLookupTags = function(){
+    if($scope.showMainTagView){
+      taggingSvc.clearAllLookupTagsAndSave();
+    } else {
+      taggingSvc.clearAllLookupTags();
+    }
   };
 
   $scope.editLookup = function(){
@@ -27,6 +43,7 @@ angular.module("tagging")
     $scope.showLookupEditView = true;
   };
   $scope.resetView = function(){
+    $scope.refreshChanges();
     $scope.showMainTagView = true;
     $scope.showLookupEditView = false;
   };
