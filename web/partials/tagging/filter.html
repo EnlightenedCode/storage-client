@@ -2,12 +2,13 @@
     <i class="fa fa-times"></i>
   </button>
 
-  <div id="lookup-filter" style="margin-bottom:10px">
+  <div id="lookup-filter" class="half-bottom">
     <label class="control-label">Filter by Lookup</label>
 
-    <div class="content-box" style="padding:5px;min-height:34px;">
-      <div class="label label-tag" ng-repeat="tag in selectedTags">
-        <span>{{tag.name}}:</span>{{tag.value}} <i class="fa fa-minus-circle" style="cursor: pointer;" ng-click="deselectTag(tag)"></i>
+    <div class="content-box tags-input">
+      <div class="label label-tag" ng-repeat="tag in selectedTags" ng-click="deselectTag(tag)">
+        <span>{{tag.name}}:</span><span class="tag-value">{{tag.value}}</span> 
+        <span><i class="fa fa-minus-circle" style="cursor: pointer;" ></i></span>
       </div>
     </div>
 
@@ -18,14 +19,15 @@
       </div>
 
       <div class="scrollable-content">
-        <div class="label label-tag" ng-repeat="tag in tags | filter:tagFilter">
-          <span>{{tag.name}}:</span>{{tag.value}} <i class="fa fa-plus-circle" style="cursor: pointer;" ng-click="selectTag(tag)"></i>
+        <div class="label label-tag" ng-repeat="tag in tags | filter:tagFilter" ng-click="selectTag(tag)">
+          <span>{{tag.name}}:</span><span class="tag-value">{{tag.value}}
+          <span><i class="fa fa-plus-circle" style="cursor: pointer;" ></i></span>
         </div>
       </div><!-- scrollable-content -->
     </div>
   </div><!-- lookup-filter -->
 
-  <div id="timeline-filter" style="margin-top:20px">
+  <div id="timeline-filter">
     <label class="control-label">Filter by Timeline</label>
 
     <div class="form-group">
@@ -48,7 +50,7 @@
     </div>
   </div><!-- timeline-filter -->
 
-  <div class="button-wrapper text-right" style="margin-top:10px; margin-bottom:10px;">
+  <div class="button-wrapper text-right">
     <button class="btn btn-sm btn-primary">Apply <i class="fa fa-check"></i></button>
     <button class="btn btn-sm btn-default btn-close" ng-click="toggleDialog()">Cancel <i class="fa fa-times"></i></button>
   </div>
