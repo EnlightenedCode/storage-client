@@ -15,10 +15,11 @@ var env = process.env.NODE_ENV || "dev",
     e2ePort = process.env.E2E_PORT || E2E_PORT[env] || 8001,
     gulp = require("gulp"),
     // Include Our Plugins
-    uglify = require("gulp-uglify"),
     karma = require("gulp-karma"),
     jshint = require("gulp-jshint"),
     usemin = require("gulp-usemin"),
+    uglify = require('gulp-uglify'),
+    sourcemaps = require('gulp-sourcemaps'),
     htmlreplace = require("gulp-html-replace"),
     replace = require("gulp-replace"),
     gutil = require("gulp-util"),
@@ -72,7 +73,6 @@ var env = process.env.NODE_ENV || "dev",
       "test/fixtures/*.js",
       "test/**/*spec.js"
     ],
-    // uglify also take care of removing unnecessary "use strict" statements
 
     appJSFiles = [
       "web/js/**/*.js",
@@ -128,7 +128,7 @@ gulp.task("clean", function() {
 
 gulp.task("lint", function() {
   return gulp.src(appJSFiles)
-    .pipe(jshint(".jshintrc"))
+    .pipe(jshint())
     .pipe(jshint.reporter("jshint-stylish"))
     .pipe(jshint.reporter("fail"));
 });
@@ -139,34 +139,18 @@ gulp.task("watch", function() {
 
 gulp.task("html", ["clean", "lint"], function () {
   return gulp.src(htmlFiles)
-    .pipe(usemin({
-    js: [uglify({mangle:false, outSourceMap: true})] //disable mangle just for $routeProvider in controllers.js
-  }))
+  .pipe(usemin())
   .pipe(env === "prod" ? replace("rise-common-test", "rise-common") : gutil.noop())
   .pipe(env === "prod" ? replace("rvaviewer-test", "rvashow2") : gutil.noop())
-  .pipe(gulp.dest("dist/"));
+  .pipe(gulp.dest("dist/"))
 });
 
-gulp.task("build-e2e", function () {
-  gulp.src("test/gapi-mock.js")
-  .pipe(gulp.dest("dist-e2e/"));
-
-  gulp.src(viewFiles).pipe(gulp.dest("dist-e2e/partials"));
-  gulp.src(fileFiles).pipe(gulp.dest("dist-e2e/files"));
-  gulp.src(imgFiles).pipe(gulp.dest("dist-e2e/img"));
-
-  return gulp.src(htmlFiles)
-    .pipe(htmlreplace({
-      e2e: {
-        src: ["gapi-mock.js"],
-        tpl: "<script type=\"text/javascript\" src=\"%s\"></script>"
-      }
-    }))
-    .pipe(usemin({
-      js: [uglify({mangle:false})] //disable mangle just for $routeProvider in controllers.js
-    }))
-
-  .pipe(gulp.dest("dist-e2e/"));
+gulp.task("uglify", ["html"], function() {
+  return gulp.src("dist/script/*")
+  .pipe(sourcemaps.init())
+  .pipe(uglify())
+  .pipe(sourcemaps.write())
+  .pipe(gulp.dest("dist/script"));
 });
 
 gulp.task("view", ["clean"], function() {
@@ -237,7 +221,7 @@ gulp.task("config", function() {
     .pipe(gulp.dest("./web/js/config"));
 });
 
-gulp.task("build", ["clean", "config", "html", "view", "i18n", "files", "img", "css", "fonts", "locales", "icons"]);
+gulp.task("build", ["clean", "config", "html", "uglify", "view", "i18n", "files", "img", "css", "fonts", "locales", "icons"]);
 
 
 gulp.task("test", function() {
@@ -283,8 +267,6 @@ gulp.task("server", ["sass", "watch-dev"], function() {
 });
 
 gulp.task("server-dist", function() {
-  gulp.start("build");
-  gulp.start("watch-dist");
   httpServer = connect.server({
     root: "dist",
     port: 8000,
