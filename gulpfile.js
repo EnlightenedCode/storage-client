@@ -101,10 +101,6 @@ var env = process.env.NODE_ENV || "dev",
       "web/partials/**/*",
     ],
 
-    languageFiles = [
-      "web/locales/**",
-    ],
-
     fileFiles = [
       "web/files/**/*"
     ],
@@ -158,11 +154,6 @@ gulp.task("view", ["clean"], function() {
     .pipe(gulp.dest("dist/partials"));
 });
 
-
-gulp.task("i18n", ["clean"], function() {
-  return gulp.src(languageFiles)
-    .pipe(gulp.dest("dist/locales"));
-});
 
 gulp.task("files", ["clean"], function() {
   return gulp.src(fileFiles)
@@ -221,7 +212,7 @@ gulp.task("config", function() {
     .pipe(gulp.dest("./web/js/config"));
 });
 
-gulp.task("build", ["clean", "config", "html", "uglify", "view", "i18n", "files", "img", "css", "fonts", "locales", "icons"]);
+gulp.task("build", ["clean", "config", "html", "uglify", "view", "files", "img", "css", "fonts", "locales", "icons"]);
 
 
 gulp.task("test", function() {
