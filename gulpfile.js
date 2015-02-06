@@ -149,7 +149,7 @@ gulp.task("uglify", ["html"], function() {
   return gulp.src("dist/script/*")
   .pipe(sourcemaps.init())
   .pipe(uglify())
-  .pipe(sourcemaps.write())
+  .pipe(sourcemaps.write("./"))
   .pipe(gulp.dest("dist/script"));
 });
 

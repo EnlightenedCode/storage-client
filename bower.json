@@ -1,14 +1,14 @@
 {
   "name": "rv-storage-client",
   "dependencies": {
-    "angular": "~1.2.6",
-    "angular-mocks": "~1.2.6",
-    "angular-resource": "~1.2.6",
-    "angular-sanitize": "~1.2.6",
+    "angular": "~1.3.12",
+    "angular-mocks": "~1.3.12",
+    "angular-resource": "~1.3.12",
+    "angular-sanitize": "~1.3.12",
     "jQuery": "~1.11.1",
     "q": "~1.0.1",
     "rv-common-style": "https://github.com/Rise-Vision/common-style.git#master",
-    "rv-common-header": "https://github.com/Rise-Vision/common-header.git",
+    "rv-common-header": "https://github.com/Rise-Vision/common-header.git#v1.0.7",
     "rv-subscription-status": "https://github.com/Rise-Vision/component-subscription-status.git#master",
     "rv-common-i18n": "https://github.com/Rise-Vision/common-i18n.git#master",
     "rv-widget-settings-ui-core": "https://github.com/Rise-Vision/widget-settings-ui-core.git",
@@ -16,13 +16,13 @@
   },
   "resolutions": {
     "jQuery": "~1.11.1",
-    "angular": ">=1",
     "jquery": "~1.11.1",
-    "angular-mocks": "~1.2.24",
     "angular-translate": "~2.4.2",
     "angular-translate-loader-static-files": "~2.4.2",
-    "angular-sanitize": "~1",
     "rv-common-style": "master",
-    "rv-common-i18n": "master"
+    "rv-common-i18n": "master",
+    "angular": "~1.3.12",
+    "angular-mocks": "~1.3.12",
+    "angular-sanitize": "~1.3.12"
   }
 }
