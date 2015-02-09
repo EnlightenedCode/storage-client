@@ -14,7 +14,6 @@
     "rv-subscription-status": "https://github.com/Rise-Vision/component-subscription-status.git#master",
     "rv-common-i18n": "https://github.com/Rise-Vision/common-i18n.git#master",
     "rv-widget-settings-ui-core": "https://github.com/Rise-Vision/widget-settings-ui-core.git",
-    "angular-file-upload": "https://github.com/tejohnso/angular-file-upload.git",
     "angular-ui-router": "~0.2.11"
   },
   "overrides": {
