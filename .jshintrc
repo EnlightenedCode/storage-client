@@ -73,6 +73,7 @@
   "globals": {
 
     "$": false,
+    "_": false,
     "$q": false,
     "$log": false,
     "Stripe": false,
