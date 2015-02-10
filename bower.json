@@ -7,6 +7,7 @@
     "angular-sanitize": "~1.2.6",
     "jQuery": "~1.11.1",
     "q": "~1.0.1",
+    "underscore": "1.7.0",
     "rv-common-style": "https://github.com/Rise-Vision/common-style.git#master",
     "rv-common-header": "https://github.com/Rise-Vision/common-header.git#v1.0.2",
     "angular-translate": "~2.5.2",
