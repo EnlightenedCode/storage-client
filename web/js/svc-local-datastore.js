@@ -1,4 +1,5 @@
 "use strict";
+
 angular.module("localData", [])
 .service("localDatastore", ["LocalTagsConfigFiles", "LocalFiles", "$q", "$stateParams", "GAPIRequestService",
     "FileListService",
@@ -6,6 +7,7 @@ angular.module("localData", [])
     var svc = {};
     var ds = {fileTagEntries: [], tagConfigs: [], filesWithTags: []};
     svc.statusDetails = {code: 200};
+
     svc.refreshConfigTags = function(){
       var deferred = $q.defer();
       var params = {companyId: $stateParams.companyId};
@@ -19,8 +21,8 @@ angular.module("localData", [])
         var code = 0;
         svc.statusDetails.code = 202;
         var params = {companyId: $stateParams.companyId};
-        var fileTagListQuery = requestor.executeRequest("storage.filetag.list", params).then(function(resp){
-          ds.fileTagEntries = (resp.items) ? resp.items : [];
+        var fileTagListQuery = requestor.executeRequest("storage.files.listbytags", params).then(function(resp){
+          ds.fileTagEntries = (resp.items) ? storageObjectsToFileTags(resp.items) : [];
           code += resp.code;
         });
 
@@ -220,6 +222,46 @@ angular.module("localData", [])
         }
       }
       return updatedTagsToAdd;
+    }
+
+    // Helper functions to transform current RvStorageObject format to former FileTagEntry
+    function fileTagFromStorageTag(so, tag, values) {
+      return {
+        companyId: so.companyId,
+        objectId: so.objectId,
+        type: tag.type,
+        name: tag.name,
+        values: values || []
+      };
+    }
+
+    function storageObjectToFileTags(so) {
+      var fileTags = {};
+
+      for(var t in so.tags) {
+        var key = t.type + t.name;
+        var ft = fileTags[key];
+
+        if(ft === null) {
+          ft = fileTags[key] = fileTagFromStorageTag(so, t);
+        }
+
+        ft.values.push(t.value);
+      }
+
+      fileTags.TIMELINE = fileTagFromStorageTag(so,  { type: "TIMELINE", name: "TIMELINE" }, [so.timeline]);
+
+      return _.values(fileTags);
+    }
+
+    function storageObjectsToFileTags(storageObjects) {
+      var fileTags = [];
+
+      storageObjects.forEach(function(so) {
+        fileTags.concat(storageObjectToFileTags(so));
+      });
+
+      return fileTags;
     }
 
     return svc;
