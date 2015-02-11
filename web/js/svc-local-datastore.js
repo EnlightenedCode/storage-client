@@ -238,17 +238,19 @@ angular.module("localData", [])
     function storageObjectToFileTags(so) {
       var fileTags = {};
 
-      so.tags.forEach(function(t) {
-        var key = t.type + t.name;
-        var ft = fileTags[key];
+      if(so.tags) {
+        so.tags.forEach(function(t) {
+          var key = t.type + t.name;
+          var ft = fileTags[key];
 
-        if(ft === undefined) {
-          fileTags[key] = fileTagFromStorageTag(so, t);
-          ft = fileTags[key];
-        }
+          if(ft === undefined) {
+            fileTags[key] = fileTagFromStorageTag(so, t);
+            ft = fileTags[key];
+          }
 
-        ft.values.push(t.value);
-      });
+          ft.values.push(t.value);
+        });
+      }
 
       if(so.timeline) {
         fileTags.TIMELINE = fileTagFromStorageTag(so,  { type: "TIMELINE", name: "TIMELINE" }, [so.timeline]);
@@ -263,8 +265,6 @@ angular.module("localData", [])
       storageObjects.forEach(function(so) {
         fileTags = fileTags.concat(storageObjectToFileTags(so));
       });
-
-      console.log(fileTags);
 
       return fileTags;
     }

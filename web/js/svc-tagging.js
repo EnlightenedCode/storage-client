@@ -169,90 +169,43 @@ angular.module("tagging", [])
       return $q.all(deletePromises);
     };
 
-    svc.updateTimelineTag = function(namesOfFiles, selectedItems, type) {
-      var addPromises = [];
-      var deletePromises = [];
-      var timelinesFilesToAdd = [];
-      var addParams = {};
-      namesOfFiles.forEach(function(i, pos){
-        selectedItems.forEach(function() {
-          var haveTimelineTag = svc.selected.files[pos].tags.filter(function (i) {
-            return i.type === type;
-          });
-          if (haveTimelineTag.length > 0) {
-            var foundTagToDelete = svc.selected.files[pos].tags.filter(function (y) {
-              return y.type === type;
-            });
-            if (foundTagToDelete.length > 0) {
-              var params = {};
-              params.id = foundTagToDelete[0].id;
-              deletePromises.push(requestor.executeRequest("storage.filetag.delete", params));
-            }
-            addParams = {};
-            addParams.objectId = i;
-            addParams.companyId = $stateParams.companyId;
-            addParams.name = "timeline";
-            addParams.type = type;
-            addParams.values = JSON.stringify(selectedItems[0]);
+    svc.updateTimelineTag = function(namesOfFiles, selectedItems) {
+      var promises = [];
 
-            addPromises.push(requestor.executeRequest("storage.filetag.put", addParams).then(function (resp) {
-              timelinesFilesToAdd.push(resp.item);
-            }));
-          } else {
-            addParams = {};
-            addParams.objectId = i;
-            addParams.companyId = $stateParams.companyId;
-            addParams.name = "timeline";
-            addParams.type = type;
+      namesOfFiles.forEach(function(objectId) {
+        var params = {
+          companyId: $stateParams.companyId,
+          objectId: objectId,
+          tags: [],
+          timeline: JSON.stringify(selectedItems[0])
+        };
+        
+        promises.push(requestor.executeRequest("storage.storageobject.put", params));
+      });
 
-            addParams.values = JSON.stringify(selectedItems[0]);
-            addPromises.push(requestor.executeRequest("storage.filetag.put", addParams).then(function (resp) {
-              timelinesFilesToAdd.push(resp.item);
-            }));
-          }
-        });
-      });
-      return $q.all(deletePromises).then(function(){
-        return $q.all(addPromises).then(function(){
-          var defer = $q.defer();
-          defer.resolve(timelinesFilesToAdd);
-          return defer.promise;
-        });
-      });
+      return $q.all(promises);
     };
 
-    svc.updateFreeformTags = function(namesOfFiles, selectedItems, type) {
-      var deletePromises = [];
-      var addPromises = [];
-
-      namesOfFiles.forEach(function(i){
-        selectedItems.forEach(function(y){
-          var addParams = {companyId: $stateParams.companyId};
-          addParams.name = y.name;
-          addParams.objectId = i;
-          addParams.type = type;
-          if (y.value !== ""){
-            addParams.values = y.value;
-          }
-
-          addPromises.push(requestor.executeRequest("storage.filetag.put", addParams).then(function(resp){
-
-            var selItemNames = selectedItems.map(function(elem){
-              return elem.name;
-            });
-            var indx = selItemNames.indexOf(y.name);
-            if(indx !== -1 && resp.item !== undefined){
-              selectedItems[indx].changedBy = resp.item.changedBy;  selectedItems[indx].changedDate = resp.item.changedDate;
-              selectedItems[indx].companyId = resp.item.companyId;selectedItems[indx].createdBy = resp.item.createdBy;
-              selectedItems[indx].creationDate = resp.item.creationDate;selectedItems[indx].id = resp.item.id;
-              selectedItems[indx].objectId = resp.item.objectId;
-            }
-          }));
-        });
+    svc.updateFreeformTags = function(namesOfFiles, selectedItems) {
+      var promises = [];
+      var tags = selectedItems.map(function(tag) {
+        return {
+          name: tag.name, value: tag.value, type: "FREEFORM"
+        };
       });
-      return $q.all(deletePromises).then(function(){
-        return $q.all(addPromises);
+
+      namesOfFiles.forEach(function(objectId) {
+        var params = {
+          companyId: $stateParams.companyId,
+          objectId: objectId,
+          tags: tags,
+          timeline: ""
+        };
+        
+        promises.push(requestor.executeRequest("storage.storageobject.put", params));
       });
+
+      return $q.all(promises);
     };
 
     svc.updateLookupTags = function(namesOfFiles, selectedItems) {
@@ -275,110 +228,6 @@ angular.module("tagging", [])
       });
 
       return $q.all(promises);
-    };
-
-    //
-    svc.updateLookupTagsOld = function(namesOfFiles, selectedItems, type) {
-      var deletePromises = [];
-      var addPromises = [];
-      var lookupsToBeAdded = [];
-      var lookupsNamesToBeRemoved = [];
-      var lookupTagDefs = localData.getTagConfigs().filter(function(x){
-        return x.type === "LOOKUP";
-      });
-      var availableNames = lookupTagDefs.map(function(y){
-        return y.name;
-      });
-      var availableNameValuePairs = localData.availableNameValuePairs();
-
-      selectedItems.forEach(function(i){
-        var lookupsAddedNames = lookupsToBeAdded.map(function(elem){
-          return elem.name;
-        });
-        var indx = lookupsAddedNames.indexOf(i.name);
-        if(indx  > -1){
-          if(availableNameValuePairs.indexOf(i.name + i.value) > -1){
-            lookupsToBeAdded[indx].values.push(i.value);
-          }
-        }else {
-          var addObject = {name: i.name, values: [i.value]};
-          if(i.delete){
-            addObject.delete = i.delete;
-          }
-          if(availableNames.indexOf(i.name) === -1){
-            lookupsNamesToBeRemoved.push(i.name);
-          } else {
-            lookupsToBeAdded.push(addObject);
-          }
-        }
-      });
-      var nameMapLookupToBeAdded = lookupsToBeAdded.map(function(i){
-        return i.name;
-      });
-
-      svc.tagGroups.lookupTags.forEach(function(i){
-        if(nameMapLookupToBeAdded.indexOf(i.name) === -1){
-          var noLookupName = {
-            name: i.name,
-            values: []
-          };
-          noLookupName.delete = true;
-          lookupsToBeAdded.push(noLookupName);
-        }
-      });
-
-
-      namesOfFiles.forEach(function(i){
-        lookupsNamesToBeRemoved.forEach(function(y){
-          var entryObjectToDelete = localData.getTagEntries().filter(function(elem){
-            return elem.name === y && elem.companyId === $stateParams.companyId &&
-                elem.objectId === i && elem.type === "LOOKUP";
-          });
-
-          if(entryObjectToDelete.length > 0){
-            var params = {};
-            params.id = entryObjectToDelete[0].id;
-            deletePromises.push(requestor.executeRequest("storage.filetag.delete", params).then(function(resp){
-              console.log(resp);
-            }));
-          }
-        });
-      });
-
-      namesOfFiles.forEach(function(i){
-        lookupsToBeAdded.forEach(function(y){
-          var addParams = {companyId: $stateParams.companyId};
-          addParams.name = y.name;
-          addParams.objectId = i;
-          addParams.type = type;
-          if (!y.delete){
-            addParams.values = y.values;
-          }
-
-          addPromises.push(requestor.executeRequest("storage.filetag.put", addParams).then(function(resp){
-            console.log(resp);
-
-            var selItemNames = selectedItems.map(function(elem){
-              return elem.name;
-            });
-            if(resp.code === 200 && resp.item){
-              var indx = selItemNames.indexOf(y.name);
-              if(indx !== -1){
-                selectedItems[indx].changedBy = resp.item.changedBy;  selectedItems[indx].changedDate = resp.item.changedDate;
-                selectedItems[indx].companyId = resp.item.companyId;selectedItems[indx].createdBy = resp.item.createdBy;
-                selectedItems[indx].creationDate = resp.item.creationDate;selectedItems[indx].id = resp.item.id;
-                selectedItems[indx].objectId = resp.item.objectId;
-              }
-            } else {
-              console.log(resp.code);
-            }
-
-          }));
-        });
-      });
-      return $q.all(deletePromises).then(function(){
-        return $q.all(addPromises);
-      });
     };
 
     // wait for server calls to make unit tests.
