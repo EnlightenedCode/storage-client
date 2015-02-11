@@ -124,8 +124,9 @@ angular.module("tagging", [])
       }
       if(type === "TIMELINE"){
         return svc.updateTimelineTag(namesOfFiles, selectedItems, type).then(function(resp){
-          resp.forEach(function(i){
-            localData.updateTimelineTag(i);
+          resp.forEach(function(so) {
+            var timeline = localData.fileTagFromStorageTag(so.item, { type: "TIMELINE", name: "TIMELINE"}, selectedItems);
+            localData.updateTimelineTag(timeline);
           });
         });
       }
@@ -146,7 +147,7 @@ angular.module("tagging", [])
 
       localData.clearSelectedTimelines(namesOfFiles);
 
-      return svc.updateTimelineTag(namesOfFiles, [null]);
+      return svc.saveChangesToTags([null], "TIMELINE");
     };
 
     svc.updateTimelineTag = function(namesOfFiles, selectedItems) {

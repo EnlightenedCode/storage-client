@@ -22,7 +22,7 @@ angular.module("localData", [])
         svc.statusDetails.code = 202;
         var params = {companyId: $stateParams.companyId};
         var fileTagListQuery = requestor.executeRequest("storage.files.listbytags", params).then(function(resp){
-          ds.fileTagEntries = (resp.files) ? storageObjectsToFileTags(resp.files) : [];
+          ds.fileTagEntries = (resp.files) ? svc.storageObjectsToFileTags(resp.files) : [];
           code += resp.code;
         });
 
@@ -147,6 +147,9 @@ angular.module("localData", [])
           });
         }
       });
+
+      console.log(tagPositionToSlice, filePosition, selectedItems);
+      
       if(tagPositionToSlice !== null && filePosition !== null){
         ds.filesWithTags[filePosition].tags.splice(tagPositionToSlice, 1);
       }
@@ -225,7 +228,7 @@ angular.module("localData", [])
     }
 
     // Helper functions to transform current RvStorageObject format to former FileTagEntry
-    function fileTagFromStorageTag(so, tag, values) {
+    svc.fileTagFromStorageTag = function(so, tag, values) {
       return {
         companyId: so.companyId,
         objectId: so.objectId,
@@ -233,9 +236,9 @@ angular.module("localData", [])
         name: tag.name,
         values: values || []
       };
-    }
+    };
 
-    function storageObjectToFileTags(so) {
+    svc.storageObjectToFileTags = function(so) {
       var fileTags = {};
 
       if(so.tags) {
@@ -244,7 +247,7 @@ angular.module("localData", [])
           var ft = fileTags[key];
 
           if(ft === undefined) {
-            fileTags[key] = fileTagFromStorageTag(so, t);
+            fileTags[key] = svc.fileTagFromStorageTag(so, t);
             ft = fileTags[key];
           }
 
@@ -253,21 +256,21 @@ angular.module("localData", [])
       }
 
       if(so.timeline) {
-        fileTags.TIMELINE = fileTagFromStorageTag(so,  { type: "TIMELINE", name: "TIMELINE" }, [so.timeline]);
+        fileTags.TIMELINE = svc.fileTagFromStorageTag(so,  { type: "TIMELINE", name: "TIMELINE" }, [so.timeline]);
       }
 
       return _.values(fileTags);
-    }
+    };
 
-    function storageObjectsToFileTags(storageObjects) {
+    svc.storageObjectsToFileTags = function(storageObjects) {
       var fileTags = [];
 
       storageObjects.forEach(function(so) {
-        fileTags = fileTags.concat(storageObjectToFileTags(so));
+        fileTags = fileTags.concat(svc.storageObjectToFileTags(so));
       });
 
       return fileTags;
-    }
+    };
 
     return svc;
 
