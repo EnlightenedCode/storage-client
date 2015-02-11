@@ -145,7 +145,7 @@ angular.module("tagging", [])
       svc.selected.timelineTag = null;
 
       localData.clearSelectedTimelines(namesOfFiles);
-      
+
       return svc.updateTimelineTag(namesOfFiles, [null]);
     };
 
@@ -160,7 +160,7 @@ angular.module("tagging", [])
           updateOnly: "TIMELINE"
         };
         
-        promises.push(requestor.executeRequest("storage.storageobject.put", params));
+        promises.push(requestor.executeRequest("storage.filetags.put", params));
       });
 
       return $q.all(promises);
@@ -182,7 +182,7 @@ angular.module("tagging", [])
           updateOnly: "FREEFORM"
         };
         
-        promises.push(requestor.executeRequest("storage.storageobject.put", params));
+        promises.push(requestor.executeRequest("storage.filetags.put", params));
       });
 
       return $q.all(promises);
@@ -204,7 +204,7 @@ angular.module("tagging", [])
           updateOnly: "LOOKUP"
         };
         
-        promises.push(requestor.executeRequest("storage.storageobject.put", params));
+        promises.push(requestor.executeRequest("storage.filetags.put", params));
       });
 
       return $q.all(promises);
