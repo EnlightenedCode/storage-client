@@ -176,8 +176,8 @@ angular.module("tagging", [])
         var params = {
           companyId: $stateParams.companyId,
           objectId: objectId,
-          tags: [],
-          timeline: JSON.stringify(selectedItems[0])
+          timeline: JSON.stringify(selectedItems[0]),
+          updateOnly: "TIMELINE"
         };
         
         promises.push(requestor.executeRequest("storage.storageobject.put", params));
@@ -199,7 +199,7 @@ angular.module("tagging", [])
           companyId: $stateParams.companyId,
           objectId: objectId,
           tags: tags,
-          timeline: ""
+          updateOnly: "FREEFORM"
         };
         
         promises.push(requestor.executeRequest("storage.storageobject.put", params));
@@ -221,7 +221,7 @@ angular.module("tagging", [])
           companyId: $stateParams.companyId,
           objectId: objectId,
           tags: tags,
-          timeline: ""
+          updateOnly: "LOOKUP"
         };
         
         promises.push(requestor.executeRequest("storage.storageobject.put", params));
