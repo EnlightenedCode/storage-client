@@ -189,9 +189,15 @@ angular.module("tagging")
   };
 
   $scope.refreshMainList = function(){
-    return listSvc.refreshFilesList().then(function(){
-      localData.loadLocalData();
+    var promise = $q.defer();
+
+    listSvc.refreshFilesList().then(function(){
+      localData.loadLocalData().then(function() {
+        promise.resolve();
+      });
     });
+
+    return promise.promise;
   };
 
   $scope.saveChangesFromView =function(){
