@@ -139,34 +139,14 @@ angular.module("tagging", [])
       return fake.promise;
     };
 
-
-
-
-    svc.clearTimeLineOnly = function(namesOfFiles, selectedItems, type) {
-      var deletePromises = [];
-      namesOfFiles.forEach(function (i, pos) {
-          var haveTimelineTag = svc.selected.files[pos].tags.filter(function (i) {
-            return i.type === type;
-          });
-          if (haveTimelineTag.length > 0) {
-            var foundTagToDelete = svc.selected.files[pos].tags.filter(function (y) {
-              return y.type === type;
-            });
-            if (foundTagToDelete.length > 0) {
-              var params = {};
-              params.id = foundTagToDelete[0].id;
-              deletePromises.push(requestor.executeRequest("storage.filetag.delete", params));
-            }
-          }
-      });
-
+    svc.clearTimeLineOnly = function(namesOfFiles) {
       //update locally
       svc.tagGroups.timelineTag = null;
       svc.selected.timelineTag = null;
-//    ========
 
       localData.clearSelectedTimelines(namesOfFiles);
-      return $q.all(deletePromises);
+      
+      return svc.updateTimelineTag(namesOfFiles, [null]);
     };
 
     svc.updateTimelineTag = function(namesOfFiles, selectedItems) {
@@ -176,7 +156,7 @@ angular.module("tagging", [])
         var params = {
           companyId: $stateParams.companyId,
           objectId: objectId,
-          timeline: JSON.stringify(selectedItems[0]),
+          timeline: selectedItems[0] && JSON.stringify(selectedItems[0]),
           updateOnly: "TIMELINE"
         };
         
