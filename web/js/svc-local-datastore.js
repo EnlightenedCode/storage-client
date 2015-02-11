@@ -22,7 +22,7 @@ angular.module("localData", [])
         svc.statusDetails.code = 202;
         var params = {companyId: $stateParams.companyId};
         var fileTagListQuery = requestor.executeRequest("storage.files.listbytags", params).then(function(resp){
-          ds.fileTagEntries = (resp.items) ? storageObjectsToFileTags(resp.items) : [];
+          ds.fileTagEntries = (resp.files) ? storageObjectsToFileTags(resp.files) : [];
           code += resp.code;
         });
 
@@ -238,18 +238,21 @@ angular.module("localData", [])
     function storageObjectToFileTags(so) {
       var fileTags = {};
 
-      for(var t in so.tags) {
+      so.tags.forEach(function(t) {
         var key = t.type + t.name;
         var ft = fileTags[key];
 
-        if(ft === null) {
-          ft = fileTags[key] = fileTagFromStorageTag(so, t);
+        if(ft === undefined) {
+          fileTags[key] = fileTagFromStorageTag(so, t);
+          ft = fileTags[key];
         }
 
         ft.values.push(t.value);
-      }
+      });
 
-      fileTags.TIMELINE = fileTagFromStorageTag(so,  { type: "TIMELINE", name: "TIMELINE" }, [so.timeline]);
+      if(so.timeline) {
+        fileTags.TIMELINE = fileTagFromStorageTag(so,  { type: "TIMELINE", name: "TIMELINE" }, [so.timeline]);
+      }
 
       return _.values(fileTags);
     }
@@ -258,8 +261,10 @@ angular.module("localData", [])
       var fileTags = [];
 
       storageObjects.forEach(function(so) {
-        fileTags.concat(storageObjectToFileTags(so));
+        fileTags = fileTags.concat(storageObjectToFileTags(so));
       });
+
+      console.log(fileTags);
 
       return fileTags;
     }

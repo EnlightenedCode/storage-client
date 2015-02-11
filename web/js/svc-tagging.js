@@ -255,8 +255,30 @@ angular.module("tagging", [])
       });
     };
 
+    svc.updateLookupTags = function(namesOfFiles, selectedItems) {
+      var promises = [];
+      var tags = selectedItems.map(function(tag) {
+        return {
+          name: tag.name, value: tag.value, type: "LOOKUP"
+        };
+      });
+
+      namesOfFiles.forEach(function(objectId) {
+        var params = {
+          companyId: $stateParams.companyId,
+          objectId: objectId,
+          tags: tags,
+          timeline: ""
+        };
+        
+        promises.push(requestor.executeRequest("storage.storageobject.put", params));
+      });
+
+      return $q.all(promises);
+    };
+
     //
-    svc.updateLookupTags = function(namesOfFiles, selectedItems, type) {
+    svc.updateLookupTagsOld = function(namesOfFiles, selectedItems, type) {
       var deletePromises = [];
       var addPromises = [];
       var lookupsToBeAdded = [];
