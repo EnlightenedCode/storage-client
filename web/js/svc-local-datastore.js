@@ -23,6 +23,7 @@ angular.module("localData", [])
         var params = {companyId: $stateParams.companyId};
         var fileTagListQuery = requestor.executeRequest("storage.files.listbytags", params).then(function(resp){
           ds.fileTagEntries = (resp.files) ? svc.storageObjectsToFileTags(resp.files) : [];
+
           code += resp.code;
         });
 
@@ -34,15 +35,10 @@ angular.module("localData", [])
           svc.statusDetails.code = (code === 400) ? 200 : 500;
           ds.filesWithTags = angular.copy(listSvc.filesDetails.files);
           ds.filesWithTags.forEach(function(i){
-          var filteredTagEntries = ds.fileTagEntries.filter(function(elem){
-            return elem.objectId === i.name;
-          });
-          filteredTagEntries.forEach(function(y){
-            if(y.type === "TIMELINE"){
-              y.values[0] = y.values[0];
-            }
-          });
-          i.tags = filteredTagEntries;
+            var filteredTagEntries = ds.fileTagEntries.filter(function(elem){
+              return elem.objectId === i.name;
+            });
+            i.tags = filteredTagEntries;
           });
         });
     };
@@ -94,6 +90,32 @@ angular.module("localData", [])
       return tagEntries;
     };
 
+    // Returns the tags of a given file, optionally filtering by type
+    svc.getFileTags = function(objectId, types) {
+      var file = _.find(ds.filesWithTags, function(file) {
+        return file.name === objectId;
+      });
+
+      if(!_.isUndefined(file)) {
+        // Filter tags
+        var tags = file.tags.filter(function(tag) {
+          return !types || types.indexOf(tag.type) >= 0;
+        });
+
+        // Flatten { tagname, values } into [{ tagname, value }]
+        tags = tags.map(function(tag) {
+          return _.flatten(tag.values.map(function(value) {
+            return { type: tag.type, name: tag.name, value: value};
+          }));
+        });
+
+        // Flatten array of arrays into a single array
+        return _.flatten(tags);
+      }
+      else {
+        return [];
+      }
+    };
 
     svc.getTagDefs = function(){
       var tagDefs = [];
@@ -148,8 +170,6 @@ angular.module("localData", [])
         }
       });
 
-      console.log(tagPositionToSlice, filePosition, selectedItems);
-      
       if(tagPositionToSlice !== null && filePosition !== null){
         ds.filesWithTags[filePosition].tags.splice(tagPositionToSlice, 1);
       }

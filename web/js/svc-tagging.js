@@ -59,12 +59,9 @@ angular.module("tagging", [])
       var namesOfFiles = svc.selected.files.map(function(i){
         return i.name;
       });
-      var deleteObjects = angular.copy(svc.tagGroups.lookupTags);
-      deleteObjects.forEach(function(i){
-        i.delete = true;
-      });
+
       svc.tagGroups.lookupTags.splice(0, svc.tagGroups.lookupTags.length);
-      return svc.updateLookupTags(namesOfFiles, deleteObjects, "LOOKUP");
+      return svc.updateLookupTags(namesOfFiles, [], "LOOKUP");
     };
 
     //unit tested
@@ -85,10 +82,12 @@ angular.module("tagging", [])
 
     //unit tested
     svc.clearAllFreeformTagsAndSave = function(){
-      svc.clearAllFreeformTags();
-      return svc.saveChangesToTags(svc.selected.freeformTags, "FREEFORM").then(function(){
-        svc.tagGroups.freeformTags.splice(0, svc.tagGroups.freeformTags.length);
+      var namesOfFiles = svc.selected.files.map(function(i){
+        return i.name;
       });
+
+      svc.tagGroups.freeformTags.splice(0, svc.tagGroups.freeformTags.length);
+      return svc.updateFreeformTags(namesOfFiles, [], "FREEFORM");
     };
 
     //unit tested
@@ -107,19 +106,27 @@ angular.module("tagging", [])
 
     //unit tested
     svc.saveChangesToTags = function(selectedItems, type){
+      var promise;
+      promise = $q.defer();
+
       var namesOfFiles = svc.selected.files.map(function(i){
         return i.name;
       });
+
       if(type === "FREEFORM"){
         return svc.updateFreeformTags(namesOfFiles, selectedItems, type).then(function(){
           selectedItems = cleanEmptyFreeformTags(selectedItems);
           localData.updateTags(namesOfFiles, type, selectedItems);
+
+          promise.resolve();
         });
       }
       if(type === "LOOKUP"){
         return svc.updateLookupTags(namesOfFiles, selectedItems, type).then(function(){
           selectedItems = (selectedItems === null) ? [] : selectedItems;
           localData.updateTags(namesOfFiles, type, selectedItems);
+
+          promise.resolve();
         });
       }
       if(type === "TIMELINE"){
@@ -128,16 +135,16 @@ angular.module("tagging", [])
             var timeline = localData.fileTagFromStorageTag(so.item, { type: "TIMELINE", name: "TIMELINE"}, selectedItems);
             localData.updateTimelineTag(timeline);
           });
+
+          promise.resolve();
         });
       }
       if (!$stateParams.companyId) {
         selectedItems = (selectedItems === null) ? [] : selectedItems;
         localData.updateTags(namesOfFiles, type, selectedItems);
       }
-      var fake;
-      fake = $q.defer();
-      fake.resolve();
-      return fake.promise;
+      
+      return promise.promise;
     };
 
     svc.clearTimeLineOnly = function(namesOfFiles) {
@@ -150,18 +157,25 @@ angular.module("tagging", [])
       return svc.saveChangesToTags([null], "TIMELINE");
     };
 
+    svc.updateStorageObject = function(objectId, tags, timeline) {
+      var params = {
+        companyId: $stateParams.companyId,
+        objectId: objectId,
+        tags: tags,
+        timeline: timeline
+      };
+      
+      return requestor.executeRequest("storage.filetags.put", params);
+    };
+
     svc.updateTimelineTag = function(namesOfFiles, selectedItems) {
       var promises = [];
 
       namesOfFiles.forEach(function(objectId) {
-        var params = {
-          companyId: $stateParams.companyId,
-          objectId: objectId,
-          timeline: selectedItems[0] && JSON.stringify(selectedItems[0]),
-          updateOnly: "TIMELINE"
-        };
-        
-        promises.push(requestor.executeRequest("storage.filetags.put", params));
+        var tags = localData.getFileTags(objectId, ["LOOKUP", "FREEFORM"]);
+        var timeline = selectedItems[0] && JSON.stringify(selectedItems[0]);
+
+        promises.push(svc.updateStorageObject(objectId, tags, timeline));
       });
 
       return $q.all(promises);
@@ -169,21 +183,17 @@ angular.module("tagging", [])
 
     svc.updateFreeformTags = function(namesOfFiles, selectedItems) {
       var promises = [];
-      var tags = selectedItems.map(function(tag) {
-        return {
-          name: tag.name, value: tag.value, type: "FREEFORM"
-        };
-      });
 
       namesOfFiles.forEach(function(objectId) {
-        var params = {
-          companyId: $stateParams.companyId,
-          objectId: objectId,
-          tags: tags,
-          updateOnly: "FREEFORM"
-        };
-        
-        promises.push(requestor.executeRequest("storage.filetags.put", params));
+        var tags = localData.getFileTags(objectId, ["LOOKUP"]);
+        var timeline = localData.getFileTags(objectId, ["TIMELINE"]);
+
+        timeline = timeline && timeline[0] && timeline[0].value;
+
+        console.log("tags", tags);
+        console.log("selected items", selectedItems);
+
+        promises.push(svc.updateStorageObject(objectId, selectedItems.concat(tags), timeline));
       });
 
       return $q.all(promises);
@@ -191,21 +201,14 @@ angular.module("tagging", [])
 
     svc.updateLookupTags = function(namesOfFiles, selectedItems) {
       var promises = [];
-      var tags = selectedItems.map(function(tag) {
-        return {
-          name: tag.name, value: tag.value, type: "LOOKUP"
-        };
-      });
 
       namesOfFiles.forEach(function(objectId) {
-        var params = {
-          companyId: $stateParams.companyId,
-          objectId: objectId,
-          tags: tags,
-          updateOnly: "LOOKUP"
-        };
-        
-        promises.push(requestor.executeRequest("storage.filetags.put", params));
+        var tags = localData.getFileTags(objectId, ["FREEFORM"]);
+        var timeline = localData.getFileTags(objectId, ["TIMELINE"]);
+
+        timeline = timeline && timeline[0] && timeline[0].value;
+
+        promises.push(svc.updateStorageObject(objectId, selectedItems.concat(tags), timeline));
       });
 
       return $q.all(promises);
@@ -276,11 +279,11 @@ angular.module("tagging", [])
 
         if(tagDef.type === "LOOKUP" && type === "LOOKUP") {
           for(var j = 0; j < tagDef.values.length; j++) {
-            res.push({ name: tagDef.name, value: tagDef.values[j] });
+            res.push({ type: tagDef.type, name: tagDef.name, value: tagDef.values[j] });
           }
         }
         if(tagDef.type === "FREEFORM" && type === "FREEFORM") {
-          res.push({ name: tagDef.name, id: tagDef.id});
+          res.push({ type: tagDef.type, name: tagDef.name, id: tagDef.id});
         }
       }
       return res;
@@ -606,6 +609,7 @@ angular.module("tagging", [])
               if(items[i].tags[x].type === "LOOKUP"){
                 for (var y = 0; y < items[i].tags[x].values.length; ++y) {
                   var addLookup = {};
+                  addLookup.type = "LOOKUP";
                   addLookup.name = items[i].tags[x].name;
                   addLookup.value = items[i].tags[x].values[y];
                   if(uniqueLookupValues.length < 1 || uniqueLookupValues.indexOf(addLookup.name + addLookup.value) === -1){
@@ -617,6 +621,7 @@ angular.module("tagging", [])
               }
               if(items[i].tags[x].type === "FREEFORM"){
                 var addFreeform = {};
+                addFreeform.type = "FREEFORM";
                 addFreeform.name = items[i].tags[x].name;
                 addFreeform.value = items[i].tags[x].values[0];
                 if(uniqueFreeformValues.length < 1 || uniqueFreeformValues.indexOf(addFreeform.name) === -1){
@@ -632,7 +637,7 @@ angular.module("tagging", [])
               }
               if(items[i].tags[x].type === "TIMELINE"){
                 if(items[i].tags[x].values[0].timeDefined === undefined){
-                items[i].tags[x].values[0] = JSON.parse(items[i].tags[x].values[0]);
+                  items[i].tags[x].values[0] = JSON.parse(items[i].tags[x].values[0]);
                 }
                 timelineTag = items[i].tags[x];
               }
