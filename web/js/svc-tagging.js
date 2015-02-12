@@ -255,14 +255,14 @@ angular.module("tagging", [])
       });
       return $q.all(deletePromises).then(function(resp){
         var deferred = $q.defer();
-        if(resp[0].code === 403){
+        if(resp.code === 403){
           deferred.resolve(resp);
           return deferred.promise;
         }
         return $q.all(addPromises).then(function(resp){
 
           var defer = $q.defer();
-          if(resp[0].code === 200){
+          if(resp.code === 200){
             defer.resolve(timelinesFilesToAdd);
           } else{
             defer.resolve(resp);
