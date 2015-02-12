@@ -438,8 +438,12 @@ describe("Services: TaggingService2",function() {
     it("saveChangesToTags for TimelineTag should map names of files and call updateTags", function () {
       sandbox.stub(taggingSvc,"selected", {timelineTag: angular.copy(mockTimelineObjectToSave), files: angular.copy(mockSelectedFiles)});
       sandbox.stub(localDatastore, "updateTimelineTag", function(){return 200;});
+      localDatastore.fileTagFromStorageTag = function(){
+        return 200;
+      };
       sandbox.stub(taggingSvc,"updateTimelineTag", function(){
-        return Q.resolve([200]);});
+        return Q.resolve([200]);
+      });
 
       return taggingSvc.saveChangesToTags(taggingSvc.selected.timelineTag, "TIMELINE").then(function(){
         expect(taggingSvc.updateTimelineTag.getCall(0).args[0][0]).to.eql(taggingSvc.selected.files[0].name);
@@ -484,14 +488,22 @@ describe("Services: TaggingService2",function() {
 
     it("clearAllFreeformTagsAndSave should remove all tags froms selected FreeformTags, and calls save.", function () {
       sandbox.stub(taggingSvc,"saveChangesToTags", function(){
-        return Q.resolve();});
+        return Q.resolve();
+      });
+      sandbox.stub(taggingSvc,"updateFreeformTags", function(){
+        return Q.resolve();
+      });
+
       taggingSvc.tagGroups = {};
+      localDatastore.getFileTags = function(){
+        return [{}];
+      };
+      taggingSvc.selected = { files: [] };
       sandbox.stub(taggingSvc,"tagGroups", {freeformTags: angular.copy(mockFreeformSelectedTagsWithValues)});
       sandbox.stub(taggingSvc,"clearAllFreeformTags", function(){ return 200;});
       taggingSvc.clearAllFreeformTagsAndSave();
-      expect(taggingSvc.clearAllFreeformTags.callCount).to.equal(1);
-      expect(taggingSvc.saveChangesToTags.callCount).to.equal(1);
-      return taggingSvc.saveChangesToTags().then(function(){
+      expect(taggingSvc.updateFreeformTags.callCount).to.equal(1);
+      return taggingSvc.updateFreeformTags().then(function(){
         expect(taggingSvc.tagGroups.freeformTags.length).to.equal(0);
       });
     });
