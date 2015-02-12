@@ -490,9 +490,6 @@ describe("Services: TaggingService2",function() {
       sandbox.stub(taggingSvc,"saveChangesToTags", function(){
         return Q.resolve();
       });
-      sandbox.stub(taggingSvc,"updateFreeformTags", function(){
-        return Q.resolve();
-      });
 
       taggingSvc.tagGroups = {};
       localDatastore.getFileTags = function(){
@@ -502,8 +499,8 @@ describe("Services: TaggingService2",function() {
       sandbox.stub(taggingSvc,"tagGroups", {freeformTags: angular.copy(mockFreeformSelectedTagsWithValues)});
       sandbox.stub(taggingSvc,"clearAllFreeformTags", function(){ return 200;});
       taggingSvc.clearAllFreeformTagsAndSave();
-      expect(taggingSvc.updateFreeformTags.callCount).to.equal(1);
-      return taggingSvc.updateFreeformTags().then(function(){
+      expect(taggingSvc.saveChangesToTags.callCount).to.equal(1);
+      return taggingSvc.saveChangesToTags().then(function(){
         expect(taggingSvc.tagGroups.freeformTags.length).to.equal(0);
       });
     });

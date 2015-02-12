@@ -82,12 +82,16 @@ angular.module("tagging", [])
 
     //unit tested
     svc.clearAllFreeformTagsAndSave = function(){
-      var namesOfFiles = svc.selected.files.map(function(i){
-        return i.name;
+      svc.clearAllFreeformTags();
+      return svc.saveChangesToTags([], "FREEFORM").then(function(){
+        svc.tagGroups.freeformTags.splice(0, svc.tagGroups.freeformTags.length);
       });
-
-      svc.tagGroups.freeformTags.splice(0, svc.tagGroups.freeformTags.length);
-      return svc.updateFreeformTags(namesOfFiles, [], "FREEFORM");
+//      var namesOfFiles = svc.selected.files.map(function(i){
+//        return i.name;
+//      });
+//
+//      svc.tagGroups.freeformTags.splice(0, svc.tagGroups.freeformTags.length);
+//      return svc.updateFreeformTags(namesOfFiles, [], "FREEFORM");
     };
 
     //unit tested
